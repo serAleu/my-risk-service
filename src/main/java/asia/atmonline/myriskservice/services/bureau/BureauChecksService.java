@@ -1,5 +1,7 @@
 package asia.atmonline.myriskservice.services.bureau;
 
+import static asia.atmonline.myriskservice.enums.GroupOfChecks.BUREAU;
+
 import asia.atmonline.myriskservice.data.entity.impl.requests.BureauRequestJpaEntity;
 import asia.atmonline.myriskservice.data.entity.impl.responses.BureauResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BureauRequestJpaRepository;
@@ -20,6 +22,11 @@ public class BureauChecksService extends BaseChecksService<BureauRequest> {
   @Override
   public RiskResponse process(BureauRequest request) {
     return new RiskResponse();
+  }
+
+  @Override
+  public boolean accept(BureauRequest request) {
+    return request != null && BUREAU.equals(request.getCheck());
   }
 
   @Override

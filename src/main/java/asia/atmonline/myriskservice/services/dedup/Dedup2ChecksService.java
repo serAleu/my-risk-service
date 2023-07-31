@@ -1,5 +1,7 @@
 package asia.atmonline.myriskservice.services.dedup;
 
+import static asia.atmonline.myriskservice.enums.GroupOfChecks.DEDUP2;
+
 import asia.atmonline.myriskservice.data.entity.impl.responses.Dedup2ResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.Dedup2RequestJpaRepository;
 import asia.atmonline.myriskservice.data.repositories.impl.Dedup2ResponseJpaRepository;
@@ -19,6 +21,11 @@ public class Dedup2ChecksService extends BaseChecksService<Dedup2Request> {
   @Override
   public RiskResponse process(Dedup2Request request) {
     return new RiskResponse();
+  }
+
+  @Override
+  public boolean accept(Dedup2Request request) {
+    return request != null && DEDUP2.equals(request.getCheck());
   }
 
   @Override

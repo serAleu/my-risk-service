@@ -67,65 +67,82 @@ public class RiskServiceEngine {
 
   public void processBlacklistsRequest(String message) throws JsonProcessingException {
     BlacklistsRequest request = mapper.readValue(message, BlacklistsRequest.class);
-    blacklistChecksService.saveRequest(request);
-    RiskResponse response = blacklistChecksService.process(request);
-    blacklistChecksService.saveResponse(response);
-    blSqsProducer.sendResponseToQueue(response);
+    if(blacklistChecksService.accept(request)) {
+      blacklistChecksService.saveRequest(request);
+      RiskResponse response = blacklistChecksService.process(request);
+      blacklistChecksService.saveResponse(response);
+      blSqsProducer.sendResponseToQueue(response);
+    }
   }
 
   public void processDedup2Request(String message) throws JsonProcessingException {
     Dedup2Request request = mapper.readValue(message, Dedup2Request.class);
-    dedup2ChecksService.saveRequest(request);
-    RiskResponse response = dedup2ChecksService.process(request);
-    dedup2ChecksService.saveResponse(response);
-    dedup2SqsProducer.sendResponseToQueue(response);
+    if(dedup2ChecksService.accept(request)) {
+      dedup2ChecksService.saveRequest(request);
+      RiskResponse response = dedup2ChecksService.process(request);
+      dedup2ChecksService.saveResponse(response);
+      dedup2SqsProducer.sendResponseToQueue(response);
+    }
   }
 
   public void processDedup3Request(String message) throws JsonProcessingException {
     Dedup3Request request = mapper.readValue(message, Dedup3Request.class);
-    dedup3ChecksService.saveRequest(request);
-    RiskResponse response = dedup3ChecksService.process(request);
-    dedup3ChecksService.saveResponse(response);
-    dedup3SqsProducer.sendResponseToQueue(response);
+    if(dedup3ChecksService.accept(request)) {
+      dedup3ChecksService.saveRequest(request);
+      RiskResponse response = dedup3ChecksService.process(request);
+      dedup3ChecksService.saveResponse(response);
+      dedup3SqsProducer.sendResponseToQueue(response);
+    }
   }
 
   public void processBasicRequest(String message) throws JsonProcessingException {
     BasicRequest request = mapper.readValue(message, BasicRequest.class);
-    basicChecksService.saveRequest(request);
-    RiskResponse response = basicChecksService.process(request);
-    basicChecksService.saveResponse(response);
-    basicSqsProducer.sendResponseToQueue(response);
+    if(basicChecksService.accept(request)) {
+      basicChecksService.saveRequest(request);
+      RiskResponse response = basicChecksService.process(request);
+      basicChecksService.saveResponse(response);
+      basicSqsProducer.sendResponseToQueue(response);
+    }
+
   }
 
   public void processSeonDataRequest(String message) throws JsonProcessingException {
     SeonDataRequest request = mapper.readValue(message, SeonDataRequest.class);
-    seonDataService.saveRequest(request);
-    RiskResponse response = seonDataService.process(request);
-    seonDataService.saveResponse(response);
-    seonDataSqsProducer.sendResponseToQueue(response);
+    if(seonDataService.accept(request)) {
+      seonDataService.saveRequest(request);
+      RiskResponse response = seonDataService.process(request);
+      seonDataService.saveResponse(response);
+      seonDataSqsProducer.sendResponseToQueue(response);
+    }
   }
 
   public void processSeonBlackboxRequest(String message) throws JsonProcessingException {
     SeonBlackboxRequest request = mapper.readValue(message, SeonBlackboxRequest.class);
-    seonBlackboxService.saveRequest(request);
-    RiskResponse response = seonBlackboxService.process(request);
-    seonBlackboxService.saveResponse(response);
-    seonBlackboxSqsProducer.sendResponseToQueue(response);
+    if(seonBlackboxService.accept(request)) {
+      seonBlackboxService.saveRequest(request);
+      RiskResponse response = seonBlackboxService.process(request);
+      seonBlackboxService.saveResponse(response);
+      seonBlackboxSqsProducer.sendResponseToQueue(response);
+    }
   }
 
   public void processBureauRequest(String message) throws JsonProcessingException {
     BureauRequest request = mapper.readValue(message, BureauRequest.class);
-    bureauChecksService.saveRequest(request);
-    RiskResponse response = bureauChecksService.process(request);
-    bureauChecksService.saveResponse(response);
-    bureauSqsProducer.sendResponseToQueue(response);
+    if(bureauChecksService.accept(request)) {
+      bureauChecksService.saveRequest(request);
+      RiskResponse response = bureauChecksService.process(request);
+      bureauChecksService.saveResponse(response);
+      bureauSqsProducer.sendResponseToQueue(response);
+    }
   }
 
   public void processFinalRequest(String message) throws JsonProcessingException {
     FinalRequest request = mapper.readValue(message, FinalRequest.class);
-    finalChecksService.saveRequest(request);
-    RiskResponse response = finalChecksService.process(request);
-    finalChecksService.saveResponse(response);
-    finalSqsProducer.sendResponseToQueue(response);
+    if(finalChecksService.accept(request)) {
+      finalChecksService.saveRequest(request);
+      RiskResponse response = finalChecksService.process(request);
+      finalChecksService.saveResponse(response);
+      finalSqsProducer.sendResponseToQueue(response);
+    }
   }
 }

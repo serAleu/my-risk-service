@@ -1,5 +1,7 @@
 package asia.atmonline.myriskservice.services.fin;
 
+import static asia.atmonline.myriskservice.enums.GroupOfChecks.FINAL;
+
 import asia.atmonline.myriskservice.data.entity.impl.requests.FinalRequestJpaEntity;
 import asia.atmonline.myriskservice.data.entity.impl.responses.FinalResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.FinalRequestJpaRepository;
@@ -20,6 +22,11 @@ public class FinalChecksService extends BaseChecksService<FinalRequest> {
   @Override
   public RiskResponse process(FinalRequest request) {
     return new RiskResponse();
+  }
+
+  @Override
+  public boolean accept(FinalRequest request) {
+    return request != null && FINAL.equals(request.getCheck());
   }
 
   @Override

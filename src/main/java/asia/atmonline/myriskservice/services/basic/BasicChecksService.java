@@ -1,5 +1,7 @@
 package asia.atmonline.myriskservice.services.basic;
 
+import static asia.atmonline.myriskservice.enums.GroupOfChecks.BASIC;
+
 import asia.atmonline.myriskservice.data.entity.impl.requests.BasicRequestJpaEntity;
 import asia.atmonline.myriskservice.data.entity.impl.responses.BasicResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BasicRequestJpaRepository;
@@ -20,6 +22,11 @@ public class BasicChecksService extends BaseChecksService<BasicRequest> {
   @Override
   public RiskResponse process(BasicRequest request) {
     return new RiskResponse();
+  }
+
+  @Override
+  public boolean accept(BasicRequest request) {
+    return request != null && BASIC.equals(request.getCheck());
   }
 
   @Override

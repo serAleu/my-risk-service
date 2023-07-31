@@ -12,8 +12,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ScoreServiceRequest extends BaseRequest {
 
-  @JsonProperty("app_id")
-  private Long appId;
   @JsonProperty("node_id")
   private Long nodeId;
   @JsonProperty("product")

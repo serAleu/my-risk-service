@@ -1,5 +1,7 @@
 package asia.atmonline.myriskservice.services.seon.data;
 
+import static asia.atmonline.myriskservice.enums.GroupOfChecks.SEON_DATA;
+
 import asia.atmonline.myriskservice.data.entity.impl.requests.SeonDataRequestJpaEntity;
 import asia.atmonline.myriskservice.data.entity.impl.responses.SeonDataResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.SeonDataRequestJpaRepository;
@@ -20,6 +22,11 @@ public class SeonDataService extends BaseChecksService<SeonDataRequest> {
   @Override
   public RiskResponse process(SeonDataRequest request) {
     return new RiskResponse();
+  }
+
+  @Override
+  public boolean accept(SeonDataRequest request) {
+    return request != null && SEON_DATA.equals(request.getCheck());
   }
 
   @Override

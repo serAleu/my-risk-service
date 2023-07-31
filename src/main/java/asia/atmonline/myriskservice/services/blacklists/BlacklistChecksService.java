@@ -1,5 +1,7 @@
 package asia.atmonline.myriskservice.services.blacklists;
 
+import static asia.atmonline.myriskservice.enums.GroupOfChecks.BL;
+
 import asia.atmonline.myriskservice.data.entity.impl.requests.BlacklistRequestJpaEntity;
 import asia.atmonline.myriskservice.data.entity.impl.responses.BlacklistResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BlacklistRequestJpaRepository;
@@ -20,6 +22,11 @@ public class BlacklistChecksService extends BaseChecksService<BlacklistsRequest>
   @Override
   public RiskResponse process(BlacklistsRequest request) {
     return new RiskResponse();
+  }
+
+  @Override
+  public boolean accept(BlacklistsRequest request) {
+    return request != null && BL.equals(request.getCheck());
   }
 
   @Override
