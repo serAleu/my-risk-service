@@ -1,0 +1,98 @@
+spring:
+  config:
+    activate:
+      on-profile: ${PROFILE:preprod}
+  jpa:
+    open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
+  main:
+    allow-bean-definition-overriding: ${SPRING_ALLOW_BEAN_OVERRIDING:true}
+
+aws:
+  credentials:
+    access-key: ${AWS_ACCESS_KEY:AKIAWH5BMXL7TDQER3MH}
+    secret-key: ${AWS_SECRET_KEY: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}
+  default-task-executor:
+    thread-name-prefix: ${THREAD_NAME_PREFIX:SQSExecutor -}
+    core-pool-size: ${CORE_POOL_SIZE:100}
+    max-pool-size: ${MAX_POOL_SIZE:100}
+    queue-capacity: ${QUEUE_CAPACITY:2}
+    blocking-task-timeout: ${BLOCKING_TASK_TIMEOUT:1000}
+  sqs:
+    max-number-of-messages: ${SQS_MAX_NUMBER_OF_MESSAGES:10}
+    back-off-time: ${SQS_BACK_OFF_TIME:60000}
+    auto-startup: ${SQS_AUTO_STARTUP:true}
+    blacklists:
+      receiver:
+        queue-name: ${BL_REQUEST_RISK_QUEUE:my-risk-bl-request-preprod}
+      producer:
+        queue-name: ${BL_RESPONSE_RISK_QUEUE:my-risk-bl-response-preprod}
+    dedup-2:
+      receiver:
+        queue-name: ${DEDUP2_REQUEST_RISK_QUEUE:my-risk-dedup2-request-preprod}
+      producer:
+        queue-name: ${DEDUP2_RESPONSE_RISK_QUEUE:my-risk-dedup2-response-preprod}
+    dedup-3:
+      receiver:
+        queue-name: ${DEDUP3_REQUEST_RISK_QUEUE:my-risk-dedup3-request-preprod}
+      producer:
+        queue-name: ${DEDUP3_RESPONSE_RISK_QUEUE:my-risk-dedup3-response-preprod}
+    basic:
+      receiver:
+        queue-name: ${BASIC_REQUEST_RISK_QUEUE:my-risk-basic-request-preprod}
+      producer:
+        queue-name: ${BASIC_RESPONSE_RISK_QUEUE:my-risk-basic-response-preprod}
+    score:
+      receiver:
+        queue-name: ${SCORE_REQUEST_RISK_QUEUE:my-risk-score-request-preprod}
+      producer:
+        queue-name: ${SCORE_RESPONSE_RISK_QUEUE:my-risk-score-response-preprod}
+    seon-data:
+      receiver:
+        queue-name: ${SEON_DATA_REQUEST_RISK_QUEUE:my-risk-seon-data-request-preprod}
+      producer:
+        queue-name: ${SEON_DATA_RESPONSE_RISK_QUEUE:my-risk-seon-data-response-preprod}
+    seon-blackbox:
+      receiver:
+        queue-name: ${SEON_BLACKBOX_REQUEST_RISK_QUEUE:my-risk-seon-blackbox-request-preprod}
+      producer:
+        queue-name: ${SEON_BLACKBOX_RESPONSE_RISK_QUEUE:my-risk-seon-blackbox-response-preprod}
+    bureau:
+      receiver:
+        queue-name: ${BUREAU_REQUEST_RISK_QUEUE:my-risk-bureau-request-preprod}
+      producer:
+        queue-name: ${BUREAU_RESPONSE_RISK_QUEUE:my-risk-bureau-response-preprod}
+    final:
+      receiver:
+        queue-name: ${FINAL_REQUEST_RISK_QUEUE:my-risk-final-request-preprod}
+      producer:
+        queue-name: ${FINAL_RESPONSE_RISK_QUEUE:my-risk-final-response-preprod}
+
+datasource:
+  connectionTimeout: ${DATASOURCE_CONNECTION_TIMEOUT:60000}
+  maximumPoolSize: ${DATASOURCE_POOL_SIZE:20}
+  cachePrepStmts: ${DATASOURCE_CACHE_PREP_STMTS:true}
+  prepStmtCacheSize: ${DATASOURCE_PREP_STMT_CACHE_SIZE:250}
+  prepStmtCacheSqlLimit: ${DATASOURCE_PREP_STMT_CACHE_SQL_LIMIT:2048}
+  useServerPrepStmts: ${DATASOURCE_USE_SERVER_PREP_STMTS:true}
+  driverClassName: ${DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
+  url: jdbc:postgresql://${DB_MY_URL:localhost}:${DB_MY_PORT:5432}/${DB_MY_DATABASE:my_risk_service_local}?socketTimeout=30
+  username: ${DB_MY_LOGIN:postgres}
+  password: ${DB_MY_PASSWORD:postgres}
+
+score:
+  datasource:
+    jdbcDriver: jdbc:postgresql
+    url: ${DB_SCORE_URL:lotus-preprod.ctoxc08s0evf.ap-southeast-1.rds.amazonaws.com}
+    port: ${DB_SCORE_PORT:5432}
+    database: ${DB_SCORE_DATABASE:lotus}
+    username: ${DB_SCORE_USERNAME:risk_user_ro}
+    password: ${DB_SCORE_PASSWORD:ZxamISdw1401ykn3M2vm}
+  bitbucket:
+    url:
+      base: ${BITBUCKET_URL:https://api.bitbucket.org/2.0/repositories/my/external-score-files/src/master/projects/}
+      il: ${BITBUCKET_PATH_TO_IL:my_scoreservice_preprod/il/app.sql}
+      rs1: ${BITBUCKET_PATH_TO_RS1:my_scoreservice_preprod/rs1/app.sql}
+      rs2: ${BITBUCKET_PATH_TO_RS2:my_scoreservice_preprod/rs2/app.sql}
+      rs3: ${BITBUCKET_PATH_TO_RS3:my_scoreservice_preprod/rs3/app.sql}
+    token: ${BASIC_AUTH_BITBUCKET:Basic c2VyX2FsZXU6QVRCQkR2RHFrUTRYdXdGS1U0UjhyUXpYdWg4YkU2RTNFN0E2}
+
