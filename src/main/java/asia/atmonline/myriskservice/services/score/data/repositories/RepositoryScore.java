@@ -82,7 +82,7 @@ public class RepositoryScore {
     map.put("modelId", StringUtils.isBlank(modelId) ? "unknown-model-id" : modelId);
     map.put("modelVersion", StringUtils.isBlank(
         modelVersion) ? "unknown-model-version" : modelVersion);
-    map.put("applicationId", request.getAppId());
+    map.put("applicationId", request.getApplicationId());
     map.put("queueName", StringUtils.isBlank(queueName) ? "unknown-queue-name" : queueName);
     map.put("messageBody", scoreModelResp);
     return map;

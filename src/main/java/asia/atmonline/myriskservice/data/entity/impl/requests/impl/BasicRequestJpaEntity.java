@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.data.entity.impl.responses;
+package asia.atmonline.myriskservice.data.entity.impl.requests.impl;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import jakarta.persistence.Entity;
@@ -14,8 +14,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @RequiredArgsConstructor
 @Entity
-@Table(name = "basic_checks_response")
-@SequenceGenerator(name = "sequence-generator", sequenceName = "basic_checks_response_id_seq", allocationSize = 1)
-public class BasicResponseJpaEntity extends BaseJpaEntity {
+@Table(name = "basic_checks_request")
+@SequenceGenerator(name = "sequence-generator", sequenceName = "basic_checks_request_id_seq", allocationSize = 1)
+public class BasicRequestJpaEntity extends BaseJpaEntity {
 
+  @Override
+  public String repositoryName() {
+    return "basicRequestJpaRepository";
+  }
 }

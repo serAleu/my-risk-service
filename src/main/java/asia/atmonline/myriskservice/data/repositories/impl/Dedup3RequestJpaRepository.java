@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.data.repositories.impl;
 
-import asia.atmonline.myriskservice.data.entity.impl.requests.Dedup3RequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.impl.requests.impl.Dedup3RequestJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
 import org.springframework.stereotype.Repository;
 

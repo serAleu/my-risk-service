@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.producers.bl;
+package asia.atmonline.myriskservice.producers;
 
 import asia.atmonline.myriskservice.messages.response.RiskResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,20 +10,19 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class BLSqsProducer {
+public abstract class BaseSqsProducer {
 
   private final QueueMessagingTemplate queueMessagingTemplate;
-
-  @Value("${aws.sqs.blacklists.producer.queue-name}")
-  private String awsSqsBlacklistsProducerQueueName;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public void sendResponseToQueue(RiskResponse riskResponse) {
+  public abstract void sendResponse(RiskResponse<? extends BaseSqsProducer> riskResponse);
+
+  public void sendResponseToQueue(RiskResponse<? extends BaseSqsProducer> riskResponse, String queueName) {
     try {
-      queueMessagingTemplate.convertAndSend(awsSqsBlacklistsProducerQueueName, riskResponse.toString());
+      queueMessagingTemplate.convertAndSend(queueName, riskResponse.toString());
     } catch (Exception e) {
-      log.error("my-risk-service-" + activeProfile + " Error while placing message to the blacklist-checks response queue. " + e.getMessage());
+      log.error("my-risk-service-" + activeProfile + " Error while placing message to the " + queueName + " queue. " + e.getMessage());
     }
   }
 }

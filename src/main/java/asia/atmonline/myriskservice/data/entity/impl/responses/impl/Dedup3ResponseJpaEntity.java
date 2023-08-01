@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.data.entity.impl.responses;
+package asia.atmonline.myriskservice.data.entity.impl.responses.impl;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import jakarta.persistence.Entity;
@@ -18,4 +18,8 @@ import lombok.experimental.Accessors;
 @SequenceGenerator(name = "sequence-generator", sequenceName = "dedup3_checks_response_id_seq", allocationSize = 1)
 public class Dedup3ResponseJpaEntity extends BaseJpaEntity {
 
+  @Override
+  public String repositoryName() {
+    return "dedup3ResponseJpaRepository";
+  }
 }

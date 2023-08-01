@@ -27,7 +27,7 @@ public class ScoreServiceEngine {
     ScoreServiceRequest request = mapper.readValue(message, ScoreServiceRequest.class);
     if (isNeedCalculateScoreModel(request)) {
       String scoreModelResp = "";
-      Long scoreRequestId = scoreRepository.saveScoreRequest(request.getAppId(),message);
+      Long scoreRequestId = scoreRepository.saveScoreRequest(request.getApplicationId(), message);
       String scoreModel = bitbucketService.getScoreFile(request);
       if (!StringUtils.isBlank(scoreModel)) {
         scoreModelResp = dataService.getScoreModelResponse(request, scoreModel);
@@ -40,6 +40,6 @@ public class ScoreServiceEngine {
   }
 
   private boolean isNeedCalculateScoreModel(ScoreServiceRequest request) {
-    return request != null && request.getAppId() != null && request.getProduct() != null && request.getNodeId() != null;
+    return request != null && request.getApplicationId() != null && request.getProduct() != null && request.getNodeId() != null;
   }
 }

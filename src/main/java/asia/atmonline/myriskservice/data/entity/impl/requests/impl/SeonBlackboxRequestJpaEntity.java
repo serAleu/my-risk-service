@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.data.entity.impl.requests;
+package asia.atmonline.myriskservice.data.entity.impl.requests.impl;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import jakarta.persistence.Entity;
@@ -18,4 +18,8 @@ import lombok.experimental.Accessors;
 @SequenceGenerator(name = "sequence-generator", sequenceName = "seon_blackbox_request_id_seq", allocationSize = 1)
 public class SeonBlackboxRequestJpaEntity extends BaseJpaEntity {
 
+  @Override
+  public String repositoryName() {
+    return "seonBlackboxRequestJpaRepository";
+  }
 }

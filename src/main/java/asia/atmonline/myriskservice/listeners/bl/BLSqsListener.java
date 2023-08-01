@@ -1,9 +1,12 @@
 package asia.atmonline.myriskservice.listeners.bl;
 
+import asia.atmonline.myriskservice.data.entity.impl.requests.impl.BlacklistRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.impl.responses.impl.BlacklistResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
+import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.BlacklistsRequest;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy;
@@ -11,25 +14,28 @@ import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 
-@Component
-@RequiredArgsConstructor
 @Slf4j
-public class BLSqsListener {
+@Component
+public class BLSqsListener extends BaseSqsListener<BlacklistsRequest> {
 
-//  private final RiskServiceEngine<BlacklistsRequest, BlacklistChecksService> engine;
-  private final RiskServiceEngine engine;
-  private final AsyncTaskExecutor threadPoolQueue;
+  private final RiskServiceEngine<BlacklistsRequest, BlacklistRequestJpaEntity, BlacklistResponseJpaEntity, BlacklistChecksService> engine;
+  private final ObjectMapper mapper;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
+  public BLSqsListener(AsyncTaskExecutor threadPoolQueue,
+      RiskServiceEngine<BlacklistsRequest, BlacklistRequestJpaEntity, BlacklistResponseJpaEntity, BlacklistChecksService> engine, ObjectMapper mapper) {
+    super(threadPoolQueue);
+    this.engine = engine;
+    this.mapper = mapper;
+  }
+
   @SqsListener(value = "${aws.blacklists.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(String message) {
-    threadPoolQueue.submit(() -> {
-      try {
-        engine.processBlacklistsRequest(message);
-      } catch (Exception e) {
-        log.error("my-risk-service-" + activeProfile + " Error while processing message from the blacklists-checks request queue. " + e.getMessage());
-      }
-    });
+    try {
+      super.listenQueue(mapper.readValue(message, BlacklistsRequest.class), engine);
+    } catch (Exception e) {
+      log.error("my-risk-service-" + activeProfile + " Error while processing message from the blacklists-checks request queue. " + e.getMessage());
+    }
   }
 }

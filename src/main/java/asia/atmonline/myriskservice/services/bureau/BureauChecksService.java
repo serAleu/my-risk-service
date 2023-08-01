@@ -1,27 +1,30 @@
 package asia.atmonline.myriskservice.services.bureau;
 
+import static asia.atmonline.myriskservice.enums.GroupOfChecks.BASIC;
 import static asia.atmonline.myriskservice.enums.GroupOfChecks.BUREAU;
 
-import asia.atmonline.myriskservice.data.entity.impl.requests.BureauRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.responses.BureauResponseJpaEntity;
-import asia.atmonline.myriskservice.data.repositories.impl.BureauRequestJpaRepository;
-import asia.atmonline.myriskservice.data.repositories.impl.BureauResponseJpaRepository;
+import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.impl.requests.impl.BureauRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.impl.responses.impl.BureauResponseJpaEntity;
+import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.BureauRequest;
 import asia.atmonline.myriskservice.messages.response.RiskResponse;
+import asia.atmonline.myriskservice.producers.BaseSqsProducer;
+import asia.atmonline.myriskservice.producers.bureau.BureauSqsProducer;
 import asia.atmonline.myriskservice.services.BaseChecksService;
-import lombok.RequiredArgsConstructor;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
-public class BureauChecksService extends BaseChecksService<BureauRequest> {
+public class BureauChecksService extends BaseChecksService<BureauRequest, BureauRequestJpaEntity, BureauResponseJpaEntity> {
 
-  private final BureauRequestJpaRepository bureauRequestJpaRepository;
-  private final BureauResponseJpaRepository bureauResponseJpaRepository;
+  public BureauChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories) {
+    super(repositories);
+  }
 
   @Override
-  public RiskResponse process(BureauRequest request) {
-    return new RiskResponse();
+  public RiskResponse<BureauSqsProducer> process(BureauRequest request) {
+    return new RiskResponse<>();
   }
 
   @Override
@@ -30,12 +33,12 @@ public class BureauChecksService extends BaseChecksService<BureauRequest> {
   }
 
   @Override
-  public void saveRequest(BureauRequest request) {
-    bureauRequestJpaRepository.save(new BureauRequestJpaEntity());
+  public BureauRequestJpaEntity getRequestEntity(BureauRequest request) {
+    return new BureauRequestJpaEntity();
   }
 
   @Override
-  public void saveResponse(RiskResponse riskResponse) {
-    bureauResponseJpaRepository.save(new BureauResponseJpaEntity());
+  public BureauResponseJpaEntity getResponseEntity(RiskResponse<? extends BaseSqsProducer> response) {
+    return new BureauResponseJpaEntity();
   }
 }

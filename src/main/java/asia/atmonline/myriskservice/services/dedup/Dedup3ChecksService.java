@@ -2,26 +2,28 @@ package asia.atmonline.myriskservice.services.dedup;
 
 import static asia.atmonline.myriskservice.enums.GroupOfChecks.DEDUP3;
 
-import asia.atmonline.myriskservice.data.entity.impl.requests.Dedup3RequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.responses.Dedup3ResponseJpaEntity;
-import asia.atmonline.myriskservice.data.repositories.impl.Dedup3RequestJpaRepository;
-import asia.atmonline.myriskservice.data.repositories.impl.Dedup3ResponseJpaRepository;
+import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.impl.requests.impl.Dedup3RequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.impl.responses.impl.Dedup3ResponseJpaEntity;
+import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.Dedup3Request;
 import asia.atmonline.myriskservice.messages.response.RiskResponse;
+import asia.atmonline.myriskservice.producers.BaseSqsProducer;
+import asia.atmonline.myriskservice.producers.dedup3.Dedup3SqsProducer;
 import asia.atmonline.myriskservice.services.BaseChecksService;
-import lombok.RequiredArgsConstructor;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
-public class Dedup3ChecksService extends BaseChecksService<Dedup3Request> {
+public class Dedup3ChecksService extends BaseChecksService<Dedup3Request, Dedup3RequestJpaEntity, Dedup3ResponseJpaEntity> {
 
-  private final Dedup3RequestJpaRepository dedup3RequestJpaRepository;
-  private final Dedup3ResponseJpaRepository dedup3ResponseJpaRepository;
+  public Dedup3ChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories) {
+    super(repositories);
+  }
 
   @Override
-  public RiskResponse process(Dedup3Request request) {
-    return new RiskResponse();
+  public RiskResponse<Dedup3SqsProducer> process(Dedup3Request request) {
+    return new RiskResponse<>();
   }
 
   @Override
@@ -30,12 +32,12 @@ public class Dedup3ChecksService extends BaseChecksService<Dedup3Request> {
   }
 
   @Override
-  public void saveRequest(Dedup3Request request) {
-    dedup3RequestJpaRepository.save(new Dedup3RequestJpaEntity());
+  public Dedup3RequestJpaEntity getRequestEntity(Dedup3Request request) {
+    return new Dedup3RequestJpaEntity();
   }
 
   @Override
-  public void saveResponse(RiskResponse riskResponse) {
-    dedup3ResponseJpaRepository.save(new Dedup3ResponseJpaEntity());
+  public Dedup3ResponseJpaEntity getResponseEntity(RiskResponse<? extends BaseSqsProducer> response) {
+    return new Dedup3ResponseJpaEntity();
   }
 }

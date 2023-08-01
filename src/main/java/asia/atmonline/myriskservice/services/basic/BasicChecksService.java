@@ -2,26 +2,28 @@ package asia.atmonline.myriskservice.services.basic;
 
 import static asia.atmonline.myriskservice.enums.GroupOfChecks.BASIC;
 
-import asia.atmonline.myriskservice.data.entity.impl.requests.BasicRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.responses.BasicResponseJpaEntity;
-import asia.atmonline.myriskservice.data.repositories.impl.BasicRequestJpaRepository;
-import asia.atmonline.myriskservice.data.repositories.impl.BasicResponseJpaRepository;
+import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.impl.requests.impl.BasicRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.impl.responses.impl.BasicResponseJpaEntity;
+import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.BasicRequest;
 import asia.atmonline.myriskservice.messages.response.RiskResponse;
+import asia.atmonline.myriskservice.producers.BaseSqsProducer;
+import asia.atmonline.myriskservice.producers.basic.BasicSqsProducer;
 import asia.atmonline.myriskservice.services.BaseChecksService;
-import lombok.RequiredArgsConstructor;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
-public class BasicChecksService extends BaseChecksService<BasicRequest> {
+public class BasicChecksService extends BaseChecksService<BasicRequest, BasicRequestJpaEntity, BasicResponseJpaEntity> {
 
-  private final BasicRequestJpaRepository basicRequestJpaRepository;
-  private final BasicResponseJpaRepository basicResponseJpaRepository;
+  public BasicChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories) {
+    super(repositories);
+  }
 
   @Override
-  public RiskResponse process(BasicRequest request) {
-    return new RiskResponse();
+  public RiskResponse<BasicSqsProducer> process(BasicRequest request) {
+    return new RiskResponse<>();
   }
 
   @Override
@@ -30,12 +32,12 @@ public class BasicChecksService extends BaseChecksService<BasicRequest> {
   }
 
   @Override
-  public void saveRequest(BasicRequest request) {
-    basicRequestJpaRepository.save(new BasicRequestJpaEntity());
+  public BasicRequestJpaEntity getRequestEntity(BasicRequest request) {
+    return new BasicRequestJpaEntity();
   }
 
   @Override
-  public void saveResponse(RiskResponse riskResponse) {
-    basicResponseJpaRepository.save(new BasicResponseJpaEntity());
+  public BasicResponseJpaEntity getResponseEntity(RiskResponse<? extends BaseSqsProducer> response) {
+    return new BasicResponseJpaEntity();
   }
 }

@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.producers.dedup3;
+package asia.atmonline.myriskservice.producers.blacklist;
 
 import asia.atmonline.myriskservice.messages.response.RiskResponse;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
@@ -7,17 +7,17 @@ import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Dedup3SqsProducer extends BaseSqsProducer {
+public class BlacklistSqsProducer extends BaseSqsProducer {
 
-  @Value("${aws.sqs.dedup-3.producer.queue-name}")
-  private String awsSqsDedup3ProducerQueueName;
+  @Value("${aws.sqs.blacklists.producer.queue-name}")
+  private String awsSqsBlacklistsProducerQueueName;
 
-  public Dedup3SqsProducer(QueueMessagingTemplate queueMessagingTemplate) {
+  public BlacklistSqsProducer(QueueMessagingTemplate queueMessagingTemplate) {
     super(queueMessagingTemplate);
   }
 
   @Override
   public void sendResponse(RiskResponse<? extends BaseSqsProducer> riskResponse) {
-    super.sendResponseToQueue(riskResponse, awsSqsDedup3ProducerQueueName);
+    super.sendResponseToQueue(riskResponse, awsSqsBlacklistsProducerQueueName);
   }
 }
