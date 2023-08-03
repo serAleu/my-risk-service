@@ -1,7 +1,7 @@
 package asia.atmonline.myriskservice.listeners.bl;
 
-import asia.atmonline.myriskservice.data.entity.impl.requests.impl.BlacklistRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.responses.impl.BlacklistResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.requests.impl.BlacklistRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.responses.impl.BlacklistResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.BlacklistsRequest;

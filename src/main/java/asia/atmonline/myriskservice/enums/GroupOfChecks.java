@@ -8,6 +8,5 @@ public enum GroupOfChecks {
   DEDUP3,
   FINAL,
   SCORE,
-  SEON_BLACKBOX,
-  SEON_DATA
+  SEON
 }

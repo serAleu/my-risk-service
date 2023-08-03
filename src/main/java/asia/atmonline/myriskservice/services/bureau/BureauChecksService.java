@@ -1,11 +1,10 @@
 package asia.atmonline.myriskservice.services.bureau;
 
-import static asia.atmonline.myriskservice.enums.GroupOfChecks.BASIC;
 import static asia.atmonline.myriskservice.enums.GroupOfChecks.BUREAU;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.requests.impl.BureauRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.responses.impl.BureauResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.requests.impl.BureauRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.responses.impl.BureauResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.BureauRequest;
 import asia.atmonline.myriskservice.messages.response.RiskResponse;

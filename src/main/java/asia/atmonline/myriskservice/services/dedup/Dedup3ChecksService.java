@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.services.dedup;
 import static asia.atmonline.myriskservice.enums.GroupOfChecks.DEDUP3;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.requests.impl.Dedup3RequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.responses.impl.Dedup3ResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.requests.impl.Dedup3RequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.responses.impl.Dedup3ResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.Dedup3Request;
 import asia.atmonline.myriskservice.messages.response.RiskResponse;

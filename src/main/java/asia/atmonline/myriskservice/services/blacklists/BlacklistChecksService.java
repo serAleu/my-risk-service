@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.services.blacklists;
 import static asia.atmonline.myriskservice.enums.GroupOfChecks.BL;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.requests.impl.BlacklistRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.responses.impl.BlacklistResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.requests.impl.BlacklistRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.responses.impl.BlacklistResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.BlacklistsRequest;
 import asia.atmonline.myriskservice.messages.response.RiskResponse;

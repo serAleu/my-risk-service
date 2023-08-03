@@ -25,6 +25,8 @@ public class RiskServiceEngine<R extends BaseRequest, E extends BaseJpaEntity, Y
       RiskResponse<? extends BaseSqsProducer> response = service.process(request);
       service.save(service.getResponseEntity(response));
       response.getProducer().sendResponse(response);
+    } else {
+      log.warn("");
     }
   }
 }

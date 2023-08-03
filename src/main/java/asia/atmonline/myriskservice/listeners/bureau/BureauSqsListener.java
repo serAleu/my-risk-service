@@ -1,7 +1,7 @@
 package asia.atmonline.myriskservice.listeners.bureau;
 
-import asia.atmonline.myriskservice.data.entity.impl.requests.impl.BureauRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.responses.impl.BureauResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.requests.impl.BureauRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.responses.impl.BureauResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.BureauRequest;

@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.services.fin;
 import static asia.atmonline.myriskservice.enums.GroupOfChecks.FINAL;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.requests.impl.FinalRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.impl.responses.impl.FinalResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.requests.impl.FinalRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.responses.impl.FinalResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.FinalRequest;
 import asia.atmonline.myriskservice.messages.response.RiskResponse;

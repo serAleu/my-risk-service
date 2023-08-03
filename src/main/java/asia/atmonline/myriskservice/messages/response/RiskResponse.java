@@ -7,17 +7,15 @@ import asia.atmonline.myriskservice.producers.BaseSqsProducer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Transient;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.ToString.Exclude;
-import lombok.experimental.Accessors;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter
 @Setter
-@Accessors(chain = true)
 public class RiskResponse<P extends BaseSqsProducer> {
 
   @JsonProperty("final_decision")
@@ -33,6 +31,7 @@ public class RiskResponse<P extends BaseSqsProducer> {
 
   @JsonIgnore
   @Exclude
+  @Setter(AccessLevel.NONE)
   private P producer;
 
   public P getProducer() {
