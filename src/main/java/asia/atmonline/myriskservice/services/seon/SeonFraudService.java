@@ -1,9 +1,6 @@
 package asia.atmonline.myriskservice.services.seon;
 
-import static asia.atmonline.myriskservice.enums.FinalDecision.APPROVE;
-import static asia.atmonline.myriskservice.enums.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.GroupOfChecks.SEON;
-import static asia.atmonline.myriskservice.enums.RejectionReasonCode.SEONPHONE;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import asia.atmonline.myriskservice.data.entity.requests.impl.SeonFraudRequestJpaEntity;
@@ -14,29 +11,16 @@ import asia.atmonline.myriskservice.messages.request.impl.SeonFraudRequest;
 import asia.atmonline.myriskservice.messages.response.RiskResponse;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
 import asia.atmonline.myriskservice.producers.seon.SeonFraudSqsProducer;
+import asia.atmonline.myriskservice.rules.seon.SeonPhoneRule;
+import asia.atmonline.myriskservice.rules.seon.SeonRuleContext;
 import asia.atmonline.myriskservice.services.BaseChecksService;
 import asia.atmonline.myriskservice.utils.JsonUtils;
 import asia.atmonline.myriskservice.web.seon.client.SeonFraudFeignClient;
-import asia.atmonline.myriskservice.web.seon.dto.AccountDetails;
 import asia.atmonline.myriskservice.web.seon.dto.Config;
 import asia.atmonline.myriskservice.web.seon.dto.ConfigDetail;
 import asia.atmonline.myriskservice.web.seon.dto.FraudRequest;
 import asia.atmonline.myriskservice.web.seon.dto.FraudResponse;
 import asia.atmonline.myriskservice.web.seon.dto.SeonResponseError;
-import asia.atmonline.myriskservice.web.seon.dto.social.Facebook;
-import asia.atmonline.myriskservice.web.seon.dto.social.Google;
-import asia.atmonline.myriskservice.web.seon.dto.social.Instagram;
-import asia.atmonline.myriskservice.web.seon.dto.social.Kakao;
-import asia.atmonline.myriskservice.web.seon.dto.social.Line;
-import asia.atmonline.myriskservice.web.seon.dto.social.Microsoft;
-import asia.atmonline.myriskservice.web.seon.dto.social.Ok;
-import asia.atmonline.myriskservice.web.seon.dto.social.Skype;
-import asia.atmonline.myriskservice.web.seon.dto.social.Snapchat;
-import asia.atmonline.myriskservice.web.seon.dto.social.Telegram;
-import asia.atmonline.myriskservice.web.seon.dto.social.Twitter;
-import asia.atmonline.myriskservice.web.seon.dto.social.Viber;
-import asia.atmonline.myriskservice.web.seon.dto.social.Whatsapp;
-import asia.atmonline.myriskservice.web.seon.dto.social.Zalo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -44,7 +28,6 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
@@ -60,41 +43,34 @@ public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFr
   private final SeonFraudFeignClient client;
   private final ObjectMapper mapper;
   private final SeonFraudResponseJpaRepository seonFraudResponseJpaRepository;
+  private final SeonPhoneRule seonPhoneRule;
 
   public SeonFraudService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories, SeonFraudFeignClient client,
-      ObjectMapper mapper, SeonFraudResponseJpaRepository seonFraudResponseJpaRepository) {
+      ObjectMapper mapper, SeonFraudResponseJpaRepository seonFraudResponseJpaRepository, SeonPhoneRule seonPhoneRule) {
     super(repositories);
     this.client = client;
     this.mapper = mapper;
     this.seonFraudResponseJpaRepository = seonFraudResponseJpaRepository;
+    this.seonPhoneRule = seonPhoneRule;
   }
 
   @Override
   public RiskResponse<SeonFraudSqsProducer> process(SeonFraudRequest request) {
-    RiskResponse<SeonFraudSqsProducer> riskResponse = new RiskResponse<>();
-    riskResponse.setApplicationId(riskResponse.getApplicationId());
-    riskResponse.setDecision(APPROVE);
-    riskResponse.setCheck(request.getCheck());
+    boolean isNewSeonData = false;
     Optional<SeonFraudResponseJpaEntity> seonFraudOldResponseJpaEntityOptional = seonFraudResponseJpaRepository
         .findTop1ByBorrowerIdAndCreatedAtGreaterThanAndSuccessOrderByCreatedAtDesc(request.getBorrowerId(),
             LocalDateTime.now().minus(request.getSeonFraudRequestsLimit(), ChronoUnit.DAYS), true);
     SeonFraudResponseJpaEntity currentResponse;
     if(seonFraudOldResponseJpaEntityOptional.isEmpty() || isNeedToGetNewSeonInfo(request, seonFraudOldResponseJpaEntityOptional.get())) {
       currentResponse = getFraudData(request);
-      if(request.getSeonFraudPhoneStopFactorEnable() && currentResponse != null && currentResponse.getSuccess()){
-        AccountDetails accountDetails = currentResponse.getResponse().getData().getPhoneDetails().getAccountDetails();
-        if(accountDetails != null && checkRegistrations(accountDetails)) {
-          riskResponse.setDecision(REJECT);
-          riskResponse.setRejectionReasonCode(SEONPHONE);
-        }
-      }
+      isNewSeonData = true;
     } else {
       currentResponse = seonFraudOldResponseJpaEntityOptional.get();
     }
     if(currentResponse != null) {
       seonFraudResponseJpaRepository.save(currentResponse);
     }
-    return riskResponse;
+    return seonPhoneRule.execute(new SeonRuleContext(request, currentResponse, isNewSeonData));
   }
 
   @Override
@@ -107,7 +83,9 @@ public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFr
 
   @Override
   public SeonFraudRequestJpaEntity getRequestEntity(SeonFraudRequest request) {
-    return new SeonFraudRequestJpaEntity();
+    return new SeonFraudRequestJpaEntity().setApplicationId(request.getApplicationId())
+        .setBorrowerId(request.getBorrowerId())
+        .setOriginalRequest(request.toString());
   }
 
   @Override
@@ -183,49 +161,6 @@ public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFr
       }
     }
     return false;
-  }
-
-  private boolean checkRegistrations(AccountDetails accountDetails) {
-    Facebook facebook = accountDetails.getFacebook();
-    Google google = accountDetails.getGoogle();
-    Instagram instagram = accountDetails.getInstagram();
-    Telegram telegram = accountDetails.getTelegram();
-    Twitter twitter = accountDetails.getTwitter();
-    Viber viber = accountDetails.getViber();
-    Whatsapp whatsapp = accountDetails.getWhatsapp();
-
-    boolean facebookRegistered = facebook != null && facebook.isRegistered();
-    boolean googleRegistered = google != null && google.isRegistered();
-    boolean instagramRegistered = instagram != null && instagram.isRegistered();
-    boolean telegramRegistered = telegram != null && telegram.isRegistered();
-    boolean twitterRegistered = twitter != null && twitter.isRegistered();
-    boolean viberRegistered = viber != null && viber.isRegistered();
-    boolean whatsappRegistered = whatsapp != null && whatsapp.isRegistered();
-
-    Zalo zalo = accountDetails.getZalo();
-    boolean zaloRegistered = Objects.nonNull(zalo) && zalo.isRegistered();
-
-    Ok ok = accountDetails.getOk();
-    boolean okRegistered = Objects.nonNull(ok) && ok.isRegistered();
-
-    Line line = accountDetails.getLine();
-    boolean lineRegistered = Objects.nonNull(line) && line.isRegistered();
-
-    Microsoft microsoft = accountDetails.getMicrosoft();
-    boolean microsoftRegistered = Objects.nonNull(microsoft) && microsoft.isRegistered();
-
-    Snapchat snapchat = accountDetails.getSnapchat();
-    boolean snapchatRegistered = Objects.nonNull(snapchat) && snapchat.isRegistered();
-
-    Skype skype = accountDetails.getSkype();
-    boolean skypeRegistered = Objects.nonNull(skype) && skype.isRegistered();
-
-    Kakao kakao = accountDetails.getKakao();
-    boolean kakaoRegistered = Objects.nonNull(kakao) && kakao.isRegistered();
-
-    return !facebookRegistered && !googleRegistered && !instagramRegistered && !telegramRegistered
-        && !twitterRegistered && !viberRegistered && !whatsappRegistered && !zaloRegistered && !okRegistered && !lineRegistered
-        && !microsoftRegistered && !snapchatRegistered && !skypeRegistered && !kakaoRegistered;
   }
 
   private String formatPhone(final String borrowerPhone) {

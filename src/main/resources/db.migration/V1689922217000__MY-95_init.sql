@@ -26,11 +26,7 @@ CREATE TABLE IF NOT EXISTS final_checks_request (
 
 );
 
-CREATE TABLE IF NOT EXISTS seon_blackbox_request (
-
-);
-
-CREATE TABLE IF NOT EXISTS seon_data_request (
+CREATE TABLE IF NOT EXISTS seon_fraud_request (
 
 );
 
@@ -62,10 +58,6 @@ CREATE TABLE IF NOT EXISTS final_checks_response (
 
 );
 
-CREATE TABLE IF NOT EXISTS seon_blackbox_response (
-
-);
-
-CREATE TABLE IF NOT EXISTS seon_data_response (
+CREATE TABLE IF NOT EXISTS seon_fraud_response (
 
 );

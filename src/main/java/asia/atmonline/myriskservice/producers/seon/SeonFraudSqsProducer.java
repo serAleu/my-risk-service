@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SeonFraudSqsProducer extends BaseSqsProducer {
 
-  @Value("${aws.sqs.seon-data.producer.queue-name}")
+  @Value("${aws.sqs.seon-fraud.producer.queue-name}")
   private String awsSqsSeonDataProducerQueueName;
 
   public SeonFraudSqsProducer(QueueMessagingTemplate queueMessagingTemplate) {

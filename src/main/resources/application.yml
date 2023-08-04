@@ -46,16 +46,11 @@ aws:
         queue-name: ${SCORE_REQUEST_RISK_QUEUE:my-risk-score-request-preprod}
       producer:
         queue-name: ${SCORE_RESPONSE_RISK_QUEUE:my-risk-score-response-preprod}
-    seon-data:
+    seon-fraud:
       receiver:
-        queue-name: ${SEON_DATA_REQUEST_RISK_QUEUE:my-risk-seon-data-request-preprod}
+        queue-name: ${SEON_FRAUD_REQUEST_RISK_QUEUE:my-risk-seon-fraud-request-preprod}
       producer:
-        queue-name: ${SEON_DATA_RESPONSE_RISK_QUEUE:my-risk-seon-data-response-preprod}
-    seon-blackbox:
-      receiver:
-        queue-name: ${SEON_BLACKBOX_REQUEST_RISK_QUEUE:my-risk-seon-blackbox-request-preprod}
-      producer:
-        queue-name: ${SEON_BLACKBOX_RESPONSE_RISK_QUEUE:my-risk-seon-blackbox-response-preprod}
+        queue-name: ${SEON_FRAUD_RESPONSE_RISK_QUEUE:my-risk-seon-fraud-response-preprod}
     bureau:
       receiver:
         queue-name: ${BUREAU_REQUEST_RISK_QUEUE:my-risk-bureau-request-preprod}

@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.rules;
 import asia.atmonline.myriskservice.messages.response.RiskResponse;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
 
-public abstract class BaseRule {
+public abstract class BaseRule<T extends RuleContext> {
 
-  public abstract void execute(RiskResponse<? extends BaseSqsProducer> response);
+  public abstract RiskResponse<? extends BaseSqsProducer> execute(T context);
 
 }

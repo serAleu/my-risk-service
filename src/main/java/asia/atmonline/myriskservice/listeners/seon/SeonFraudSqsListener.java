@@ -30,12 +30,12 @@ public class SeonFraudSqsListener extends BaseSqsListener<SeonFraudRequest> {
     this.mapper = mapper;
   }
 
-  @SqsListener(value = "${aws.seon-data.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+  @SqsListener(value = "${aws.seon-fraud.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(String message) {
     try {
       super.listenQueue(mapper.readValue(message, SeonFraudRequest.class), engine);
     } catch (Exception e) {
-      log.error("my-risk-service-" + activeProfile + " Error while processing message from the seon-data-checks request queue. " + e.getMessage());
+      log.error("my-risk-service-" + activeProfile + " Error while processing message from the seon-fraud-checks request queue. " + e.getMessage());
     }
   }
 }
