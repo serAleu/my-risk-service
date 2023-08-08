@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.services.score.web;
 
-import asia.atmonline.myriskservice.enums.ProductCode;
+import asia.atmonline.myriskservice.enums.application.ProductCode;
 import java.time.LocalDateTime;
 
 public class Cache {

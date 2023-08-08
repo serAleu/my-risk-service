@@ -1,14 +1,13 @@
 package asia.atmonline.myriskservice.services.basic;
 
-import static asia.atmonline.myriskservice.enums.GroupOfChecks.BASIC;
+import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.BASIC;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.requests.impl.BasicRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.responses.impl.BasicResponseJpaEntity;
-import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
+import asia.atmonline.myriskservice.data.entity.risk.requests.impl.BasicRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.impl.BasicResponseJpaEntity;
+import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.BasicRequest;
-import asia.atmonline.myriskservice.messages.response.RiskResponse;
-import asia.atmonline.myriskservice.producers.BaseSqsProducer;
+import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.basic.BasicSqsProducer;
 import asia.atmonline.myriskservice.services.BaseChecksService;
 import java.util.Map;
@@ -22,8 +21,8 @@ public class BasicChecksService extends BaseChecksService<BasicRequest, BasicReq
   }
 
   @Override
-  public RiskResponse<BasicSqsProducer> process(BasicRequest request) {
-    return new RiskResponse<>();
+  public RiskResponseJpaEntity<BasicSqsProducer> process(BasicRequest request) {
+    return new RiskResponseJpaEntity<>();
   }
 
   @Override
@@ -36,8 +35,8 @@ public class BasicChecksService extends BaseChecksService<BasicRequest, BasicReq
     return new BasicRequestJpaEntity();
   }
 
-  @Override
-  public BasicResponseJpaEntity getResponseEntity(RiskResponse<? extends BaseSqsProducer> response) {
-    return new BasicResponseJpaEntity();
-  }
+//  @Override
+//  public BasicResponseJpaEntity getResponseEntity(RiskResponseJpaEntity<? extends BaseSqsProducer> response) {
+//    return new BasicResponseJpaEntity();
+//  }
 }

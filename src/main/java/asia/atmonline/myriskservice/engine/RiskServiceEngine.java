@@ -2,7 +2,7 @@ package asia.atmonline.myriskservice.engine;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import asia.atmonline.myriskservice.messages.request.BaseRequest;
-import asia.atmonline.myriskservice.messages.response.RiskResponse;
+import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
 import asia.atmonline.myriskservice.services.BaseChecksService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class RiskServiceEngine<R extends BaseRequest, E extends BaseJpaEntity, Y
   public void process(R request) {
     service.save(service.getRequestEntity(request));
     if(service.accept(request)) {
-      RiskResponse<? extends BaseSqsProducer> response = service.process(request);
-      service.save(service.getResponseEntity(response));
+      RiskResponseJpaEntity<? extends BaseSqsProducer> response = service.process(request);
+      service.save(response);
       response.getProducer().sendResponse(response);
     } else {
       log.warn("Unacceptable request to Risk Service. request = " + request.toString());

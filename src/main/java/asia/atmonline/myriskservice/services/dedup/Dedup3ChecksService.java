@@ -1,14 +1,13 @@
 package asia.atmonline.myriskservice.services.dedup;
 
-import static asia.atmonline.myriskservice.enums.GroupOfChecks.DEDUP3;
+import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.DEDUP3;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.requests.impl.Dedup3RequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.responses.impl.Dedup3ResponseJpaEntity;
-import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
+import asia.atmonline.myriskservice.data.entity.risk.requests.impl.Dedup3RequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.impl.Dedup3ResponseJpaEntity;
+import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.Dedup3Request;
-import asia.atmonline.myriskservice.messages.response.RiskResponse;
-import asia.atmonline.myriskservice.producers.BaseSqsProducer;
+import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.dedup3.Dedup3SqsProducer;
 import asia.atmonline.myriskservice.services.BaseChecksService;
 import java.util.Map;
@@ -22,8 +21,8 @@ public class Dedup3ChecksService extends BaseChecksService<Dedup3Request, Dedup3
   }
 
   @Override
-  public RiskResponse<Dedup3SqsProducer> process(Dedup3Request request) {
-    return new RiskResponse<>();
+  public RiskResponseJpaEntity<Dedup3SqsProducer> process(Dedup3Request request) {
+    return new RiskResponseJpaEntity<>();
   }
 
   @Override
@@ -36,8 +35,8 @@ public class Dedup3ChecksService extends BaseChecksService<Dedup3Request, Dedup3
     return new Dedup3RequestJpaEntity();
   }
 
-  @Override
-  public Dedup3ResponseJpaEntity getResponseEntity(RiskResponse<? extends BaseSqsProducer> response) {
-    return new Dedup3ResponseJpaEntity();
-  }
+//  @Override
+//  public Dedup3ResponseJpaEntity getResponseEntity(RiskResponseJpaEntity<? extends BaseSqsProducer> response) {
+//    return new Dedup3ResponseJpaEntity();
+//  }
 }

@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.messages.request;
 
-import asia.atmonline.myriskservice.enums.GroupOfChecks;
+import asia.atmonline.myriskservice.enums.risk.GroupOfChecks;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Transient;
 import lombok.Getter;

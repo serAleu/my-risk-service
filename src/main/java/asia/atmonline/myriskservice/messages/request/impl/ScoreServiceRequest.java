@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.messages.request.impl;
 
-import asia.atmonline.myriskservice.enums.ProductCode;
+import asia.atmonline.myriskservice.enums.application.ProductCode;
 import asia.atmonline.myriskservice.messages.request.BaseRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

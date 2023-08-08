@@ -1,7 +1,7 @@
 package asia.atmonline.myriskservice.listeners.seon;
 
-import asia.atmonline.myriskservice.data.entity.requests.impl.SeonFraudRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.responses.impl.SeonFraudResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.requests.impl.SeonFraudRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.impl.SeonFraudResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.SeonFraudRequest;

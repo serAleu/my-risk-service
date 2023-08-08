@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.services.score.web;
 
-import asia.atmonline.myriskservice.enums.ProductCode;
+import asia.atmonline.myriskservice.enums.application.ProductCode;
 import asia.atmonline.myriskservice.messages.request.impl.ScoreServiceRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

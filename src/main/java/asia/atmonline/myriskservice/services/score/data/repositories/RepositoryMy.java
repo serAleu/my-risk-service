@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.services.score.data.repositories;
 
-import static asia.atmonline.myriskservice.enums.ProductCode.IL;
+import static asia.atmonline.myriskservice.enums.application.ProductCode.IL;
 
 import asia.atmonline.myriskservice.messages.request.impl.ScoreServiceRequest;
 import java.util.HashMap;

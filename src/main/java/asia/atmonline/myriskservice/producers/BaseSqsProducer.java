@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.producers;
 
-import asia.atmonline.myriskservice.messages.response.RiskResponse;
+import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,11 +16,11 @@ public abstract class BaseSqsProducer {
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public abstract void sendResponse(RiskResponse<? extends BaseSqsProducer> riskResponse);
+  public abstract void sendResponse(RiskResponseJpaEntity<? extends BaseSqsProducer> riskResponseJpaEntity);
 
-  public void sendResponseToQueue(RiskResponse<? extends BaseSqsProducer> riskResponse, String queueName) {
+  public void sendResponseToQueue(RiskResponseJpaEntity<? extends BaseSqsProducer> riskResponseJpaEntity, String queueName) {
     try {
-      queueMessagingTemplate.convertAndSend(queueName, riskResponse.toString());
+      queueMessagingTemplate.convertAndSend(queueName, riskResponseJpaEntity.toString());
     } catch (Exception e) {
       log.error("my-risk-service-" + activeProfile + " Error while placing message to the " + queueName + " queue. " + e.getMessage());
     }

@@ -1,18 +1,17 @@
 package asia.atmonline.myriskservice.services.seon;
 
-import static asia.atmonline.myriskservice.enums.GroupOfChecks.SEON;
+import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.SEON;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.requests.impl.SeonFraudRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.responses.impl.SeonFraudResponseJpaEntity;
-import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
-import asia.atmonline.myriskservice.data.repositories.impl.SeonFraudResponseJpaRepository;
+import asia.atmonline.myriskservice.data.entity.risk.requests.impl.SeonFraudRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.impl.SeonFraudResponseJpaEntity;
+import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
+import asia.atmonline.myriskservice.data.repositories.impl.risk.responses.SeonFraudResponseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.SeonFraudRequest;
-import asia.atmonline.myriskservice.messages.response.RiskResponse;
-import asia.atmonline.myriskservice.producers.BaseSqsProducer;
+import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.seon.SeonFraudSqsProducer;
 import asia.atmonline.myriskservice.rules.seon.SeonPhoneRule;
-import asia.atmonline.myriskservice.rules.seon.SeonRuleContext;
+import asia.atmonline.myriskservice.rules.seon.SeonPhoneRuleContext;
 import asia.atmonline.myriskservice.services.BaseChecksService;
 import asia.atmonline.myriskservice.utils.JsonUtils;
 import asia.atmonline.myriskservice.web.seon.client.SeonFraudFeignClient;
@@ -55,7 +54,7 @@ public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFr
   }
 
   @Override
-  public RiskResponse<SeonFraudSqsProducer> process(SeonFraudRequest request) {
+  public RiskResponseJpaEntity<SeonFraudSqsProducer> process(SeonFraudRequest request) {
     boolean isNewSeonData = false;
     Optional<SeonFraudResponseJpaEntity> seonFraudOldResponseJpaEntityOptional = seonFraudResponseJpaRepository
         .findTop1ByBorrowerIdAndCreatedAtGreaterThanAndSuccessOrderByCreatedAtDesc(request.getBorrowerId(),
@@ -70,7 +69,7 @@ public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFr
     if(currentResponse != null) {
       seonFraudResponseJpaRepository.save(currentResponse);
     }
-    return seonPhoneRule.execute(new SeonRuleContext(request, currentResponse, isNewSeonData));
+    return seonPhoneRule.execute(new SeonPhoneRuleContext(request, currentResponse, isNewSeonData));
   }
 
   @Override
@@ -88,10 +87,10 @@ public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFr
         .setOriginalRequest(request.toString());
   }
 
-  @Override
-  public SeonFraudResponseJpaEntity getResponseEntity(RiskResponse<? extends BaseSqsProducer> response) {
-    return new SeonFraudResponseJpaEntity();
-  }
+//  @Override
+//  public SeonFraudResponseJpaEntity getResponseEntity(RiskResponseJpaEntity<? extends BaseSqsProducer> response) {
+//    return new SeonFraudResponseJpaEntity();
+//  }
 
   @Transactional
   public SeonFraudResponseJpaEntity getFraudData(SeonFraudRequest request) {
@@ -126,7 +125,6 @@ public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFr
       seonFraudResponseJpaEntity = SeonFraudResponseJpaEntity.builder()
           .borrowerId(request.getBorrowerId())
           .applicationId(request.getApplicationId())
-          .createdAt(now)
           .phone(request.getMobilePhone())
           .response(new FraudResponse(new SeonResponseError(e.getMessage())))
           .build();
@@ -140,8 +138,11 @@ public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFr
   private SeonFraudResponseJpaEntity extractSeonFraudResponseJpaEntity(Object response, SeonFraudRequest request) throws JsonProcessingException {
     String responseString = mapper.writeValueAsString(response);
     FraudResponse fraudResponse = JsonUtils.decodeDefault(responseString, FraudResponse.class);
-    SeonFraudResponseJpaEntity seonFraudResponseJpaEntity = new SeonFraudResponseJpaEntity(request.getApplicationId(), request.getBorrowerId(),
-        request.getMobilePhone(), fraudResponse, true);
+    SeonFraudResponseJpaEntity seonFraudResponseJpaEntity = new SeonFraudResponseJpaEntity().setApplicationId(request.getApplicationId())
+        .setBorrowerId(request.getBorrowerId())
+        .setPhone(request.getMobilePhone())
+        .setResponse(fraudResponse)
+        .setSuccess(true);
     seonFraudResponseJpaEntity.setOriginalResponse(responseString);
     return seonFraudResponseJpaEntity;
   }

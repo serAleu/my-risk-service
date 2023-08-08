@@ -1,7 +1,7 @@
 package asia.atmonline.myriskservice.listeners.dedup3;
 
-import asia.atmonline.myriskservice.data.entity.requests.impl.Dedup3RequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.responses.impl.Dedup3ResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.requests.impl.Dedup3RequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.impl.Dedup3ResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.Dedup3Request;

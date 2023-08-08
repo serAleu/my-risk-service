@@ -1,13 +1,12 @@
 package asia.atmonline.myriskservice.rules.seon;
 
-import static asia.atmonline.myriskservice.enums.FinalDecision.APPROVE;
-import static asia.atmonline.myriskservice.enums.FinalDecision.REJECT;
-import static asia.atmonline.myriskservice.enums.GroupOfChecks.SEON;
-import static asia.atmonline.myriskservice.enums.RejectionReasonCode.SEONPHONE;
+import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
+import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.SEON;
+import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SEONPHONE;
 
-import asia.atmonline.myriskservice.data.entity.responses.impl.SeonFraudResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.impl.SeonFraudResponseJpaEntity;
 import asia.atmonline.myriskservice.messages.request.impl.SeonFraudRequest;
-import asia.atmonline.myriskservice.messages.response.RiskResponse;
+import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.seon.SeonFraudSqsProducer;
 import asia.atmonline.myriskservice.rules.BaseRule;
 import asia.atmonline.myriskservice.web.seon.dto.AccountDetails;
@@ -29,24 +28,22 @@ import java.util.Objects;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SeonPhoneRule extends BaseRule<SeonRuleContext> {
+public class SeonPhoneRule extends BaseRule<SeonPhoneRuleContext> {
 
   @Override
-  public RiskResponse<SeonFraudSqsProducer> execute(SeonRuleContext context) {
-    SeonFraudResponseJpaEntity entity = context.getEntity();
+  @SuppressWarnings({"unchecked"})
+  public RiskResponseJpaEntity<SeonFraudSqsProducer> execute(SeonPhoneRuleContext context) {
+    SeonFraudResponseJpaEntity responseJpaEntity = context.getResponseJpaEntity();
     SeonFraudRequest request = context.getRequest();
-    RiskResponse<SeonFraudSqsProducer> riskResponse = new RiskResponse<>();
-    riskResponse.setApplicationId(entity.getApplicationId());
-    riskResponse.setDecision(APPROVE);
-    riskResponse.setCheck(SEON);
-    if(context.getIsNewSeonData() && request.getSeonFraudPhoneStopFactorEnable() && entity.getSuccess()){
-      AccountDetails accountDetails = entity.getResponse().getData().getPhoneDetails().getAccountDetails();
+    RiskResponseJpaEntity<SeonFraudSqsProducer> riskResponseJpaEntity = getApprovedResponse(responseJpaEntity.getApplicationId(), SEON, context.getRiskResponseJpaEntity());
+    if(context.getIsNewSeonData() && request.getSeonFraudPhoneStopFactorEnable() && responseJpaEntity.getSuccess()){
+      AccountDetails accountDetails = responseJpaEntity.getResponse().getData().getPhoneDetails().getAccountDetails();
       if(accountDetails != null && checkRegistrations(accountDetails)) {
-        riskResponse.setDecision(REJECT);
-        riskResponse.setRejectionReasonCode(SEONPHONE);
+        riskResponseJpaEntity.setDecision(REJECT);
+        riskResponseJpaEntity.setRejectionReasonCode(SEONPHONE);
       }
     }
-    return riskResponse;
+    return riskResponseJpaEntity;
   }
 
   private boolean checkRegistrations(AccountDetails accountDetails) {
@@ -68,22 +65,16 @@ public class SeonPhoneRule extends BaseRule<SeonRuleContext> {
 
     Zalo zalo = accountDetails.getZalo();
     boolean zaloRegistered = Objects.nonNull(zalo) && zalo.isRegistered();
-
     Ok ok = accountDetails.getOk();
     boolean okRegistered = Objects.nonNull(ok) && ok.isRegistered();
-
     Line line = accountDetails.getLine();
     boolean lineRegistered = Objects.nonNull(line) && line.isRegistered();
-
     Microsoft microsoft = accountDetails.getMicrosoft();
     boolean microsoftRegistered = Objects.nonNull(microsoft) && microsoft.isRegistered();
-
     Snapchat snapchat = accountDetails.getSnapchat();
     boolean snapchatRegistered = Objects.nonNull(snapchat) && snapchat.isRegistered();
-
     Skype skype = accountDetails.getSkype();
     boolean skypeRegistered = Objects.nonNull(skype) && skype.isRegistered();
-
     Kakao kakao = accountDetails.getKakao();
     boolean kakaoRegistered = Objects.nonNull(kakao) && kakao.isRegistered();
 

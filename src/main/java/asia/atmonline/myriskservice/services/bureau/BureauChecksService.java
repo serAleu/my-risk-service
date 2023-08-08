@@ -1,14 +1,13 @@
 package asia.atmonline.myriskservice.services.bureau;
 
-import static asia.atmonline.myriskservice.enums.GroupOfChecks.BUREAU;
+import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.BUREAU;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.requests.impl.BureauRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.responses.impl.BureauResponseJpaEntity;
-import asia.atmonline.myriskservice.data.repositories.BaseJpaRepository;
+import asia.atmonline.myriskservice.data.entity.risk.requests.impl.BureauRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.impl.BureauResponseJpaEntity;
+import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.BureauRequest;
-import asia.atmonline.myriskservice.messages.response.RiskResponse;
-import asia.atmonline.myriskservice.producers.BaseSqsProducer;
+import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.bureau.BureauSqsProducer;
 import asia.atmonline.myriskservice.services.BaseChecksService;
 import java.util.Map;
@@ -22,8 +21,8 @@ public class BureauChecksService extends BaseChecksService<BureauRequest, Bureau
   }
 
   @Override
-  public RiskResponse<BureauSqsProducer> process(BureauRequest request) {
-    return new RiskResponse<>();
+  public RiskResponseJpaEntity<BureauSqsProducer> process(BureauRequest request) {
+    return new RiskResponseJpaEntity<>();
   }
 
   @Override
@@ -36,8 +35,8 @@ public class BureauChecksService extends BaseChecksService<BureauRequest, Bureau
     return new BureauRequestJpaEntity();
   }
 
-  @Override
-  public BureauResponseJpaEntity getResponseEntity(RiskResponse<? extends BaseSqsProducer> response) {
-    return new BureauResponseJpaEntity();
-  }
+//  @Override
+//  public BureauResponseJpaEntity getResponseEntity(RiskResponseJpaEntity<? extends BaseSqsProducer> response) {
+//    return new BureauResponseJpaEntity();
+//  }
 }

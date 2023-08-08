@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.producers.blacklist;
 
-import asia.atmonline.myriskservice.messages.response.RiskResponse;
+import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
@@ -17,7 +17,7 @@ public class BlacklistSqsProducer extends BaseSqsProducer {
   }
 
   @Override
-  public void sendResponse(RiskResponse<? extends BaseSqsProducer> riskResponse) {
-    super.sendResponseToQueue(riskResponse, awsSqsBlacklistsProducerQueueName);
+  public void sendResponse(RiskResponseJpaEntity<? extends BaseSqsProducer> riskResponseJpaEntity) {
+    super.sendResponseToQueue(riskResponseJpaEntity, awsSqsBlacklistsProducerQueueName);
   }
 }
