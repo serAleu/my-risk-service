@@ -10,8 +10,8 @@ import asia.atmonline.myriskservice.data.repositories.impl.risk.responses.SeonFr
 import asia.atmonline.myriskservice.messages.request.impl.SeonFraudRequest;
 import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.seon.SeonFraudSqsProducer;
-import asia.atmonline.myriskservice.rules.seon.SeonPhoneRule;
-import asia.atmonline.myriskservice.rules.seon.SeonPhoneRuleContext;
+import asia.atmonline.myriskservice.rules.seon.phone.SeonPhoneRule;
+import asia.atmonline.myriskservice.rules.seon.phone.SeonPhoneRuleContext;
 import asia.atmonline.myriskservice.services.BaseChecksService;
 import asia.atmonline.myriskservice.utils.JsonUtils;
 import asia.atmonline.myriskservice.web.seon.client.SeonFraudFeignClient;
@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
-public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFraudRequestJpaEntity, SeonFraudResponseJpaEntity> {
+public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFraudRequestJpaEntity> {
 
   private final SeonFraudFeignClient client;
   private final ObjectMapper mapper;

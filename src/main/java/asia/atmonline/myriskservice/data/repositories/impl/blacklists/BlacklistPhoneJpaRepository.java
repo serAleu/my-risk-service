@@ -16,4 +16,6 @@ public interface BlacklistPhoneJpaRepository extends BaseJpaRepository<Blacklist
 
   List<BlacklistPhoneJpaEntity> findByPhoneAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(String phone, Long ruleId, LocalDateTime after);
 
+  List<BlacklistPhoneJpaEntity> findByPhoneAndExpiredAtAfterOrderByAddedAtDesc(String phone, LocalDateTime after);
+
 }

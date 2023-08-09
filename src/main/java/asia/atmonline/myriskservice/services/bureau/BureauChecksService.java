@@ -4,7 +4,6 @@ import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.BUREAU;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.BureauRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.BureauResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.BureauRequest;
 import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
@@ -14,7 +13,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BureauChecksService extends BaseChecksService<BureauRequest, BureauRequestJpaEntity, BureauResponseJpaEntity> {
+public class BureauChecksService extends BaseChecksService<BureauRequest, BureauRequestJpaEntity> {
 
   public BureauChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories) {
     super(repositories);
@@ -34,9 +33,4 @@ public class BureauChecksService extends BaseChecksService<BureauRequest, Bureau
   public BureauRequestJpaEntity getRequestEntity(BureauRequest request) {
     return new BureauRequestJpaEntity();
   }
-
-//  @Override
-//  public BureauResponseJpaEntity getResponseEntity(RiskResponseJpaEntity<? extends BaseSqsProducer> response) {
-//    return new BureauResponseJpaEntity();
-//  }
 }

@@ -4,7 +4,6 @@ import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.BASIC;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.BasicRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.BasicResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.BasicRequest;
 import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
@@ -14,7 +13,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BasicChecksService extends BaseChecksService<BasicRequest, BasicRequestJpaEntity, BasicResponseJpaEntity> {
+public class BasicChecksService extends BaseChecksService<BasicRequest, BasicRequestJpaEntity> {
 
   public BasicChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories) {
     super(repositories);
@@ -34,9 +33,4 @@ public class BasicChecksService extends BaseChecksService<BasicRequest, BasicReq
   public BasicRequestJpaEntity getRequestEntity(BasicRequest request) {
     return new BasicRequestJpaEntity();
   }
-
-//  @Override
-//  public BasicResponseJpaEntity getResponseEntity(RiskResponseJpaEntity<? extends BaseSqsProducer> response) {
-//    return new BasicResponseJpaEntity();
-//  }
 }

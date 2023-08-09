@@ -14,11 +14,11 @@ CREATE TABLE IF NOT EXISTS bureau_checks_request (
 
 );
 
-CREATE TABLE IF NOT EXISTS dedup2_checks_request (
+CREATE TABLE IF NOT EXISTS cooldown_checks_request (
 
 );
 
-CREATE TABLE IF NOT EXISTS dedup3_checks_request (
+CREATE TABLE IF NOT EXISTS dedup_checks_request (
 
 );
 
@@ -46,11 +46,11 @@ CREATE TABLE IF NOT EXISTS bureau_checks_response (
 
 );
 
-CREATE TABLE IF NOT EXISTS dedup2_checks_response (
+CREATE TABLE IF NOT EXISTS cooldown_checks_response (
 
 );
 
-CREATE TABLE IF NOT EXISTS dedup3_checks_response (
+CREATE TABLE IF NOT EXISTS dedup_checks_response (
 
 );
 

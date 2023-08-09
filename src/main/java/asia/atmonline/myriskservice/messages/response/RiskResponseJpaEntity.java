@@ -5,12 +5,15 @@ import asia.atmonline.myriskservice.enums.risk.FinalDecision;
 import asia.atmonline.myriskservice.enums.risk.GroupOfChecks;
 import asia.atmonline.myriskservice.enums.risk.RejectionReasonCode;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Transient;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +41,8 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
   @JsonProperty("phone_num")
   @Nullable
   private String phone_num;
+  @Nullable
+  private Map<String, String> additionalFields = new HashMap<>();
 
   @JsonIgnore
   @Exclude
@@ -46,6 +51,14 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
 
   public P getProducer() {
     return producer;
+  }
+
+  @JsonAnySetter
+  public void setAdditionalField(String fieldName, String fieldValue) {
+    if(additionalFields == null) {
+      additionalFields = new HashMap<>();
+    }
+    additionalFields.put(fieldName, fieldValue);
   }
 
   @Override

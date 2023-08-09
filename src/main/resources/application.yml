@@ -26,16 +26,16 @@ aws:
         queue-name: ${BL_REQUEST_RISK_QUEUE:my-risk-bl-request-preprod}
       producer:
         queue-name: ${BL_RESPONSE_RISK_QUEUE:my-risk-bl-response-preprod}
-    dedup-2:
+    cooldown:
       receiver:
-        queue-name: ${DEDUP2_REQUEST_RISK_QUEUE:my-risk-dedup2-request-preprod}
+        queue-name: ${COOLDOWN_REQUEST_RISK_QUEUE:my-risk-cooldown-request-preprod}
       producer:
-        queue-name: ${DEDUP2_RESPONSE_RISK_QUEUE:my-risk-dedup2-response-preprod}
-    dedup-3:
+        queue-name: ${COOLDOWN_RESPONSE_RISK_QUEUE:my-risk-cooldown-response-preprod}
+    dedup:
       receiver:
-        queue-name: ${DEDUP3_REQUEST_RISK_QUEUE:my-risk-dedup3-request-preprod}
+        queue-name: ${DEDUP_REQUEST_RISK_QUEUE:my-risk-dedup-request-preprod}
       producer:
-        queue-name: ${DEDUP3_RESPONSE_RISK_QUEUE:my-risk-dedup3-response-preprod}
+        queue-name: ${DEDUP_RESPONSE_RISK_QUEUE:my-risk-dedup-response-preprod}
     basic:
       receiver:
         queue-name: ${BASIC_REQUEST_RISK_QUEUE:my-risk-basic-request-preprod}

@@ -4,8 +4,8 @@ public enum GroupOfChecks {
   BASIC,
   BL,
   BUREAU,
-  DEDUP2,
-  DEDUP3,
+  COOLDOWN,
+  DEDUP,
   FINAL,
   SCORE,
   SEON

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Scope("prototype")
 public class RiskServiceEngine<R extends BaseRequest, E extends BaseJpaEntity, Y extends BaseJpaEntity,
-    S extends BaseChecksService<R, E, Y>> {
+    S extends BaseChecksService<R, E>> {
 
   private final S service;
 
