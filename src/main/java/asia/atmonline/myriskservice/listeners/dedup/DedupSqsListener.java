@@ -1,7 +1,6 @@
 package asia.atmonline.myriskservice.listeners.dedup;
 
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.DedupRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.DedupResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.DedupRequest;
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class DedupSqsListener extends BaseSqsListener<DedupRequest> {
 
-  private final RiskServiceEngine<DedupRequest, DedupRequestJpaEntity, DedupResponseJpaEntity, DedupChecksService> engine;
+  private final RiskServiceEngine<DedupRequest, DedupRequestJpaEntity, DedupChecksService> engine;
   private final ObjectMapper mapper;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
   public DedupSqsListener(AsyncTaskExecutor threadPoolQueue,
-      RiskServiceEngine<DedupRequest, DedupRequestJpaEntity, DedupResponseJpaEntity, DedupChecksService> engine,
+      RiskServiceEngine<DedupRequest, DedupRequestJpaEntity, DedupChecksService> engine,
       ObjectMapper mapper) {
     super(threadPoolQueue);
     this.engine = engine;

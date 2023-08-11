@@ -1,7 +1,6 @@
 package asia.atmonline.myriskservice.listeners.fin;
 
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.FinalRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.FinalResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.FinalRequest;
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class FinalSqsListener extends BaseSqsListener<FinalRequest> {
 
-  private final RiskServiceEngine<FinalRequest, FinalRequestJpaEntity, FinalResponseJpaEntity, FinalChecksService> engine;
+  private final RiskServiceEngine<FinalRequest, FinalRequestJpaEntity, FinalChecksService> engine;
   private final ObjectMapper mapper;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
   public FinalSqsListener(AsyncTaskExecutor threadPoolQueue,
-      RiskServiceEngine<FinalRequest, FinalRequestJpaEntity, FinalResponseJpaEntity, FinalChecksService> engine, ObjectMapper mapper) {
+      RiskServiceEngine<FinalRequest, FinalRequestJpaEntity, FinalChecksService> engine, ObjectMapper mapper) {
     super(threadPoolQueue);
     this.engine = engine;
     this.mapper = mapper;

@@ -1,7 +1,6 @@
 package asia.atmonline.myriskservice.listeners.blacklist;
 
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.BlacklistRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.BlacklistResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.BlacklistsRequest;
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class BlacklistSqsListener extends BaseSqsListener<BlacklistsRequest> {
 
-  private final RiskServiceEngine<BlacklistsRequest, BlacklistRequestJpaEntity, BlacklistResponseJpaEntity, BlacklistChecksService> engine;
+  private final RiskServiceEngine<BlacklistsRequest, BlacklistRequestJpaEntity, BlacklistChecksService> engine;
   private final ObjectMapper mapper;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
   public BlacklistSqsListener(AsyncTaskExecutor threadPoolQueue,
-      RiskServiceEngine<BlacklistsRequest, BlacklistRequestJpaEntity, BlacklistResponseJpaEntity, BlacklistChecksService> engine, ObjectMapper mapper) {
+      RiskServiceEngine<BlacklistsRequest, BlacklistRequestJpaEntity, BlacklistChecksService> engine, ObjectMapper mapper) {
     super(threadPoolQueue);
     this.engine = engine;
     this.mapper = mapper;

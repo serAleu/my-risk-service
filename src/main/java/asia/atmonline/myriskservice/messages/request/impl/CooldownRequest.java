@@ -10,4 +10,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class CooldownRequest extends BaseRequest {
 
+  private Long borrowerId;
+
 }

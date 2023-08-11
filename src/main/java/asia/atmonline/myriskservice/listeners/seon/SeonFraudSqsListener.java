@@ -1,7 +1,6 @@
 package asia.atmonline.myriskservice.listeners.seon;
 
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.SeonFraudRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.SeonFraudResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.SeonFraudRequest;
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class SeonFraudSqsListener extends BaseSqsListener<SeonFraudRequest> {
 
-  private final RiskServiceEngine<SeonFraudRequest, SeonFraudRequestJpaEntity, SeonFraudResponseJpaEntity, SeonFraudService> engine;
+  private final RiskServiceEngine<SeonFraudRequest, SeonFraudRequestJpaEntity, SeonFraudService> engine;
   private final ObjectMapper mapper;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
   public SeonFraudSqsListener(AsyncTaskExecutor threadPoolQueue,
-      RiskServiceEngine<SeonFraudRequest, SeonFraudRequestJpaEntity, SeonFraudResponseJpaEntity, SeonFraudService> engine, ObjectMapper mapper) {
+      RiskServiceEngine<SeonFraudRequest, SeonFraudRequestJpaEntity, SeonFraudService> engine, ObjectMapper mapper) {
     super(threadPoolQueue);
     this.engine = engine;
     this.mapper = mapper;

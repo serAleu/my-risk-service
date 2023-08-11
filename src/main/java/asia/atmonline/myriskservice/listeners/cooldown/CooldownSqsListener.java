@@ -1,7 +1,6 @@
 package asia.atmonline.myriskservice.listeners.cooldown;
 
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.CooldownRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.CooldownResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.CooldownRequest;
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CooldownSqsListener extends BaseSqsListener<CooldownRequest> {
 
-  private final RiskServiceEngine<CooldownRequest, CooldownRequestJpaEntity, CooldownResponseJpaEntity, CooldownChecksService> engine;
+  private final RiskServiceEngine<CooldownRequest, CooldownRequestJpaEntity, CooldownChecksService> engine;
   private final ObjectMapper mapper;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
   public CooldownSqsListener(AsyncTaskExecutor threadPoolQueue,
-      RiskServiceEngine<CooldownRequest, CooldownRequestJpaEntity, CooldownResponseJpaEntity, CooldownChecksService> engine, ObjectMapper mapper) {
+      RiskServiceEngine<CooldownRequest, CooldownRequestJpaEntity, CooldownChecksService> engine, ObjectMapper mapper) {
     super(threadPoolQueue);
     this.engine = engine;
     this.mapper = mapper;

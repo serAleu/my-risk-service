@@ -1,6 +1,7 @@
 package asia.atmonline.myriskservice.data.entity.risk.requests.impl;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -17,6 +18,9 @@ import lombok.experimental.Accessors;
 @Table(name = "cooldown_checks_request")
 @SequenceGenerator(name = "sequence-generator", sequenceName = "cooldown_checks_request_id_seq", allocationSize = 1)
 public class CooldownRequestJpaEntity extends BaseJpaEntity {
+
+  @Column(name = "borrower_id", nullable = false)
+  private Long borrowerId;
 
   @Override
   public String repositoryName() {

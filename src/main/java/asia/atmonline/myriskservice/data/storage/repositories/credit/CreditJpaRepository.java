@@ -24,6 +24,8 @@ public interface CreditJpaRepository extends BaseStorageJpaRepository<Credit> {
 
   Long countByBorrowerIdInAndStatusIn(Set<Long> borrowerIds, List<CreditStatus> statuses);
 
+  List<Credit> findByBorrowerId(Long borrowerId);
+
   @Query("select max(amount) from Credit where borrower.id =?1")
   Optional<BigDecimal> findMaxOfAmountByBorrowerId(Long borrowerId);
 

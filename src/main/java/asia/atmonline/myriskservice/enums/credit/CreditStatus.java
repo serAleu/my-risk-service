@@ -54,7 +54,7 @@ public enum CreditStatus {
   private boolean alive;
   private boolean ending;
 
-  private CreditStatus(int code, boolean ending, boolean alive) {
+  CreditStatus(int code, boolean ending, boolean alive) {
     this.code = code;
     this.ending = ending;
     this.alive = alive;

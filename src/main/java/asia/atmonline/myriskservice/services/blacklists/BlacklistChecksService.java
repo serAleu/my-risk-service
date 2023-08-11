@@ -1,5 +1,6 @@
 package asia.atmonline.myriskservice.services.blacklists;
 
+import static asia.atmonline.myriskservice.enums.risk.BlacklistSource.SYSTEM;
 import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.BL;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
@@ -101,6 +102,15 @@ public class BlacklistChecksService extends BaseChecksService<BlacklistsRequest,
   @Transactional(readOnly = true)
   public boolean checkPhonesBlackList(final List<String> phones) {
     return blacklistPhoneJpaRepository.existsByPhoneInAndExpiredAtAfter(phones, LocalDateTime.now());
+  }
+
+  public void save(Borrower borrower, Long ruleId) {
+    BlacklistRecordForm form = new BlacklistRecordForm();
+    form.setBankAccount(borrower.getBorrowerAccount());
+    form.setIdNumber(borrower.getBorrowerNIC());
+    form.setPhone(borrower.getBorrowerPhone());
+    form.setRuleId(ruleId);
+    save(form, SYSTEM, null);
   }
 
   @Transactional

@@ -14,14 +14,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 @Scope("prototype")
-public class RiskServiceEngine<R extends BaseRequest, E extends BaseJpaEntity, Y extends BaseJpaEntity,
-    S extends BaseChecksService<R, E>> {
+public class RiskServiceEngine<R extends BaseRequest, E extends BaseJpaEntity, S extends BaseChecksService<R, E>> {
 
   private final S service;
 
   public void process(R request) {
     service.save(service.getRequestEntity(request));
-    if(service.accept(request)) {
+    if (service.accept(request)) {
       RiskResponseJpaEntity<? extends BaseSqsProducer> response = service.process(request);
       service.save(response);
       response.getProducer().sendResponse(response);

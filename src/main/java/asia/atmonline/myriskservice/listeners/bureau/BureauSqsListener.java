@@ -1,7 +1,6 @@
 package asia.atmonline.myriskservice.listeners.bureau;
 
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.BureauRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.BureauResponseJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.messages.request.impl.BureauRequest;
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class BureauSqsListener extends BaseSqsListener<BureauRequest> {
 
-  private final RiskServiceEngine<BureauRequest, BureauRequestJpaEntity, BureauResponseJpaEntity, BureauChecksService> engine;
+  private final RiskServiceEngine<BureauRequest, BureauRequestJpaEntity, BureauChecksService> engine;
   private final ObjectMapper mapper;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
   public BureauSqsListener(AsyncTaskExecutor threadPoolQueue,
-      RiskServiceEngine<BureauRequest, BureauRequestJpaEntity, BureauResponseJpaEntity, BureauChecksService> engine, ObjectMapper mapper) {
+      RiskServiceEngine<BureauRequest, BureauRequestJpaEntity, BureauChecksService> engine, ObjectMapper mapper) {
     super(threadPoolQueue);
     this.engine = engine;
     this.mapper = mapper;
