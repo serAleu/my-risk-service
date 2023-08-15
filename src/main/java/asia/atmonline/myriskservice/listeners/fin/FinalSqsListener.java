@@ -34,7 +34,8 @@ public class FinalSqsListener extends BaseSqsListener<FinalRequest> {
     try {
       super.listenQueue(mapper.readValue(message, FinalRequest.class), engine);
     } catch (Exception e) {
-      log.error("my-risk-service-" + activeProfile + " Error while processing message from the final-checks request queue. " + e.getMessage());
+      log.error("my-risk-service-" + activeProfile + " Error while processing message from the final-checks request queue. " + e.getMessage()
+          + " received message = " + message);
     }
   }
 }

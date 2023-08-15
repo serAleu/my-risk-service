@@ -34,7 +34,8 @@ public class BlacklistSqsListener extends BaseSqsListener<BlacklistsRequest> {
     try {
       super.listenQueue(mapper.readValue(message, BlacklistsRequest.class), engine);
     } catch (Exception e) {
-      log.error("my-risk-service-" + activeProfile + " Error while processing message from the blacklists-checks request queue. " + e.getMessage());
+      log.error("my-risk-service-" + activeProfile + " Error while processing message from the blacklists-checks request queue. " + e.getMessage()
+          + " received message = " + message);
     }
   }
 }

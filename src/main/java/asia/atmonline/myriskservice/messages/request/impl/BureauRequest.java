@@ -11,7 +11,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class BureauRequest extends BaseRequest {
 
-  @JsonProperty("account")
-  private String account;
+  //@JsonProperty("account")
+  //private String account;
+  @JsonProperty("borrower_id")
+  private Long borrowerId;
 
 }

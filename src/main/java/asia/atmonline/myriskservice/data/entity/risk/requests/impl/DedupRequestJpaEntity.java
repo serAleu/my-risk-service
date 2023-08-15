@@ -1,6 +1,7 @@
 package asia.atmonline.myriskservice.data.entity.risk.requests.impl;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -17,6 +18,17 @@ import lombok.experimental.Accessors;
 @Table(name = "dedup_checks_request")
 @SequenceGenerator(name = "sequence-generator", sequenceName = "dedup_checks_request_id_seq", allocationSize = 1)
 public class DedupRequestJpaEntity extends BaseJpaEntity {
+
+  @Column(name = "borrower_id", nullable = false)
+  private Long borrowerId;
+  @Column(name = "application_id", nullable = false)
+  private Long applicationId;
+  @Column(name = "passport_number")
+  private String passportNumber;
+  @Column(name = "bank_account")
+  private String bankAccount;
+  @Column(name = "is_email_confirmed")
+  private Boolean isEmailConfirmed;
 
   @Override
   public String repositoryName() {

@@ -6,7 +6,7 @@ public class BlacklistRecordForm {
 
   private Long id;
 
-  private String idNumber;
+  private String passportNumber;
 
   private String phone;
 
@@ -33,8 +33,8 @@ public class BlacklistRecordForm {
   public BlacklistRecordForm() {
   }
 
-  public BlacklistRecordForm(Long creditApplicationId, String idNumber, String phone, String bankAccount, Long ruleId, String decisionRuleVersion, ProductCode productCode) {
-    this.idNumber = idNumber;
+  public BlacklistRecordForm(Long creditApplicationId, String passportNumber, String phone, String bankAccount, Long ruleId, String decisionRuleVersion, ProductCode productCode) {
+    this.passportNumber = passportNumber;
     this.phone = phone;
     this.bankAccount = bankAccount;
     this.ruleId = ruleId;
@@ -67,12 +67,12 @@ public class BlacklistRecordForm {
     this.decisionTreeVersion = decisionTreeVersion;
   }
 
-  public String getIdNumber() {
-    return idNumber;
+  public String getPassportNumber() {
+    return passportNumber;
   }
 
-  public void setIdNumber(String idNumber) {
-    this.idNumber = idNumber;
+  public void setPassportNumber(String passportNumber) {
+    this.passportNumber = passportNumber;
   }
 
   public String getPhone() {

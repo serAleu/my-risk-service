@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @SequenceGenerator(name = "sequence-generator", sequenceName = "seon_fraud_request_id_seq", allocationSize = 1)
 public class SeonFraudRequestJpaEntity extends BaseJpaEntity {
 
-  @Column(name = "application_id", nullable = false)
+  @Column(name = "application_id")
   private Long applicationId;
   @Column(name = "borrower_id", nullable = false)
   private Long borrowerId;

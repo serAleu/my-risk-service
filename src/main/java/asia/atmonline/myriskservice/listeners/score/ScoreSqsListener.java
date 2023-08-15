@@ -25,7 +25,8 @@ public class ScoreSqsListener {
       try {
         engine.processMessage(message);
       } catch (Exception e) {
-        log.error("my-risk-service-" + activeProfile + " Error while processing message from the score-checks request queue. " + e.getMessage());
+        log.error("my-risk-service-" + activeProfile + " Error while processing message from the score-checks request queue. " + e.getMessage()
+            + " received message = " + message);
       }
     });
   }

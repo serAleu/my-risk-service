@@ -1,4 +1,6 @@
 spring:
+  flyway:
+    baselineOnMigrate: ${BASELINE_ON_MIGRATE:true}
   config:
     activate:
       on-profile: ${PROFILE:preprod}
@@ -6,6 +8,17 @@ spring:
     open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
   main:
     allow-bean-definition-overriding: ${SPRING_ALLOW_BEAN_OVERRIDING:true}
+  datasource:
+    connectionTimeout: ${DATASOURCE_CONNECTION_TIMEOUT:60000}
+    maximumPoolSize: ${DATASOURCE_POOL_SIZE:20}
+    cachePrepStmts: ${DATASOURCE_CACHE_PREP_STMTS:true}
+    prepStmtCacheSize: ${DATASOURCE_PREP_STMT_CACHE_SIZE:250}
+    prepStmtCacheSqlLimit: ${DATASOURCE_PREP_STMT_CACHE_SQL_LIMIT:2048}
+    useServerPrepStmts: ${DATASOURCE_USE_SERVER_PREP_STMTS:true}
+    driverClassName: ${DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
+    url: jdbc:postgresql://${DB_MY_URL:localhost}:${DB_MY_PORT:5432}/${DB_MY_DATABASE:my_risk_service_local}?socketTimeout=30
+    username: ${DB_MY_LOGIN:postgres}
+    password: ${DB_MY_PASSWORD:postgres}
 
 aws:
   credentials:
@@ -62,20 +75,8 @@ aws:
       producer:
         queue-name: ${FINAL_RESPONSE_RISK_QUEUE:my-risk-final-response-preprod}
 
-datasource:
-  connectionTimeout: ${DATASOURCE_CONNECTION_TIMEOUT:60000}
-  maximumPoolSize: ${DATASOURCE_POOL_SIZE:20}
-  cachePrepStmts: ${DATASOURCE_CACHE_PREP_STMTS:true}
-  prepStmtCacheSize: ${DATASOURCE_PREP_STMT_CACHE_SIZE:250}
-  prepStmtCacheSqlLimit: ${DATASOURCE_PREP_STMT_CACHE_SQL_LIMIT:2048}
-  useServerPrepStmts: ${DATASOURCE_USE_SERVER_PREP_STMTS:true}
-  driverClassName: ${DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
-  url: jdbc:postgresql://${DB_MY_URL:localhost}:${DB_MY_PORT:5432}/${DB_MY_DATABASE:my_risk_service_local}?socketTimeout=30
-  username: ${DB_MY_LOGIN:postgres}
-  password: ${DB_MY_PASSWORD:postgres}
-
 score:
-  datasource:
+  ds:
     jdbcDriver: jdbc:postgresql
     url: ${DB_SCORE_URL:lotus-preprod.ctoxc08s0evf.ap-southeast-1.rds.amazonaws.com}
     port: ${DB_SCORE_PORT:5432}

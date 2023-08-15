@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 @Table(name = "blacklist_rule")
 @Setter
 @Getter
-public class BlackListRule extends BaseJpaEntity {
+public class BlacklistRule extends BaseJpaEntity {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "created_by")

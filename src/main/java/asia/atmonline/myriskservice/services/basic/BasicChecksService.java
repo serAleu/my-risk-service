@@ -31,6 +31,6 @@ public class BasicChecksService extends BaseChecksService<BasicRequest, BasicReq
 
   @Override
   public BasicRequestJpaEntity getRequestEntity(BasicRequest request) {
-    return new BasicRequestJpaEntity();
+    return new BasicRequestJpaEntity().setBorrowerId(request.getBorrowerId());
   }
 }

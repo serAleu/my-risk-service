@@ -43,19 +43,23 @@ public class CooldownChecksService extends BaseChecksService<CooldownRequest, Co
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
   public RiskResponseJpaEntity<CooldownSqsProducer> process(CooldownRequest request) {
+    Long borrowerId = request.getBorrowerId();
     RiskResponseJpaEntity<CooldownSqsProducer> response = new RiskResponseJpaEntity<>();
-    List<CreditApplication> creditApplicationList = creditApplicationJpaRepository.findByBorrowerId(request.getBorrowerId());
-    List<Credit> creditList = creditJpaRepository.findByBorrowerId(request.getBorrowerId());
-    Integer numOf2DApplications = creditApplicationJpaRepository.countByBorrowerIdAndRequestedAtBetween(request.getBorrowerId(),
+    List<CreditApplication> creditApplicationList = creditApplicationJpaRepository.findByBorrowerId(borrowerId);
+    List<Credit> creditList = creditJpaRepository.findByBorrowerId(borrowerId);
+    Integer numOf2DApplications = creditApplicationJpaRepository.countByBorrowerIdAndRequestedAtBetween(borrowerId,
         getLocalDateTimeInPastFromHours(CooldownApplim2dContext.HOURS_TO_CHECK_NUM), LocalDateTime.now());
-    Integer numOf5wApplications = creditApplicationJpaRepository.countByBorrowerIdAndRequestedAtBetween(request.getBorrowerId(),
+    Integer numOf5wApplications = creditApplicationJpaRepository.countByBorrowerIdAndRequestedAtBetween(borrowerId,
         getLocalDateTimeInPastFromHours(getHoursFromDays(CooldownApplim5wContext.DAYS_TO_CHECK_NUM)), LocalDateTime.now());
-    Integer numOf9mApplications = creditApplicationJpaRepository.countByBorrowerIdAndRequestedAtBetween(request.getBorrowerId(),
+    Integer numOf9mApplications = creditApplicationJpaRepository.countByBorrowerIdAndRequestedAtBetween(borrowerId,
         getLocalDateTimeInPastFromHours(getHoursFromDays(CooldownApplim9mContext.DAYS_TO_CHECK_NUM)), LocalDateTime.now());
     for (BaseCooldownRule rule : rules) {
       response = rule.execute(
-          rule.getCurrentCooldownRuleContext(creditApplicationList, creditList, numOf2DApplications, numOf5wApplications, numOf9mApplications));
-      if (REJECT.equals(response.getDecision())) {
+          rule.getContext(creditApplicationList, creditList, numOf2DApplications, numOf5wApplications, numOf9mApplications));
+      if (response != null && REJECT.equals(response.getDecision())) {
+        if(response.getRejectionReasonCode() != null) {
+          rule.saveToBlacklists(borrowerId, response.getRejectionReasonCode());
+        }
         return response;
       }
     }

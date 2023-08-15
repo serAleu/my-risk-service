@@ -9,6 +9,7 @@ import asia.atmonline.myriskservice.messages.request.impl.SeonFraudRequest;
 import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.seon.SeonFraudSqsProducer;
 import asia.atmonline.myriskservice.rules.BaseRule;
+import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import asia.atmonline.myriskservice.web.seon.dto.AccountDetails;
 import asia.atmonline.myriskservice.web.seon.dto.social.Facebook;
 import asia.atmonline.myriskservice.web.seon.dto.social.Google;
@@ -29,6 +30,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SeonPhoneRule extends BaseRule<SeonPhoneRuleContext> {
+
+  public SeonPhoneRule(BlacklistChecksService blacklistChecksService) {
+    super(blacklistChecksService);
+  }
 
   @Override
   @SuppressWarnings({"unchecked"})

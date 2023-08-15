@@ -9,14 +9,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "blacklist_id_number")
+@Table(name = "blacklist_passport_number")
 @Getter
 @Setter
 @AllArgsConstructor
-public class BlacklistIdNumberJpaEntity extends BlacklistBaseJpaEntity {
+public class BlacklistPassportNumberJpaEntity extends BlacklistBaseJpaEntity {
 
-  @Column(name = "id_number")
-  private String idNumber;
+  @Column(name = "passport_number")
+  private String passportNumber;
 
   @Override
   public String repositoryName() {

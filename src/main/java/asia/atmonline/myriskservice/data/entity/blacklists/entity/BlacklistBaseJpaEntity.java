@@ -36,7 +36,7 @@ public abstract class BlacklistBaseJpaEntity extends BaseJpaEntity {
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "rule_id")
-  private BlackListRule rule;
+  private BlacklistRule rule;
 
   @Column(name = "source")
   @Enumerated(EnumType.STRING)

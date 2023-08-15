@@ -34,7 +34,8 @@ public class CooldownSqsListener extends BaseSqsListener<CooldownRequest> {
     try {
       super.listenQueue(mapper.readValue(message, CooldownRequest.class), engine);
     } catch (Exception e) {
-      log.error("my-risk-service-" + activeProfile + " Error while processing message from the cooldown-checks request queue. " + e.getMessage());
+      log.error("my-risk-service-" + activeProfile + " Error while processing message from the cooldown-checks request queue. " + e.getMessage()
+          + " received message = " + message);
     }
   }
 }

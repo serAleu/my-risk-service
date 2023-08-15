@@ -31,6 +31,6 @@ public class FinalChecksService extends BaseChecksService<FinalRequest, FinalReq
 
   @Override
   public FinalRequestJpaEntity getRequestEntity(FinalRequest request) {
-    return new FinalRequestJpaEntity();
+    return new FinalRequestJpaEntity().setBorrowerId(request.getBorrowerId());
   }
 }

@@ -31,6 +31,6 @@ public class BureauChecksService extends BaseChecksService<BureauRequest, Bureau
 
   @Override
   public BureauRequestJpaEntity getRequestEntity(BureauRequest request) {
-    return new BureauRequestJpaEntity();
+    return new BureauRequestJpaEntity().setBorrowerId(request.getBorrowerId());
   }
 }

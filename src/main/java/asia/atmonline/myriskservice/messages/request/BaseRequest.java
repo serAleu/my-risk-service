@@ -2,7 +2,6 @@ package asia.atmonline.myriskservice.messages.request;
 
 import asia.atmonline.myriskservice.enums.risk.GroupOfChecks;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +16,6 @@ public abstract class BaseRequest {
 
   @JsonProperty("check_type")
   private GroupOfChecks check;
-  @Nullable
   @JsonProperty("application_id")
   private Long applicationId;
 

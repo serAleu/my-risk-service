@@ -21,6 +21,8 @@ public class CooldownRequestJpaEntity extends BaseJpaEntity {
 
   @Column(name = "borrower_id", nullable = false)
   private Long borrowerId;
+  @Column(name = "application_id", nullable = false)
+  private Long applicationId;
 
   @Override
   public String repositoryName() {

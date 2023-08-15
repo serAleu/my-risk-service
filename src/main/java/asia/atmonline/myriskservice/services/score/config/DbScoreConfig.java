@@ -11,17 +11,17 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @Configuration
 public class DbScoreConfig {
 
-  @Value("${score.datasource.jdbcDriver}")
+  @Value("${score.ds.jdbcDriver}")
   private String scoreDsJdbcDriver;
-  @Value("${score.datasource.url}")
+  @Value("${score.ds.url}")
   private String scoreDsUrl;
-  @Value("${score.datasource.port}")
+  @Value("${score.ds.port}")
   private String scoreDsPort;
-  @Value("${score.datasource.database}")
+  @Value("${score.ds.database}")
   private String scoreDsDatabase;
-  @Value("${score.datasource.username}")
+  @Value("${score.ds.username}")
   private String scoreDsUsername;
-  @Value("${score.datasource.password}")
+  @Value("${score.ds.password}")
   private String scoreDsPassword;
 
   @Bean(name = "dbMy")

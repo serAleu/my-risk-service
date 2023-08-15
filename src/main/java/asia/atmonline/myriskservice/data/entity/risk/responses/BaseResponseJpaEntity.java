@@ -12,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public abstract class BaseResponseJpaEntity extends BaseJpaEntity {
 
-  private Long requestId;
+//  private Long requestId;
 
 }

@@ -34,7 +34,8 @@ public class BureauSqsListener extends BaseSqsListener<BureauRequest> {
     try {
       super.listenQueue(mapper.readValue(message, BureauRequest.class), engine);
     } catch (Exception e) {
-      log.error("my-risk-service-" + activeProfile + " Error while processing message from the bureau-checks request queue. " + e.getMessage());
+      log.error("my-risk-service-" + activeProfile + " Error while processing message from the bureau-checks request queue. " + e.getMessage()
+          + " received message = " + message);
     }
   }
 }

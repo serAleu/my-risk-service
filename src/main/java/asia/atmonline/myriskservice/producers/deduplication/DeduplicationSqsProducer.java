@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.producers.dedup;
+package asia.atmonline.myriskservice.producers.deduplication;
 
 import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
@@ -7,12 +7,12 @@ import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DedupSqsProducer extends BaseSqsProducer {
+public class DeduplicationSqsProducer extends BaseSqsProducer {
 
   @Value("${aws.sqs.dedup.producer.queue-name}")
   private String awsSqsDedup3ProducerQueueName;
 
-  public DedupSqsProducer(QueueMessagingTemplate queueMessagingTemplate) {
+  public DeduplicationSqsProducer(QueueMessagingTemplate queueMessagingTemplate) {
     super(queueMessagingTemplate);
   }
 
