@@ -19,6 +19,9 @@ public interface BorrowerJpaRepository extends BaseStorageJpaRepository<Borrower
 
   Optional<Borrower> findBorrowerByPersonalDataMobilePhone(String phone);
 
+  @Query("select id from borrower where pd_email in :phones")
+  Set<Long> findBorrowerIdsByPersonalDataPdEmail(@Param("pdEmails") List<String>  pdEmails);
+
   @Query("select id from Borrower where personalData.mobilePhone in :phoneNumbers")
   List<Long> findIdsByPhoneNumbers(@Param("phoneNumbers") List<String> phoneNumbers);
 
@@ -67,6 +70,6 @@ public interface BorrowerJpaRepository extends BaseStorageJpaRepository<Borrower
   @Query(value = "select count(distinct b.id)" +
       "  from borrower b join credit_application ca on b.id = ca.borrower_id" +
       "  where b.id in (?1) and ca.status = ?2", nativeQuery = true)
-  Long countByApplicationRejectedAndBorrowerIdIn(Set<Long> borrowerIds, int rejectCode);
+  Integer countByApplicationRejectedAndBorrowerIdIn(Set<Long> borrowerIds, int rejectCode);
 
 }

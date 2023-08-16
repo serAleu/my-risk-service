@@ -38,7 +38,7 @@ public class PersonalData {
   private String mobilePhone;
 
   @Column(name = "pd_email")
-  private String email;
+  private String pdEmail;
 
   @Column(name = "pd_birth_date")
   private LocalDate birthDate;

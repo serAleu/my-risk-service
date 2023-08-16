@@ -20,5 +20,6 @@ public abstract class BaseDeduplicationRule<P extends BaseDeduplicationContext> 
         context.getRiskResponseJpaEntity());
   }
 
-  public abstract P getContext(boolean isBankAccountMatchedWithBlAccount, boolean isPassportNumMatchedWithBlPassportNum);
+  public abstract P getContext(int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress, int notFinishedCreditsCount,
+      int maxDpdCount, boolean isBankAccountMatchedWithBlAccount, boolean isPassportNumMatchedWithBlPassportNum);
 }

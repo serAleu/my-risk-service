@@ -8,7 +8,10 @@ import lombok.Setter;
 @Setter
 public class DeduplicationActApplContext extends BaseDeduplicationContext {
 
-  public DeduplicationActApplContext() {
+  private final int countInProgress;
+
+  public DeduplicationActApplContext(int countInProgress) {
     super();
+    this.countInProgress = countInProgress;
   }
 }

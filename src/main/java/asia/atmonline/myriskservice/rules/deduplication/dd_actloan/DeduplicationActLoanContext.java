@@ -8,7 +8,10 @@ import lombok.Setter;
 @Setter
 public class DeduplicationActLoanContext extends BaseDeduplicationContext {
 
-  public DeduplicationActLoanContext() {
+  private final int notFinishedCreditsCount;
+
+  public DeduplicationActLoanContext(int notFinishedCreditsCount) {
     super();
+    this.notFinishedCreditsCount = notFinishedCreditsCount;
   }
 }

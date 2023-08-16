@@ -27,8 +27,8 @@ public class DedupRequestJpaEntity extends BaseJpaEntity {
   private String passportNumber;
   @Column(name = "bank_account")
   private String bankAccount;
-  @Column(name = "is_email_confirmed")
-  private Boolean isEmailConfirmed;
+  @Column(name = "confirmed_email")
+  private String confirmedEmail;
 
   @Override
   public String repositoryName() {

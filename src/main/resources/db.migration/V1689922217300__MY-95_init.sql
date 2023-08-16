@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS dedup_checks_request (
   borrower_id bigint NOT NULL,
   passport_number varchar(100),
   bank_account varchar(100),
-  is_email_confirmed boolean default false
+  confirmed_email varchar(200),
 );
 
 DROP TABLE IF EXISTS final_checks_request;

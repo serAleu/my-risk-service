@@ -17,7 +17,7 @@ public class DeduplicationRequest extends BaseRequest {
   private String passportNumber;
   @JsonProperty("bank_account")
   private String bankAccount;
-  @JsonProperty("is_email_confirmed")
-  private Boolean isEmailConfirmed;
+  @JsonProperty("confirmed_email")
+  private String confirmedEmail;
 
 }

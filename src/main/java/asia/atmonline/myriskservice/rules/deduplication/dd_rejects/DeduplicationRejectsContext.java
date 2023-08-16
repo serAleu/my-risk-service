@@ -8,7 +8,12 @@ import lombok.Setter;
 @Setter
 public class DeduplicationRejectsContext extends BaseDeduplicationContext {
 
-  public DeduplicationRejectsContext() {
+  private final int approvedApplicationsCount;
+  private final int rejectedApplicationsCount;
+
+  public DeduplicationRejectsContext(int approvedApplicationsCount, int rejectedApplicationsCount) {
     super();
+    this.approvedApplicationsCount = approvedApplicationsCount;
+    this.rejectedApplicationsCount = rejectedApplicationsCount;
   }
 }

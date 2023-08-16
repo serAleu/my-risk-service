@@ -8,7 +8,11 @@ import lombok.Setter;
 @Setter
 public class DeduplicationMaxDpdContext extends BaseDeduplicationContext {
 
-  public DeduplicationMaxDpdContext() {
+  public static final Integer MAX_HISTORICAL_OVERDUE_DAYS = 30;
+  private final int maxDpdCount;
+
+  public DeduplicationMaxDpdContext(int maxDpdCount) {
     super();
+    this.maxDpdCount = maxDpdCount;
   }
 }

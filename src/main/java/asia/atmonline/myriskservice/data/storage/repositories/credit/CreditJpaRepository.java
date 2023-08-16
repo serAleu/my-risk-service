@@ -22,7 +22,7 @@ public interface CreditJpaRepository extends BaseStorageJpaRepository<Credit> {
 
   Long countByBorrowerIdAndStatusInAndEnableSpecialProductOfferTrue(Long borrowerId, List<CreditStatus> statuses);
 
-  Long countByBorrowerIdInAndStatusIn(Set<Long> borrowerIds, List<CreditStatus> statuses);
+  Integer countByBorrowerIdInAndStatusIn(Set<Long> borrowerIds, List<CreditStatus> statuses);
 
   List<Credit> findByBorrowerId(Long borrowerId);
 
@@ -35,7 +35,7 @@ public interface CreditJpaRepository extends BaseStorageJpaRepository<Credit> {
   @Query("select max(amount) from Credit where borrower.id =?1")
   Optional<Long> getMaxAmountByBorrowerId(Long borrowerId);
 
-  Long countByBorrowerIdInAndDPDMaxGreaterThan(Set<Long> borrowerIds, Integer maxDpd);
+  Integer countByBorrowerIdInAndDPDMaxGreaterThan(Set<Long> borrowerIds, Integer maxDpd);
 
   @Query("select count(cr) from Credit cr "
       + "join CreditProduct cp on cr.creditProductId = cp.id "
