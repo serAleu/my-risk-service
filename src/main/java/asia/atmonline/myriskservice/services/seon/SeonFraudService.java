@@ -4,11 +4,11 @@ import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.SEON;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.SeonFraudRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.responses.impl.SeonFraudResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
 import asia.atmonline.myriskservice.data.repositories.impl.risk.responses.SeonFraudResponseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.SeonFraudRequest;
-import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.seon.SeonFraudSqsProducer;
 import asia.atmonline.myriskservice.rules.seon.phone.SeonPhoneRule;
 import asia.atmonline.myriskservice.rules.seon.phone.SeonPhoneRuleContext;
@@ -82,7 +82,7 @@ public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFr
 
   @Override
   public SeonFraudRequestJpaEntity getRequestEntity(SeonFraudRequest request) {
-    return new SeonFraudRequestJpaEntity().setApplicationId(request.getApplicationId())
+    return new SeonFraudRequestJpaEntity().setCreditApplicationId(request.getCreditApplicationId())
         .setBorrowerId(request.getBorrowerId())
         .setOriginalRequest(request.toString());
   }
@@ -121,27 +121,28 @@ public class SeonFraudService extends BaseChecksService<SeonFraudRequest, SeonFr
       Object response = client.getSeonFraud(request.getSeonFraudLicenseKey(), fraudRequest, request.getSeonFraudTimeout());
       seonFraudResponseJpaEntity = extractSeonFraudResponseJpaEntity(response, request);
     } catch (Exception e) {
-      log.error("Failed to get Seon fraud Response with Borrower id: {}, Application id: {}", request.getBorrowerId(), request.getApplicationId(), e);
+      log.error("Failed to get Seon fraud Response with Borrower id: {}, Application id: {}", request.getBorrowerId(), request.getCreditApplicationId(), e);
       seonFraudResponseJpaEntity = SeonFraudResponseJpaEntity.builder()
           .borrowerId(request.getBorrowerId())
-          .applicationId(request.getApplicationId())
+          .creditApplicationId(request.getCreditApplicationId())
           .phone(request.getMobilePhone())
-          .response(new FraudResponse(new SeonResponseError(e.getMessage())))
+          .fraudResponse(new FraudResponse(new SeonResponseError(e.getMessage())))
           .build();
     }
     seonFraudResponseJpaEntity.setPhoneRequest(request.getSeonFraudPhoneEnable());
     seonFraudResponseJpaEntity.setEmailRequest(seonEmailEnabled);
     seonFraudResponseJpaEntity.setDeviceFingerprintRequest(request.getSeonFraudFingerprintEnable());
+    seonFraudResponseJpaEntity.setResponse(seonFraudResponseJpaEntity.getFraudResponse().toString());
     return seonFraudResponseJpaEntity;
   }
 
   private SeonFraudResponseJpaEntity extractSeonFraudResponseJpaEntity(Object response, SeonFraudRequest request) throws JsonProcessingException {
     String responseString = mapper.writeValueAsString(response);
     FraudResponse fraudResponse = JsonUtils.decodeDefault(responseString, FraudResponse.class);
-    SeonFraudResponseJpaEntity seonFraudResponseJpaEntity = new SeonFraudResponseJpaEntity().setApplicationId(request.getApplicationId())
+    SeonFraudResponseJpaEntity seonFraudResponseJpaEntity = new SeonFraudResponseJpaEntity().setCreditApplicationId(request.getCreditApplicationId())
         .setBorrowerId(request.getBorrowerId())
         .setPhone(request.getMobilePhone())
-        .setResponse(fraudResponse)
+        .setFraudResponse(fraudResponse)
         .setSuccess(true);
     seonFraudResponseJpaEntity.setOriginalResponse(responseString);
     return seonFraudResponseJpaEntity;

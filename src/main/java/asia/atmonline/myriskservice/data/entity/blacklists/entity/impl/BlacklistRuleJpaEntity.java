@@ -1,22 +1,17 @@
 package asia.atmonline.myriskservice.data.entity.blacklists.entity.impl;
 
 import asia.atmonline.myriskservice.data.entity.blacklists.entity.BlacklistBaseJpaEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
 @Entity
 @Table(name = "blacklist_rule")
 @Setter
 @Getter
 public class BlacklistRuleJpaEntity extends BlacklistBaseJpaEntity {
-
-  @Column(name = "rule_id")
-  private String ruleId;
 
   @Column(name = "rule_version")
   private String ruleVersion;
@@ -39,10 +34,10 @@ public class BlacklistRuleJpaEntity extends BlacklistBaseJpaEntity {
   @Column(name = "add_card_number", nullable = false, columnDefinition = "bool default false")
   private boolean addCardNumber;
 
-  @Transient
-  public String getRuleName() {
-    return days + StringUtils.SPACE + "(" + ruleId + ")";
-  }
+//  @Transient
+//  public String getRuleName() {
+//    return days + StringUtils.SPACE + "(" + ruleId + ")";
+//  }
 
   @Override
   public String repositoryName() {

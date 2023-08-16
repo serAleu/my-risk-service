@@ -11,6 +11,7 @@ import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.Blacklist
 import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.BlacklistPassportNumberJpaEntity;
 import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.BlacklistPhoneJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.BlacklistRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
 import asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistBankAccountJpaRepository;
 import asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistPassportNumberJpaRepository;
@@ -23,7 +24,6 @@ import asia.atmonline.myriskservice.data.storage.repositories.credit.CreditJpaRe
 import asia.atmonline.myriskservice.enums.application.ProductCode;
 import asia.atmonline.myriskservice.enums.risk.BlacklistSource;
 import asia.atmonline.myriskservice.messages.request.impl.BlacklistsRequest;
-import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.blacklist.BlacklistSqsProducer;
 import asia.atmonline.myriskservice.rules.blacklist.phone.BlacklistPhoneContext;
 import asia.atmonline.myriskservice.rules.blacklist.phone.BlacklistPhoneRule;
@@ -39,10 +39,12 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Primary
 @Slf4j
 public class BlacklistChecksService extends BaseChecksService<BlacklistsRequest, BlacklistRequestJpaEntity> {
 

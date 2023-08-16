@@ -72,7 +72,7 @@ public class Credit extends BaseCreditEntity {
   private Set<CreditSnapshot> actualCreditSnapshot;
 
   @SortNatural
-  @OrderBy(value = "periodStart")
+//  @OrderBy(value = "periodStart")
   @BatchSize(size = DEFAULT_BATCH_SIZE)
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
   @JoinColumn(name = "credit_id")

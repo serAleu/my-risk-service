@@ -29,7 +29,7 @@ public class BureauSqsListener extends BaseSqsListener<BureauRequest> {
     this.mapper = mapper;
   }
 
-  @SqsListener(value = "${aws.bureau.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+  @SqsListener(value = "${aws.sqs.bureau.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(String message) {
     try {
       super.listenQueue(mapper.readValue(message, BureauRequest.class), engine);

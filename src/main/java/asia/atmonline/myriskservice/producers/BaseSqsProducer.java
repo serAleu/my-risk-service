@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.producers;
 
-import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

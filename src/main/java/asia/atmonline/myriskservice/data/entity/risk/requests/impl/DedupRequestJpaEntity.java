@@ -21,8 +21,8 @@ public class DedupRequestJpaEntity extends BaseJpaEntity {
 
   @Column(name = "borrower_id", nullable = false)
   private Long borrowerId;
-  @Column(name = "application_id", nullable = false)
-  private Long applicationId;
+  @Column(name = "credit_application_id", nullable = false)
+  private Long creditApplicationId;
   @Column(name = "passport_number")
   private String passportNumber;
   @Column(name = "bank_account")

@@ -29,7 +29,7 @@ public class FinalSqsListener extends BaseSqsListener<FinalRequest> {
     this.mapper = mapper;
   }
 
-  @SqsListener(value = "${aws.final.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+  @SqsListener(value = "${aws.sqs.final.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(String message) {
     try {
       super.listenQueue(mapper.readValue(message, FinalRequest.class), engine);

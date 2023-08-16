@@ -19,8 +19,8 @@ import org.springframework.stereotype.Repository;
 public class RepositoryScore {
 
   @Autowired
-  @Qualifier("namedParameterJdbcTemplateScore")
-  private NamedParameterJdbcTemplate namedParameterJdbcTemplateRisk;
+  @Qualifier("namedParameterJdbcTemplateMy")
+  private NamedParameterJdbcTemplate namedParameterJdbcTemplateMy;
 
   @Autowired
   private ObjectMapper mapper;
@@ -30,23 +30,23 @@ public class RepositoryScore {
   private String scoreResponseQueueName;
 
   private static final String INSERT_INTO_SCORE_REQUEST_TABLE =
-      "insert into score_request (application_id,message_body,queue_name) " +
-          "values(:applicationId, :messageBody, :queueName) " +
+      "insert into score_request (credit_application_id,message_body,queue_name) " +
+          "values(:creditApplicationId, :messageBody, :queueName) " +
           "returning id";
 
   private static final String INSERT_INTO_SCORE_RESPONSE_TABLE =
       "insert into score_response (score_request_id,model_id,model_version," +
-          "application_id,queue_name,message_body) " +
-          "values(:scoreRequestId, :modelId, :modelVersion, :applicationId, :queueName," +
+          "credit_application_id,queue_name,message_body) " +
+          "values(:scoreRequestId, :modelId, :modelVersion, :creditApplicationId, :queueName," +
           ":messageBody) ";
 
-  public Long saveScoreRequest(Long applicationId, String message) {
+  public Long saveScoreRequest(Long creditApplicationId, String message) {
     try {
       Map<String, Object> map = new HashMap<>();
-      map.put("applicationId", applicationId);
+      map.put("creditApplicationId", creditApplicationId);
       map.put("messageBody", message);
       map.put("queueName", scoreRequestQueueName);
-      return namedParameterJdbcTemplateRisk.queryForObject(INSERT_INTO_SCORE_REQUEST_TABLE,
+      return namedParameterJdbcTemplateMy.queryForObject(INSERT_INTO_SCORE_REQUEST_TABLE,
           map, Long.class);
     } catch (Exception e) {
       log.error("");
@@ -67,7 +67,7 @@ public class RepositoryScore {
         }
         Map<String, Object> map = fillMapForUpdate(scoreRequestId, request, scoreModelResp,
             modelVersion, modelId, scoreResponseQueueName);
-        namedParameterJdbcTemplateRisk.update(INSERT_INTO_SCORE_RESPONSE_TABLE, map);
+        namedParameterJdbcTemplateMy.update(INSERT_INTO_SCORE_RESPONSE_TABLE, map);
       }
     } catch (Exception e) {
       log.error("");
@@ -82,7 +82,7 @@ public class RepositoryScore {
     map.put("modelId", StringUtils.isBlank(modelId) ? "unknown-model-id" : modelId);
     map.put("modelVersion", StringUtils.isBlank(
         modelVersion) ? "unknown-model-version" : modelVersion);
-    map.put("applicationId", request.getApplicationId());
+    map.put("creditApplicationId", request.getCreditApplicationId());
     map.put("queueName", StringUtils.isBlank(queueName) ? "unknown-queue-name" : queueName);
     map.put("messageBody", scoreModelResp);
     return map;

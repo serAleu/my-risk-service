@@ -1,5 +1,6 @@
 package asia.atmonline.myriskservice.data.storage.entity.borrower;
 
+import asia.atmonline.myriskservice.data.storage.entity.BaseStorageEntity;
 import asia.atmonline.myriskservice.enums.borrower.BorrowerAdditionalPhoneType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class BorrowerAdditionalPhone {
+public class BorrowerAdditionalPhone extends BaseStorageEntity {
 
   @Column(name = "borrower_id", nullable = false, updatable = false)
   private Long borrowerId;

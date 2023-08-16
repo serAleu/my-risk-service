@@ -3,12 +3,8 @@ package asia.atmonline.myriskservice.data.entity.blacklists.entity;
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -19,15 +15,16 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 public class BlacklistRule extends BaseJpaEntity {
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "created_by")
+  //  @ManyToOne(fetch = FetchType.EAGER)
+//  @JoinColumn(name = "created_by")
+  @Column(name = "created_by")
   private Long createdBy;
 
-  @Column(name = "created_at")
-  private LocalDateTime createdAt;
+//  @Column(name = "created_at")
+//  private LocalDateTime createdAt;
 
   @Column(name = "rule_id")
-  private String ruleId;
+  private Long ruleId;
 
   @Column(name = "rule_version")
   private String ruleVersion;

@@ -2,17 +2,22 @@ package asia.atmonline.myriskservice.rules;
 
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.APPROVE;
 
+import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.enums.risk.GroupOfChecks;
 import asia.atmonline.myriskservice.enums.risk.RejectionReasonCode;
-import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public abstract class BaseRule<T extends BaseRuleContext> {
 
-  private final BlacklistChecksService blacklistChecksService;
+  private BlacklistChecksService blacklistChecksService;
+
+  public BaseRule(BlacklistChecksService blacklistChecksService) {
+    this.blacklistChecksService = blacklistChecksService;
+  }
+
+  public BaseRule() {
+  }
 
   public abstract RiskResponseJpaEntity<? extends BaseSqsProducer> execute(T context);
 
@@ -21,8 +26,8 @@ public abstract class BaseRule<T extends BaseRuleContext> {
   }
 
   @SuppressWarnings({"rawtypes"})
-  protected RiskResponseJpaEntity getApprovedResponse(Long applicationId, GroupOfChecks check, RiskResponseJpaEntity riskResponseJpaEntity) {
-    riskResponseJpaEntity.setApplicationId(applicationId);
+  protected RiskResponseJpaEntity getApprovedResponse(Long creditApplicationId, GroupOfChecks check, RiskResponseJpaEntity riskResponseJpaEntity) {
+    riskResponseJpaEntity.setCreditApplicationId(creditApplicationId);
     riskResponseJpaEntity.setDecision(APPROVE);
     riskResponseJpaEntity.setCheck(check);
     return riskResponseJpaEntity;

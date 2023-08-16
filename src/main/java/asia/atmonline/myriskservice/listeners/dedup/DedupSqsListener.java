@@ -30,7 +30,7 @@ public class DedupSqsListener extends BaseSqsListener<DeduplicationRequest> {
     this.mapper = mapper;
   }
 
-  @SqsListener(value = "${aws.dedup.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+  @SqsListener(value = "${aws.sqs.dedup.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(String message) {
     try {
       super.listenQueue(mapper.readValue(message, DeduplicationRequest.class), engine);

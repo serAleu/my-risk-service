@@ -16,8 +16,8 @@ public abstract class BaseRequest {
 
   @JsonProperty("check_type")
   private GroupOfChecks check;
-  @JsonProperty("application_id")
-  private Long applicationId;
+  @JsonProperty("credit_application_id")
+  private Long creditApplicationId;
 
   @Override
   @Transient

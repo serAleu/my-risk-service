@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.data.entity.risk.responses.impl;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.BaseResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Entity
 @Table(name = "blacklist_checks_response")
 @SequenceGenerator(name = "sequence-generator", sequenceName = "blacklist_checks_response_id_seq", allocationSize = 1)
-public class BlacklistResponseJpaEntity extends BaseResponseJpaEntity {
+public class BlacklistResponseJpaEntity extends BaseJpaEntity {
 
   @Override
   public String repositoryName() {

@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.messages.response;
+package asia.atmonline.myriskservice.data.entity.risk.responses;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import asia.atmonline.myriskservice.enums.risk.FinalDecision;
@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,7 +21,6 @@ import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString.Exclude;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -46,9 +46,9 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
   @Column(name = "check", nullable = false)
   private GroupOfChecks check;
 
-  @JsonProperty("application_id")
-  @Column(name = "application_id")
-  private Long applicationId;
+  @JsonProperty("credit_application_id")
+  @Column(name = "credit_application_id")
+  private Long creditApplicationId;
 
   @JsonProperty("borrower_id")
   @Column(name = "borrower_id")
@@ -60,11 +60,12 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
 
   @JsonProperty("additional_fields")
   @Column(name = "additional_fields")
+  @ElementCollection
   private Map<String, String> additionalFields = new HashMap<>();
 
   @JsonIgnore
-  @Exclude
   @Setter(AccessLevel.NONE)
+  @Transient
   private P producer;
 
   public P getProducer() {

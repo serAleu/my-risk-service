@@ -29,7 +29,7 @@ public class CooldownSqsListener extends BaseSqsListener<CooldownRequest> {
     this.mapper = mapper;
   }
 
-  @SqsListener(value = "${aws.cooldown.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+  @SqsListener(value = "${aws.sqs.cooldown.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(String message) {
     try {
       super.listenQueue(mapper.readValue(message, CooldownRequest.class), engine);

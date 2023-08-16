@@ -19,7 +19,7 @@ public class ScoreSqsListener {
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  @SqsListener(value = "${aws.score.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+  @SqsListener(value = "${aws.sqs.score.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(String message) {
     threadPoolQueue.submit(() -> {
       try {

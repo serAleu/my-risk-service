@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.rules;
 
-import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

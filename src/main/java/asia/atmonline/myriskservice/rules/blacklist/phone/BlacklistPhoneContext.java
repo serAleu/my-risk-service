@@ -1,7 +1,7 @@
 package asia.atmonline.myriskservice.rules.blacklist.phone;
 
 import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.BlacklistPhoneJpaEntity;
-import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.blacklist.BlacklistSqsProducer;
 import asia.atmonline.myriskservice.rules.BaseRuleContext;
 import java.util.List;

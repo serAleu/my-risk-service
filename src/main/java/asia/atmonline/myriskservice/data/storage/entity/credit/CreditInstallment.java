@@ -179,7 +179,6 @@ public class CreditInstallment extends BaseStorageEntity {
 
   @Override
   public int hashCode() {
-
     return Objects.hash(super.hashCode(), periodStart, periodEnd, principal, remainingPrincipal, interest, serviceFee, processingFee);
   }
 }

@@ -29,7 +29,7 @@ public class SeonFraudSqsListener extends BaseSqsListener<SeonFraudRequest> {
     this.mapper = mapper;
   }
 
-  @SqsListener(value = "${aws.seon-fraud.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+  @SqsListener(value = "${aws.sqs.seon-fraud.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(String message) {
     try {
       super.listenQueue(mapper.readValue(message, SeonFraudRequest.class), engine);

@@ -20,8 +20,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -116,11 +114,11 @@ public class CreditApplication extends BaseCreditEntity {
 //  @JoinColumn(name = "device_info_id")
 //  private DeviceInfo deviceInfo;
 
-  @Column(name = "decision_log", columnDefinition = "jsonb default '{}'")
-  private Map<String, Map<String, Object>> decisionData;
+//  @Column(name = "decision_log", columnDefinition = "jsonb default '{}'")
+//  private Map<String, Map<String, Object>> decisionData;
 
-  @Column(name = "rejection_reason", columnDefinition = "jsonb default '{}'")
-  private RejectionReason rejectionReason;
+//  @Column(name = "rejection_reason", columnDefinition = "jsonb default '{}'")
+//  private RejectionReason rejectionReason;
 
   @Column(name = "kyc_checked", columnDefinition = "boolean default false")
   private boolean kycChecked = false;
@@ -129,8 +127,8 @@ public class CreditApplication extends BaseCreditEntity {
   @Column(name = "rejection_reason_code")
   private String rejectionReasonCode;
 
-  @Column(name = "dms_report", columnDefinition = "jsonb default '{}'")
-  private Map<String, Object> dmsReport;
+//  @Column(name = "dms_report", columnDefinition = "jsonb default '{}'")
+//  private Map<String, Object> dmsReport;
 
 //  @Enumerated(EnumType.STRING)
 //  @Column(name = "cpa_request_status")
@@ -266,8 +264,8 @@ public class CreditApplication extends BaseCreditEntity {
   @Column(name = "scoring_service_error")
   private String scoringServiceError;
 
-  @Column(name = "scoring_service_responses", columnDefinition = "jsonb default '[]'")
-  private List<Object> scoringServiceResponses;
+//  @Column(name = "scoring_service_responses", columnDefinition = "jsonb default '[]'")
+//  private List<Object> scoringServiceResponses;
 
   @Column(name = "external_score_requested_at", nullable = false)
   private LocalDateTime externalScoreRequestedAt;

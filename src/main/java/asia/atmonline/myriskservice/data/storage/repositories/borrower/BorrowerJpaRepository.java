@@ -22,11 +22,11 @@ public interface BorrowerJpaRepository extends BaseStorageJpaRepository<Borrower
   @Query("select id from Borrower where personalData.mobilePhone in :phoneNumbers")
   List<Long> findIdsByPhoneNumbers(@Param("phoneNumbers") List<String> phoneNumbers);
 
-  @Query("select distinct id "
-      + "from Borrower "
-      + "where contactPerson1.phone = :phoneNumber "
-      + "or contactPerson2.phone = :phoneNumber")
-  List<Long> findBorrowerIdsByCpPhone(@Param("phoneNumber") String phoneNumber);
+//  @Query("select distinct id "
+//      + "from Borrower "
+//      + "where contactPerson1.phone = :phoneNumber "
+//      + "or contactPerson2.phone = :phoneNumber")
+//  List<Long> findBorrowerIdsByCpPhone(@Param("phoneNumber") String phoneNumber);
 
   @Query(nativeQuery = true, value = "select id from borrower " +
       "where replace(upper(pd_first_name || pd_second_name || pd_last_name), ' ', '') = ?1 " +

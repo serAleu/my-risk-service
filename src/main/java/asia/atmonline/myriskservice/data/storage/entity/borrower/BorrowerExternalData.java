@@ -28,7 +28,7 @@ public class BorrowerExternalData extends BaseStorageEntity {
   private String path;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "application_id")
+  @JoinColumn(name = "credit_application_id")
   private CreditApplication application;
 
   @ManyToOne(fetch = FetchType.LAZY)

@@ -25,12 +25,12 @@ public class RepositoryMy {
     List<String> scoreFilesList;
     if (scoreServiceRequest.getProduct() == IL) {
       Map<String, Object> map = new HashMap<>();
-      map.put("applicationId", scoreServiceRequest.getApplicationId());
+      map.put("creditApplicationId", scoreServiceRequest.getCreditApplicationId());
       map.put("nodeId", scoreServiceRequest.getNodeId());
       scoreFilesList = namedParameterJdbcTemplateMy.query(request, map, (rs, rowNum) -> rs.getString(1));
     } else {
       scoreFilesList = namedParameterJdbcTemplateMy.query(request,
-              new MapSqlParameterSource("applicationId", scoreServiceRequest.getApplicationId()), (rs, rowNum) -> rs.getString(1));
+              new MapSqlParameterSource("creditApplicationId", scoreServiceRequest.getCreditApplicationId()), (rs, rowNum) -> rs.getString(1));
     }
     return scoreFilesList.get(0);
   }

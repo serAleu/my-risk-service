@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.APPROVE;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import asia.atmonline.myriskservice.messages.request.BaseRequest;
-import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
 import asia.atmonline.myriskservice.producers.basic.BasicSqsProducer;
 import asia.atmonline.myriskservice.producers.blacklist.BlacklistSqsProducer;
@@ -36,7 +36,7 @@ public class RiskServiceEngine<R extends BaseRequest, E extends BaseJpaEntity, S
     response.setDecision(APPROVE);
     response.setCheck(request.getCheck());
     response.setBorrowerId(response.getBorrowerId());
-    response.setApplicationId(request.getApplicationId());
+    response.setCreditApplicationId(request.getCreditApplicationId());
     response.setAdditionalField("additional_field", "Hey! I'm a message from Risk service!");
     try {
       service.save(service.getRequestEntity(request));

@@ -29,7 +29,7 @@ public class BlacklistSqsListener extends BaseSqsListener<BlacklistsRequest> {
     this.mapper = mapper;
   }
 
-  @SqsListener(value = "${aws.blacklists.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+  @SqsListener(value = "${aws.sqs.blacklists.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(String message) {
     try {
       super.listenQueue(mapper.readValue(message, BlacklistsRequest.class), engine);

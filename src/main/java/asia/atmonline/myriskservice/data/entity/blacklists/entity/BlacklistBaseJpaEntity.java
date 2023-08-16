@@ -18,8 +18,9 @@ import lombok.Setter;
 @Setter
 public abstract class BlacklistBaseJpaEntity extends BaseJpaEntity {
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "added_by")
+  //  @ManyToOne(fetch = FetchType.EAGER)
+//  @JoinColumn(name = "added_by")
+  @Column(name = "added_by")
   private Long addedBy;
 
   @Column(name = "added_at")

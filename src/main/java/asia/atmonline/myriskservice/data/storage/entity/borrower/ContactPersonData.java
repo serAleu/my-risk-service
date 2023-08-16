@@ -19,7 +19,7 @@ public class ContactPersonData {
   private String phone;
 
   @Column(name = "cpd_address")
-  private String address;
+  private String cpdAddress;
 
   public String getFullName(String lastName, String firstName, String middleName) {
     StringBuilder result = new StringBuilder(StringUtils.EMPTY);

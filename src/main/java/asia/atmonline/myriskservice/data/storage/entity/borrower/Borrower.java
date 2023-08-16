@@ -6,7 +6,6 @@ import asia.atmonline.myriskservice.enums.borrower.LoanPurpose;
 import asia.atmonline.myriskservice.enums.borrower.Occupation;
 import asia.atmonline.myriskservice.enums.borrower.OccupationType;
 import asia.atmonline.myriskservice.enums.borrower.WorkingIndustry;
-import asia.atmonline.myriskservice.web.seon.dto.ExtraAttributes;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -18,8 +17,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,20 +43,20 @@ public class Borrower extends UserAccount {
   @Embedded
   private UtmParametersData utmParametersData;
 
-  @Embedded
-  private ContactPersonData contactPerson1;
-
-  @Embedded
-  private ContactPersonData contactPerson2;
+//  @Embedded
+//  private ContactPersonData contactPerson1;
+//
+//  @Embedded
+//  private ContactPersonData contactPerson2;
 
   @Embedded
   private CollateralData collateralData;
 
-  @Embedded
-  private AddressData registrationAddress;
-
-  @Embedded
-  private AddressData residenceAddress;
+//  @Embedded
+//  private AddressData registrationAddress;
+//
+//  @Embedded
+//  private AddressData residenceAddress;
 
   @Column(name = "bd_same_address", nullable = false, columnDefinition = "bool default false")
   private boolean sameAddress = false;
@@ -87,8 +84,8 @@ public class Borrower extends UserAccount {
   @Column(name = "juicy_score_session_id")
   private String juicyScoreSessionId;
 
-  @Column(name = "extra_attributes")
-  private Map<ExtraAttributes, String> attributes;
+//  @Column(name = "extra_attributes")
+//  private Map<ExtraAttributes, String> attributes;
 
   @Column(name = "last_application_step")
   @Enumerated(EnumType.STRING)
@@ -97,16 +94,16 @@ public class Borrower extends UserAccount {
   @Column(name = "last_application_step_updated_at")
   private LocalDateTime lastApplicationStepUpdatedAt = LocalDateTime.now();
 
-  public AddressData getResidenceAddress() {
-    if (this.residenceAddress == null) {
-      this.residenceAddress = new AddressData();
-    }
-    return residenceAddress;
-  }
+//  public AddressData getResidenceAddress() {
+//    if (this.residenceAddress == null) {
+//      this.residenceAddress = new AddressData();
+//    }
+//    return residenceAddress;
+//  }
 
-  public void setResidenceAddress(AddressData residenceAddress) {
-    this.residenceAddress = residenceAddress;
-  }
+//  public void setResidenceAddress(AddressData residenceAddress) {
+//    this.residenceAddress = residenceAddress;
+//  }
 
 //  public Set<IovationData> getIovationData() {
 //    if (iovationData == null) {
@@ -163,23 +160,23 @@ public class Borrower extends UserAccount {
     return bankDetailsData;
   }
 
-  public ContactPersonData getContactPerson1() {
-    if (this.contactPerson1 == null) {
-      contactPerson1 = new ContactPersonData();
-    }
-    return contactPerson1;
-  }
+//  public ContactPersonData getContactPerson1() {
+//    if (this.contactPerson1 == null) {
+//      contactPerson1 = new ContactPersonData();
+//    }
+//    return contactPerson1;
+//  }
 
   public CollateralData getCollateralData() {
     return this.collateralData != null ? this.collateralData : new CollateralData();
   }
 
-  public AddressData getRegistrationAddress() {
-    if (this.registrationAddress == null) {
-      this.registrationAddress = new AddressData();
-    }
-    return registrationAddress;
-  }
+//  public AddressData getRegistrationAddress() {
+//    if (this.registrationAddress == null) {
+//      this.registrationAddress = new AddressData();
+//    }
+//    return registrationAddress;
+//  }
 
   public BigDecimal getBorrowerIncome() {
     return Optional.ofNullable(getEmploymentData()).map(EmploymentData::getIncome).orElse(BigDecimal.ZERO);
@@ -254,23 +251,23 @@ public class Borrower extends UserAccount {
         .orElse(StringUtils.EMPTY);
   }
 
-  public String getBorrowerFirstContactPersonPhone() {
-    return Optional.ofNullable(getContactPerson1())
-        .map(ContactPersonData::getPhone)
-        .orElse(StringUtils.EMPTY);
-  }
+//  public String getBorrowerFirstContactPersonPhone() {
+//    return Optional.ofNullable(getContactPerson1())
+//        .map(ContactPersonData::getPhone)
+//        .orElse(StringUtils.EMPTY);
+//  }
 
-  public String getBorrowerSecondContactPersonPhone() {
-    return Optional.ofNullable(getContactPerson2())
-        .map(ContactPersonData::getPhone)
-        .orElse(StringUtils.EMPTY);
-  }
+//  public String getBorrowerSecondContactPersonPhone() {
+//    return Optional.ofNullable(getContactPerson2())
+//        .map(ContactPersonData::getPhone)
+//        .orElse(StringUtils.EMPTY);
+//  }
 
-  public String getBorrowerEmployerPhone() {
-    return Optional.ofNullable(getEmploymentData())
-        .map(EmploymentData::getEmployerPhone)
-        .orElse(StringUtils.EMPTY);
-  }
+//  public String getBorrowerEmployerPhone() {
+//    return Optional.ofNullable(getEmploymentData())
+//        .map(EmploymentData::getEmployerPhone)
+//        .orElse(StringUtils.EMPTY);
+//  }
 
   public String getJuicyScoreSessionId() {
     return juicyScoreSessionId;
@@ -280,10 +277,10 @@ public class Borrower extends UserAccount {
     this.juicyScoreSessionId = juicyScoreSessionId;
   }
 
-  public Map<ExtraAttributes, String> getAttributes() {
-    if (this.attributes == null) {
-      this.attributes = new EnumMap<>(ExtraAttributes.class);
-    }
-    return this.attributes;
-  }
+//  public Map<ExtraAttributes, String> getAttributes() {
+//    if (this.attributes == null) {
+//      this.attributes = new EnumMap<>(ExtraAttributes.class);
+//    }
+//    return this.attributes;
+//  }
 }

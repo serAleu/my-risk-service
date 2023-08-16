@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.DEDUP;
 
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;
-import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.cooldown.CooldownSqsProducer;
 import asia.atmonline.myriskservice.rules.BaseRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
@@ -19,7 +19,7 @@ public abstract class BaseCooldownRule<P extends BaseCooldownContext> extends Ba
   @Override
   @SuppressWarnings({"unchecked"})
   public RiskResponseJpaEntity<CooldownSqsProducer> execute(P context) {
-    return (RiskResponseJpaEntity<CooldownSqsProducer>) getApprovedResponse(context.getRiskResponseJpaEntity().getApplicationId(), DEDUP,
+    return (RiskResponseJpaEntity<CooldownSqsProducer>) getApprovedResponse(context.getRiskResponseJpaEntity().getCreditApplicationId(), DEDUP,
         context.getRiskResponseJpaEntity());
   }
 

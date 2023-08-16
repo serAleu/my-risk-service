@@ -24,6 +24,6 @@ public class DataService {
   }
 
   private String createEmptyScoreModelResponse(ScoreServiceRequest request) {
-    return "{\"scoring\": {\"application_id\": " + request.getApplicationId() + "}}";
+    return "{\"scoring\": {\"credit_application_id\": " + request.getCreditApplicationId() + "}}";
   }
 }

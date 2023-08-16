@@ -7,7 +7,7 @@ import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.requests.impl.DedupRequestJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
 import asia.atmonline.myriskservice.messages.request.impl.DeduplicationRequest;
-import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.deduplication.DeduplicationSqsProducer;
 import asia.atmonline.myriskservice.rules.deduplication.BaseDeduplicationContext;
 import asia.atmonline.myriskservice.rules.deduplication.BaseDeduplicationRule;

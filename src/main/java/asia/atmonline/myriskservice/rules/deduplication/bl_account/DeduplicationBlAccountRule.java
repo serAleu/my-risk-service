@@ -3,7 +3,7 @@ package asia.atmonline.myriskservice.rules.deduplication.bl_account;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.BL_ACCOUNT;
 
-import asia.atmonline.myriskservice.messages.response.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.deduplication.DeduplicationSqsProducer;
 import asia.atmonline.myriskservice.rules.deduplication.BaseDeduplicationRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;

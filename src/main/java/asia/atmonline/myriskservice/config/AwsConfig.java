@@ -41,14 +41,14 @@ public class AwsConfig {
   private Integer awsDefaultTaskExecutorMaxPoolSize;
   @Value("${aws.default-task-executor.queue-capacity}")
   private Integer awsDefaultTaskExecutorQueueCapacity;
-  @Value("{$aws.default-task-executor.blocking-task-timeout}")
-  private Integer awsDefaultTaskExecutorBlockingTaskTimeout;
+//  @Value("{$aws.default-task-executor.blocking-task-timeout}")
+//  private Long awsDefaultTaskExecutorBlockingTaskTimeout;
   @Value("${aws.sqs.max-number-of-messages}")
   private Integer awsSqsMaxNumberOfMessages;
-  @Value("{$aws.sqs.back-off-time}")
-  private Long awsSqsBackOffTime;
+//  @Value("{$aws.sqs.back-off-time}")
+//  private String awsSqsBackOffTime;
   @Value("{$aws.sqs.auto-startup}")
-  private Boolean awsSqsAutoStartup;
+  private String awsSqsAutoStartup;
 
   @Bean
   @Primary
@@ -68,9 +68,9 @@ public class AwsConfig {
   public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory() {
     SimpleMessageListenerContainerFactory factory = new SimpleMessageListenerContainerFactory();
     factory.setAmazonSqs(awsSQSAsync());
-    factory.setAutoStartup(awsSqsAutoStartup);
+    factory.setAutoStartup(Boolean.parseBoolean(awsSqsAutoStartup));
     factory.setMaxNumberOfMessages(awsSqsMaxNumberOfMessages);
-    factory.setBackOffTime(awsSqsBackOffTime);
+    factory.setBackOffTime(60000L);
     return factory;
   }
 
@@ -94,9 +94,10 @@ public class AwsConfig {
     threadPoolTaskExecutor.setMaxPoolSize(awsDefaultTaskExecutorMaxPoolSize);
     threadPoolTaskExecutor.setQueueCapacity(awsDefaultTaskExecutorQueueCapacity);
     threadPoolTaskExecutor.afterPropertiesSet();
-    threadPoolTaskExecutor.setRejectedExecutionHandler(new BlockingTaskSubmissionPolicy(awsDefaultTaskExecutorBlockingTaskTimeout));
+    threadPoolTaskExecutor.setRejectedExecutionHandler(new BlockingTaskSubmissionPolicy(1000L));
     return threadPoolTaskExecutor;
   }
+
 
   @Bean
   public QueueMessageHandler queueMessageHandler() {
