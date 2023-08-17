@@ -2,12 +2,10 @@ package asia.atmonline.myriskservice.rules.cooldown.applim_9m;
 
 import asia.atmonline.myriskservice.rules.cooldown.BaseCooldownContext;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class CooldownApplim9mContext extends BaseCooldownContext {
 
   public static final Integer APPLICATIONS_LIMIT_NUM = 9;

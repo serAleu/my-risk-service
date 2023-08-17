@@ -4,8 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.BlacklistSource.MANUAL;
 
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import asia.atmonline.myriskservice.web.blacklist.dto.BlacklistRecordForm;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(value = "/blacklist")
 public class BlacklistController {
 
-  @Autowired
   private final BlacklistChecksService blackListService;
 
   @PostMapping(value = "/add")

@@ -23,8 +23,7 @@ public class DedupSqsListener extends BaseSqsListener<DeduplicationRequest> {
   private String activeProfile;
 
   public DedupSqsListener(AsyncTaskExecutor threadPoolQueue,
-      RiskServiceEngine<DeduplicationRequest, DedupRequestJpaEntity, DeduplicationChecksService> engine,
-      ObjectMapper mapper) {
+      RiskServiceEngine<DeduplicationRequest, DedupRequestJpaEntity, DeduplicationChecksService> engine, ObjectMapper mapper) {
     super(threadPoolQueue);
     this.engine = engine;
     this.mapper = mapper;

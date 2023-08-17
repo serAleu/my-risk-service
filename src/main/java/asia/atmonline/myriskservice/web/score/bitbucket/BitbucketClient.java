@@ -1,5 +1,6 @@
-package asia.atmonline.myriskservice.services.score.web;
+package asia.atmonline.myriskservice.web.score.bitbucket;
 
+import asia.atmonline.myriskservice.web.score.ScoreCacheExecutor;
 import java.net.URL;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -37,19 +38,19 @@ public class BitbucketClient {
   private String bitbucketBasicToken;
 
   public String getBitbucketIlModel() {
-    return requestToBitbucket(bitbucketUrlPath + bitbucketUrlIlModel, Cache.ilScoreModel);
+    return requestToBitbucket(bitbucketUrlPath + bitbucketUrlIlModel, ScoreCacheExecutor.ilScoreModel);
   }
 
   public String getBitbucketRs1Model() {
-    return requestToBitbucket(bitbucketUrlPath + bitbucketUrlRs1Model, Cache.rs1ScoreModel);
+    return requestToBitbucket(bitbucketUrlPath + bitbucketUrlRs1Model, ScoreCacheExecutor.rs1ScoreModel);
   }
 
   public String getBitbucketRs2Model() {
-    return requestToBitbucket(bitbucketUrlPath + bitbucketUrlRs2Model, Cache.rs2ScoreModel);
+    return requestToBitbucket(bitbucketUrlPath + bitbucketUrlRs2Model, ScoreCacheExecutor.rs2ScoreModel);
   }
 
   public String getBitbucketRs3PlusModel() {
-    return requestToBitbucket(bitbucketUrlPath + bitbucketUrlRs3PlusModel, Cache.rs3PlusScoreModel);
+    return requestToBitbucket(bitbucketUrlPath + bitbucketUrlRs3PlusModel, ScoreCacheExecutor.rs3PlusScoreModel);
   }
 
   private String requestToBitbucket(String urlString, String currentModelVersion) {

@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class ScoreServiceRequest extends BaseRequest {
+public class ScoreRequest extends BaseRequest {
 
   @JsonProperty("node_id")
   private Long nodeId;

@@ -1,10 +1,13 @@
-package asia.atmonline.myriskservice.services.score.web;
+package asia.atmonline.myriskservice.web.score;
 
 import asia.atmonline.myriskservice.enums.application.ProductCode;
 import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Value;
 
-public class Cache {
+public class ScoreCacheExecutor {
 
+  @Value("${score.cache.reload-time-minutes}")
+  public static Long reloadTimeMinutes;
   public static String ilScoreModel;
   public static LocalDateTime ilScoreModelUpdDt;
   public static String rs1ScoreModel;
@@ -14,30 +17,30 @@ public class Cache {
   public static String rs3PlusScoreModel;
   public static LocalDateTime rs3PlusScoreModelUpdDt;
 
-  public static Boolean checkModLastUpdDtm(ProductCode productCode) {
+  public static Boolean isCachedModelLastUpdDtmAfterReloadTimeMinutes(ProductCode productCode) {
     LocalDateTime now = LocalDateTime.now();
     boolean needed = false;
     switch (productCode) {
       case IL:
-        if (ilScoreModelUpdDt == null || now.minusMinutes(10L)
+        if (ilScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
             .isAfter(ilScoreModelUpdDt)) {
           ilScoreModelUpdDt = now;
           needed = true;
         }
       case RS1:
-        if (rs1ScoreModelUpdDt == null || now.minusMinutes(10L)
+        if (rs1ScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
             .isAfter(rs1ScoreModelUpdDt)) {
           rs1ScoreModelUpdDt = now;
           needed = true;
         }
       case RS2:
-        if (rs2ScoreModelUpdDt == null || now.minusMinutes(10L)
+        if (rs2ScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
             .isAfter(rs2ScoreModelUpdDt)) {
           rs2ScoreModelUpdDt = now;
           needed = true;
         }
       case RS3, RS4, RS5, RS6, RS7:
-        if (rs3PlusScoreModelUpdDt == null || now.minusMinutes(10L)
+        if (rs3PlusScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
             .isAfter(rs3PlusScoreModelUpdDt)) {
           rs3PlusScoreModelUpdDt = now;
           needed = true;

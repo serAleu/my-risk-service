@@ -20,8 +20,9 @@ public abstract class BaseChecksService<R extends BaseRequest, E extends BaseJpa
   public abstract E getRequestEntity(R request);
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public void save(BaseJpaEntity entity) {
+  public Long save(BaseJpaEntity entity) {
     BaseJpaRepository repository = repositories.get(entity.repositoryName());
-    repository.save(entity);
+    entity = (BaseJpaEntity) repository.save(entity);
+    return entity.getId();
   }
 }

@@ -64,6 +64,10 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
   private Map<String, String> additionalFields = new HashMap<>();
 
   @JsonIgnore
+  @Column(name = "request_id")
+  private Long requestId;
+
+  @JsonIgnore
   @Setter(AccessLevel.NONE)
   @Transient
   private P producer;

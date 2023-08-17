@@ -19,7 +19,13 @@ public enum RejectionReasonCode {
   REGION(16),
   OCCUPATION(17),
   INDUSTRY(18),
-  INCOME2LOW(19);
+  INCOME2LOW(19),
+  SCORECALL1ERR(20),
+  SCORECALL2ERR(21),
+  SCORECALL3ERR(22),
+  SCORECALL1(23),
+  SCORECALL2(24),
+  SCORECALL3(25);
 
   private final int ruleId;
 

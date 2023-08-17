@@ -16,7 +16,7 @@ public abstract class BaseRequest {
 
   @JsonProperty("check_type")
   private GroupOfChecks check;
-  @JsonProperty("credit_application_id")
+  @JsonProperty("application_id")
   private Long creditApplicationId;
 
   @Override

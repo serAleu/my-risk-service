@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.services.score.config;
+package asia.atmonline.myriskservice.config.score;
 
 import javax.sql.DataSource;
 import org.postgresql.ds.PGSimpleDataSource;

@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS dedup_checks_request (
   borrower_id bigint NOT NULL,
   passport_number varchar(100),
   bank_account varchar(100),
-  confirmed_email varchar(200),
+  confirmed_email varchar(200)
 );
 
 DROP TABLE IF EXISTS final_checks_request;
@@ -99,6 +99,24 @@ CREATE TABLE IF NOT EXISTS seon_fraud_response (
   email_request boolean default false,
   device_fingerprint_request boolean default false,
   original_response text
+);
+
+DROP TABLE IF EXISTS score_checks_response;
+CREATE TABLE IF NOT EXISTS score_checks_response (
+  id serial PRIMARY KEY,
+  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+  credit_application_id bigint,
+  score_node_id int NOT NULL,
+  decision int NOT NULL,
+  "limit" bigint,
+  term int,
+  grade varchar(50),
+  score bigint,
+  probability bigserial,
+  model_id varchar(50) NOT NULL,
+  model_version varchar(50) NOT NULL,
+  status int,
+  predictors text
 );
 
 DROP TABLE IF EXISTS blacklist_bank_account;

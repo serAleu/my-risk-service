@@ -78,6 +78,8 @@ aws:
         queue-name: ${FINAL_RESPONSE_RISK_QUEUE:my-risk-final-response-preprod}
 
 score:
+  cache:
+    reload-time-minutes: 10
   ds:
     jdbcDriver: jdbc:postgresql
     url: ${DB_SCORE_URL:lotus-preprod.ctoxc08s0evf.ap-southeast-1.rds.amazonaws.com}
