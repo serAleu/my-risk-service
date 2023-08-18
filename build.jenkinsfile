@@ -1,0 +1,37 @@
+properties([
+    parameters([
+        gitParameter(
+            name: 'GIT_BRANCH',
+            defaultValue: 'master',
+            quickFilterEnabled: false,
+            type: 'PT_BRANCH'
+        )
+    ])
+])
+
+defaults = [
+    awsRegion: 'ap-southeast-1',
+    awsAccountID: '429298334463'
+]
+
+pipeline {
+    agent { label 'atm' }
+    stages {
+        stage ('Build and push component image') {
+            steps {
+                script {
+                    dir("./projects/${params.GIT_BRANCH}") {
+                        sh "docker-compose build my-service-risk"
+                        sh "aws ecr get-login-password --region ${defaults.awsRegion} | docker login --username AWS --password-stdin ${defaults.awsAccountID}.dkr.ecr.${defaults.awsRegion}.amazonaws.com"
+                        sh "docker-compose push my-service-risk"
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}

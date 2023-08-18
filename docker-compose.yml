@@ -1,0 +1,7 @@
+version: "3"
+services:
+  my-service-risk:
+    image: 429298334463.dkr.ecr.ap-southeast-1.amazonaws.com/my-risk-service
+    build: .
+    container_name: my-service-risk
+    restart: always
