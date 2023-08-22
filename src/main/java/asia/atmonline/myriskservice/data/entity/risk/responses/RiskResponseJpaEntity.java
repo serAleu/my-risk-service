@@ -1,24 +1,19 @@
 package asia.atmonline.myriskservice.data.entity.risk.responses;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
+import asia.atmonline.myriskservice.enums.risk.CheckType;
 import asia.atmonline.myriskservice.enums.risk.FinalDecision;
-import asia.atmonline.myriskservice.enums.risk.GroupOfChecks;
 import asia.atmonline.myriskservice.enums.risk.RejectionReasonCode;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import java.util.HashMap;
-import java.util.Map;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,7 +28,7 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
 
   @JsonProperty("final_decision")
   @Enumerated(EnumType.STRING)
-  @Column(name = "decision", nullable = false)
+  @Column(name = "final_decision", nullable = false)
   private FinalDecision decision;
 
   @JsonProperty("rejection_reason")
@@ -43,8 +38,8 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
 
   @JsonProperty("check_type")
   @Enumerated(EnumType.STRING)
-  @Column(name = "check", nullable = false)
-  private GroupOfChecks check;
+  @Column(name = "check_type", nullable = false)
+  private CheckType check;
 
   @JsonProperty("credit_application_id")
   @Column(name = "credit_application_id")
@@ -57,18 +52,18 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
   @JsonProperty("phone_num")
   @Column(name = "phone_num")
   private String phone_num;
-
-  @JsonProperty("additional_fields")
-  @Column(name = "additional_fields")
-  @ElementCollection
-  private Map<String, String> additionalFields = new HashMap<>();
+//
+//  @JsonProperty("additional_fields")
+//  @Column(name = "additional_fields")
+//  @ElementCollection
+//  private Map<String, String> additionalFields = new HashMap<>();
 
   @JsonIgnore
-  @Column(name = "request_id")
+  @Column(name = "risk_request_id")
   private Long requestId;
 
   @JsonIgnore
-  @Setter(AccessLevel.NONE)
+//  @Setter(AccessLevel.NONE)
   @Transient
   private P producer;
 
@@ -76,13 +71,13 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
     return producer;
   }
 
-  @JsonAnySetter
-  public void setAdditionalField(String fieldName, String fieldValue) {
-    if(additionalFields == null) {
-      additionalFields = new HashMap<>();
-    }
-    additionalFields.put(fieldName, fieldValue);
-  }
+//  @JsonAnySetter
+//  public void setAdditionalField(String fieldName, String fieldValue) {
+//    if(additionalFields == null) {
+//      additionalFields = new HashMap<>();
+//    }
+//    additionalFields.put(fieldName, fieldValue);
+//  }
 
   @Override
   @Transient

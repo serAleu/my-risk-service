@@ -1,7 +1,6 @@
 package asia.atmonline.myriskservice.web.score.bitbucket;
 
 import asia.atmonline.myriskservice.enums.application.ProductCode;
-import asia.atmonline.myriskservice.messages.request.impl.ScoreRequest;
 import asia.atmonline.myriskservice.web.score.ScoreCacheExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +14,7 @@ public class BitbucketService {
 
   private final BitbucketClient bitbucketClient;
 
-  public String getScoreFile(ScoreRequest request) {
-    return getModel(request.getProduct());
-  }
-
-  private String getModel(ProductCode productCode) {
+  public String getModel(ProductCode productCode) {
     boolean needUpdateCache = ScoreCacheExecutor.isCachedModelLastUpdDtmAfterReloadTimeMinutes(productCode);
     String scoreModel = "";
     switch (productCode) {

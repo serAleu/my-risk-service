@@ -1,7 +1,7 @@
 package asia.atmonline.myriskservice.services.blacklists;
 
 import static asia.atmonline.myriskservice.enums.risk.BlacklistSource.SYSTEM;
-import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.BL;
+import static asia.atmonline.myriskservice.enums.risk.CheckType.BL;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
 import asia.atmonline.myriskservice.data.entity.blacklists.calculations.ClientBlLevelJpaEntity;
@@ -10,7 +10,7 @@ import asia.atmonline.myriskservice.data.entity.blacklists.entity.BlacklistRule;
 import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.BlacklistBankAccountJpaEntity;
 import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.BlacklistPassportNumberJpaEntity;
 import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.BlacklistPhoneJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.requests.impl.BlacklistRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
 import asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistBankAccountJpaRepository;
@@ -23,7 +23,6 @@ import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerJ
 import asia.atmonline.myriskservice.data.storage.repositories.credit.CreditJpaRepository;
 import asia.atmonline.myriskservice.enums.application.ProductCode;
 import asia.atmonline.myriskservice.enums.risk.BlacklistSource;
-import asia.atmonline.myriskservice.messages.request.impl.BlacklistsRequest;
 import asia.atmonline.myriskservice.producers.blacklist.BlacklistSqsProducer;
 import asia.atmonline.myriskservice.rules.blacklist.phone.BlacklistPhoneContext;
 import asia.atmonline.myriskservice.rules.blacklist.phone.BlacklistPhoneRule;
@@ -46,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Primary
 @Slf4j
-public class BlacklistChecksService extends BaseChecksService<BlacklistsRequest, BlacklistRequestJpaEntity> {
+public class BlacklistChecksService extends BaseChecksService {
 
   private final BlacklistPhoneRule blacklistPhoneRule;
   private final BlacklistPhoneJpaRepository blacklistPhoneJpaRepository;
@@ -73,8 +72,8 @@ public class BlacklistChecksService extends BaseChecksService<BlacklistsRequest,
   }
 
   @Override
-  public RiskResponseJpaEntity<BlacklistSqsProducer> process(BlacklistsRequest request) {
-    String phoneNum = request.getPhone_num();
+  public RiskResponseJpaEntity<BlacklistSqsProducer> process(RiskRequestJpaEntity request) {
+    String phoneNum = request.getPhoneNum();
     Long borrowerId = null;
     Integer numberOfNotFinishedCredits = 0;
     Integer numberOfFinishedCredits = 0;
@@ -94,13 +93,8 @@ public class BlacklistChecksService extends BaseChecksService<BlacklistsRequest,
   }
 
   @Override
-  public boolean accept(BlacklistsRequest request) {
-    return request != null && BL.equals(request.getCheck()) && request.getPhone_num() != null;
-  }
-
-  @Override
-  public BlacklistRequestJpaEntity getRequestEntity(BlacklistsRequest request) {
-    return new BlacklistRequestJpaEntity().setPhoneNum(request.getPhone_num());
+  public boolean accept(RiskRequestJpaEntity request) {
+    return request != null && BL.equals(request.getCheckType()) && request.getPhoneNum() != null;
   }
 
   @Transactional(readOnly = true)

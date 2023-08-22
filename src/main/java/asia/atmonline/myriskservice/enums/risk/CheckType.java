@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.enums.risk;
 
-public enum GroupOfChecks {
+public enum CheckType {
   BASIC,
   BL,
   BUREAU,

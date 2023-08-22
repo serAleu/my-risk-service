@@ -1,81 +1,17 @@
-DROP TABLE IF EXISTS score_request;
-CREATE TABLE IF NOT EXISTS score_request (
+DROP TABLE IF EXISTS risk_request;
+CREATE TABLE IF NOT EXISTS risk_request (
   id serial PRIMARY KEY,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
   credit_application_id bigint,
-  borrower_id bigint NOT NULL
-);
-
-DROP TABLE IF EXISTS basic_checks_request;
-CREATE TABLE IF NOT EXISTS basic_checks_request (
-  id serial PRIMARY KEY,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  credit_application_id bigint,
-  borrower_id bigint NOT NULL
-);
-
-DROP TABLE IF EXISTS blacklist_checks_request;
-CREATE TABLE IF NOT EXISTS blacklist_checks_request (
-  id serial PRIMARY KEY,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  phone_num varchar(100) NOT NULL
-);
-
-DROP TABLE IF EXISTS bureau_checks_request;
-CREATE TABLE IF NOT EXISTS bureau_checks_request (
-  id serial PRIMARY KEY,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  credit_application_id bigint,
-  borrower_id bigint NOT NULL
-);
-
-DROP TABLE IF EXISTS cooldown_checks_request;
-CREATE TABLE IF NOT EXISTS cooldown_checks_request (
-  id serial PRIMARY KEY,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  credit_application_id bigint,
-  borrower_id bigint NOT NULL
-);
-
-DROP TABLE IF EXISTS dedup_checks_request;
-CREATE TABLE IF NOT EXISTS dedup_checks_request (
-  id serial PRIMARY KEY,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  credit_application_id bigint,
-  borrower_id bigint NOT NULL,
-  passport_number varchar(100),
-  bank_account varchar(100),
-  confirmed_email varchar(200)
-);
-
-DROP TABLE IF EXISTS final_checks_request;
-CREATE TABLE IF NOT EXISTS final_checks_request (
-  id serial PRIMARY KEY,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  credit_application_id bigint,
-  borrower_id bigint NOT NULL
-);
-
-DROP TABLE IF EXISTS seon_fraud_request;
-CREATE TABLE IF NOT EXISTS seon_fraud_request (
-  id serial PRIMARY KEY,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  credit_application_id bigint,
-  borrower_id bigint NOT NULL,
-  original_request text
-);
-
-DROP TABLE IF EXISTS score_response;
-CREATE TABLE IF NOT EXISTS score_response (
-  id serial PRIMARY KEY,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  credit_application_id bigint,
-  borrower_id bigint NOT NULL
+  score_node_id int,
+  check_type varchar(30),
+  phone_num varchar(100)
 );
 
 DROP TABLE IF EXISTS risk_response;
 CREATE TABLE IF NOT EXISTS risk_response (
   id serial PRIMARY KEY,
+  risk_request_id bigint,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
   credit_application_id bigint,
   borrower_id bigint NOT NULL,
@@ -84,6 +20,14 @@ CREATE TABLE IF NOT EXISTS risk_response (
   check_type varchar(30),
   phone_num varchar(100),
   additional_fields text
+);
+
+DROP TABLE IF EXISTS score_response;
+CREATE TABLE IF NOT EXISTS score_response (
+  id serial PRIMARY KEY,
+  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+  credit_application_id bigint,
+  borrower_id bigint NOT NULL
 );
 
 DROP TABLE IF EXISTS seon_fraud_response;

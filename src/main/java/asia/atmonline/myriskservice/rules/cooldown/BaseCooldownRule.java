@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.rules.cooldown;
 
-import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.DEDUP;
+import static asia.atmonline.myriskservice.enums.risk.CheckType.DEDUP;
 
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;

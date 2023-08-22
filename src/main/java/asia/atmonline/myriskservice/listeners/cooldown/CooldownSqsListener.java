@@ -1,11 +1,9 @@
 package asia.atmonline.myriskservice.listeners.cooldown;
 
-import asia.atmonline.myriskservice.data.entity.risk.requests.impl.CooldownRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
-import asia.atmonline.myriskservice.messages.request.impl.CooldownRequest;
 import asia.atmonline.myriskservice.services.cooldown.CooldownChecksService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy;
@@ -15,27 +13,24 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class CooldownSqsListener extends BaseSqsListener<CooldownRequest> {
+public class CooldownSqsListener extends BaseSqsListener {
 
-  private final RiskServiceEngine<CooldownRequest, CooldownRequestJpaEntity, CooldownChecksService> engine;
-  private final ObjectMapper mapper;
+  private final RiskServiceEngine<CooldownChecksService> engine;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public CooldownSqsListener(AsyncTaskExecutor threadPoolQueue,
-      RiskServiceEngine<CooldownRequest, CooldownRequestJpaEntity, CooldownChecksService> engine, ObjectMapper mapper) {
+  public CooldownSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<CooldownChecksService> engine) {
     super(threadPoolQueue);
     this.engine = engine;
-    this.mapper = mapper;
   }
 
   @SqsListener(value = "${aws.sqs.cooldown.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
-  public void listenQueue(String message) {
+  public void listenQueue(RiskRequestJpaEntity request) {
     try {
-      super.listenQueue(mapper.readValue(message, CooldownRequest.class), engine);
+      super.listenQueue(request, engine);
     } catch (Exception e) {
       log.error("my-risk-service-" + activeProfile + " Error while processing message from the cooldown-checks request queue. " + e.getMessage()
-          + " received message = " + message);
+          + " received message = " + request.toString());
     }
   }
 }

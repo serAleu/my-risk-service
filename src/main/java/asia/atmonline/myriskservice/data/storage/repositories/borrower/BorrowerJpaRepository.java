@@ -12,15 +12,14 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-@Repository
+//@Repository
 public interface BorrowerJpaRepository extends BaseStorageJpaRepository<Borrower> {
 
   Optional<Borrower> findBorrowerByPersonalDataMobilePhone(String phone);
 
-  @Query("select id from borrower where pd_email in :phones")
-  Set<Long> findBorrowerIdsByPersonalDataPdEmail(@Param("pdEmails") List<String>  pdEmails);
+//  @Query("select id from borrower where personalData.pdEmail in :pdEmails")
+//  Set<Long> findBorrowerIdsByPersonalDataPdEmail(@Param("pdEmails") List<String> pdEmails);
 
   @Query("select id from Borrower where personalData.mobilePhone in :phoneNumbers")
   List<Long> findIdsByPhoneNumbers(@Param("phoneNumbers") List<String> phoneNumbers);

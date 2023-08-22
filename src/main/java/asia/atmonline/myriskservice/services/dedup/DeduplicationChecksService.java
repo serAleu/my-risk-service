@@ -7,13 +7,14 @@ import static asia.atmonline.myriskservice.enums.application.CreditApplicationSt
 import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.SENT_TO_UNDERWRITING;
 import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.UNDERWRITING_IN_PROGRESS;
 import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.WAITING_FOR_CLIENT_SIGN;
+import static asia.atmonline.myriskservice.enums.risk.CheckType.DEDUP;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
-import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.DEDUP;
 
 import asia.atmonline.myriskservice.data.entity.BaseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.requests.impl.DedupRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
+import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerAdditionalIdNumberJpaRepository;
@@ -22,7 +23,6 @@ import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerJ
 import asia.atmonline.myriskservice.data.storage.repositories.credit.CreditJpaRepository;
 import asia.atmonline.myriskservice.enums.application.CreditApplicationStatus;
 import asia.atmonline.myriskservice.enums.credit.CreditStatus;
-import asia.atmonline.myriskservice.messages.request.impl.DeduplicationRequest;
 import asia.atmonline.myriskservice.producers.deduplication.DeduplicationSqsProducer;
 import asia.atmonline.myriskservice.rules.deduplication.BaseDeduplicationContext;
 import asia.atmonline.myriskservice.rules.deduplication.BaseDeduplicationRule;
@@ -38,7 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class DeduplicationChecksService extends BaseChecksService<DeduplicationRequest, DedupRequestJpaEntity> {
+public class DeduplicationChecksService extends BaseChecksService {
 
   private final List<? extends BaseDeduplicationRule<? extends BaseDeduplicationContext>> rules;
   private final BlacklistChecksService blacklistChecksService;
@@ -65,46 +65,38 @@ public class DeduplicationChecksService extends BaseChecksService<DeduplicationR
 
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public RiskResponseJpaEntity<DeduplicationSqsProducer> process(DeduplicationRequest request) {
-    Long borrowerId = request.getBorrowerId();
-    Set<Long> borrowerIds = new HashSet<>();
+  public RiskResponseJpaEntity<DeduplicationSqsProducer> process(RiskRequestJpaEntity request) {
     RiskResponseJpaEntity<DeduplicationSqsProducer> response = new RiskResponseJpaEntity<>();
-    boolean isBankAccountMatchedWithBlAccount = blacklistChecksService.checkBankAccountBlacklist(request.getBankAccount());
-    boolean isPassportNumMatchedWithBlIdNumber = blacklistChecksService.checkPassportNumberBlacklist(request.getPassportNumber());
-    Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
-    if (borrower.isPresent()) {
-      borrowerIds = getDuplicatedBorrowerIdsForPostPvRoute(borrower.get());
-    }
-    Integer maxDpdCount = countDPDMaxMoreThan(borrowerIds);
-    Integer notFinishedCreditsCount = countNotFinishedCredits(borrowerIds);
-    Integer countInProgress = countInProgress(borrowerIds);
-    Integer rejectedApplicationsCount = countByApplicationRejectedAndBorrowerIdIn(borrowerIds);
-    Integer approvedApplicationsCount = countApproved(borrowerIds);
-    for (BaseDeduplicationRule rule : rules) {
-      response = rule.execute(
-          rule.getContext(approvedApplicationsCount, rejectedApplicationsCount, countInProgress, notFinishedCreditsCount, maxDpdCount,
-              isBankAccountMatchedWithBlAccount, isPassportNumMatchedWithBlIdNumber));
-      if (response != null && REJECT.equals(response.getDecision())) {
-        if (response.getRejectionReasonCode() != null) {
-          rule.saveToBlacklists(borrowerId, response.getRejectionReasonCode());
+    Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getCreditApplicationId());
+    if (application.isPresent() && application.get().getBorrower() != null) {
+      Borrower borrower = application.get().getBorrower();
+      Long borrowerId = borrower.getId();
+      boolean isBankAccountMatchedWithBlAccount = blacklistChecksService.checkBankAccountBlacklist(borrower.getBorrowerAccount());
+      boolean isPassportNumMatchedWithBlIdNumber = blacklistChecksService.checkPassportNumberBlacklist(borrower.getBorrowerNIC());
+      Set<Long> borrowerIds = getDuplicatedBorrowerIdsForPostPvRoute(borrower);
+      Integer maxDpdCount = countDPDMaxMoreThan(borrowerIds);
+      Integer notFinishedCreditsCount = countNotFinishedCredits(borrowerIds);
+      Integer countInProgress = countInProgress(borrowerIds);
+      Integer rejectedApplicationsCount = countByApplicationRejectedAndBorrowerIdIn(borrowerIds);
+      Integer approvedApplicationsCount = countApproved(borrowerIds);
+      for (BaseDeduplicationRule rule : rules) {
+        response = rule.execute(
+            rule.getContext(approvedApplicationsCount, rejectedApplicationsCount, countInProgress, notFinishedCreditsCount, maxDpdCount,
+                isBankAccountMatchedWithBlAccount, isPassportNumMatchedWithBlIdNumber));
+        if (response != null && REJECT.equals(response.getDecision())) {
+          if (response.getRejectionReasonCode() != null) {
+            rule.saveToBlacklists(borrowerId, response.getRejectionReasonCode());
+          }
+          return response;
         }
-        return response;
       }
     }
     return response;
   }
 
   @Override
-  public boolean accept(DeduplicationRequest request) {
-    return request != null && DEDUP.equals(request.getCheck()) && request.getBorrowerId() != null;
-  }
-
-  @Override
-  public DedupRequestJpaEntity getRequestEntity(DeduplicationRequest request) {
-    return new DedupRequestJpaEntity().setBorrowerId(request.getBorrowerId())
-        .setBankAccount(request.getBankAccount())
-        .setPassportNumber(request.getPassportNumber())
-        .setConfirmedEmail(request.getConfirmedEmail());
+  public boolean accept(RiskRequestJpaEntity request) {
+    return request != null && DEDUP.equals(request.getCheckType()) && request.getCreditApplicationId() != null;
   }
 
   @Transactional(readOnly = true)
@@ -156,7 +148,8 @@ public class DeduplicationChecksService extends BaseChecksService<DeduplicationR
   }
 
   private Set<Long> getBorrowerIdsByConfirmedEmail(Borrower borrower) {
-    Set<Long> borrowerIds = borrowerJpaRepository.findBorrowerIdsByPersonalDataPdEmail(List.of(borrower.getPersonalData().getPdEmail()));
+//    Set<Long> borrowerIds = borrowerJpaRepository.findBorrowerIdsByPersonalDataPdEmail(List.of(borrower.getPersonalData().getPdEmail()));
+    Set<Long> borrowerIds = new HashSet<>();
     if (!borrowerIds.isEmpty()) {
       borrowerIds.remove(borrower.getId());
     }

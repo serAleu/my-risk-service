@@ -18,6 +18,6 @@ public class BlacklistSqsProducer extends BaseSqsProducer {
 
   @Override
   public void sendResponse(RiskResponseJpaEntity<? extends BaseSqsProducer> riskResponseJpaEntity) {
-    super.sendResponseToQueue(riskResponseJpaEntity, awsSqsBlacklistsProducerQueueName);
+    super.sendResponseToQueue(riskResponseJpaEntity, "my-risk-bl-response-preprod");
   }
 }

@@ -27,7 +27,6 @@ aws:
     access-key: ${AWS_ACCESS_KEY:AKIAWH5BMXL7TDQER3MH}
     secret-key: ${AWS_SECRET_KEY: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}
   default-task-executor:
-    thread-name-prefix: ${THREAD_NAME_PREFIX:SQSExecutor -}
     core-pool-size: ${CORE_POOL_SIZE:100}
     max-pool-size: ${MAX_POOL_SIZE:100}
     queue-capacity: ${QUEUE_CAPACITY:2}
@@ -35,7 +34,6 @@ aws:
   sqs:
     max-number-of-messages: ${SQS_MAX_NUMBER_OF_MESSAGES:10}
     back-off-time: ${SQS_BACK_OFF_TIME:60000}
-    auto-startup: ${SQS_AUTO_STARTUP:true}
     blacklists:
       receiver:
         queue-name: ${BL_REQUEST_RISK_QUEUE:my-risk-bl-request-preprod}

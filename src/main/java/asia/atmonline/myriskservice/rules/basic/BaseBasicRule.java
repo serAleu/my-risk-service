@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.rules.basic;
 
-import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.BASIC;
+import static asia.atmonline.myriskservice.enums.risk.CheckType.BASIC;
 
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.AddressData;

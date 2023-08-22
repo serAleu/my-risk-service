@@ -3,7 +3,7 @@ package asia.atmonline.myriskservice.rules;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.APPROVE;
 
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.enums.risk.GroupOfChecks;
+import asia.atmonline.myriskservice.enums.risk.CheckType;
 import asia.atmonline.myriskservice.enums.risk.RejectionReasonCode;
 import asia.atmonline.myriskservice.producers.BaseSqsProducer;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
@@ -26,7 +26,7 @@ public abstract class BaseRule<T extends BaseRuleContext> {
   }
 
   @SuppressWarnings({"rawtypes"})
-  protected RiskResponseJpaEntity getApprovedResponse(Long creditApplicationId, GroupOfChecks check, RiskResponseJpaEntity riskResponseJpaEntity) {
+  protected RiskResponseJpaEntity getApprovedResponse(Long creditApplicationId, CheckType check, RiskResponseJpaEntity riskResponseJpaEntity) {
     riskResponseJpaEntity.setCreditApplicationId(creditApplicationId);
     riskResponseJpaEntity.setDecision(APPROVE);
     riskResponseJpaEntity.setCheck(check);

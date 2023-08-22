@@ -18,6 +18,6 @@ public class FinalSqsProducer extends BaseSqsProducer {
 
   @Override
   public void sendResponse(RiskResponseJpaEntity<? extends BaseSqsProducer> riskResponseJpaEntity) {
-    super.sendResponseToQueue(riskResponseJpaEntity, awsSqsFinalProducerQueueName);
+    super.sendResponseToQueue(riskResponseJpaEntity, "my-risk-final-response-preprod");
   }
 }

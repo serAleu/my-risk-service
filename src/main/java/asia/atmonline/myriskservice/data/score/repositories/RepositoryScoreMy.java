@@ -2,7 +2,8 @@ package asia.atmonline.myriskservice.data.score.repositories;
 
 import static asia.atmonline.myriskservice.enums.application.ProductCode.IL;
 
-import asia.atmonline.myriskservice.messages.request.impl.ScoreRequest;
+import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.enums.application.ProductCode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,19 +24,18 @@ public class RepositoryScoreMy {
 
   public RepositoryScoreMy(ApplicationContext context) {
     namedParameterJdbcTemplateMy = context.getBean(NamedParameterJdbcTemplate.class);
-    System.out.println();
   }
 
-  public String executeScoreSqlQuery(String request, ScoreRequest scoreRequest) {
+  public String executeScoreSqlQuery(String scoreModel, RiskRequestJpaEntity request, ProductCode code) {
     List<String> scoreFilesList;
-    if (scoreRequest.getProduct() == IL) {
+    if (IL.equals(code)) {
       Map<String, Object> map = new HashMap<>();
-      map.put("creditApplicationId", scoreRequest.getCreditApplicationId());
-      map.put("nodeId", scoreRequest.getNodeId());
-      scoreFilesList = namedParameterJdbcTemplateMy.query(request, map, (rs, rowNum) -> rs.getString(1));
+      map.put("creditApplicationId", request.getCreditApplicationId());
+      map.put("nodeId", request.getScoreNodeId());
+      scoreFilesList = namedParameterJdbcTemplateMy.query(scoreModel, map, (rs, rowNum) -> rs.getString(1));
     } else {
-      scoreFilesList = namedParameterJdbcTemplateMy.query(request,
-          new MapSqlParameterSource("creditApplicationId", scoreRequest.getCreditApplicationId()), (rs, rowNum) -> rs.getString(1));
+      scoreFilesList = namedParameterJdbcTemplateMy.query(scoreModel,
+          new MapSqlParameterSource("creditApplicationId", request.getCreditApplicationId()), (rs, rowNum) -> rs.getString(1));
     }
     return scoreFilesList.get(0);
   }

@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.rules.score;
 
-import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.SCORE;
+import static asia.atmonline.myriskservice.enums.risk.CheckType.SCORE;
 
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.responses.impl.ScoreResponseJpaEntity;
