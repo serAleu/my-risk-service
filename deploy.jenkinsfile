@@ -92,7 +92,7 @@ defaults = [
     serviceName: 'my-risk-preprod',
     clusterName: 'malaysia-preprod-fargate-cluster',
     // dbName: (params.ENV_TO_DEPLOY == 'prod' ? '' : 'my-middleware-preprod-rds')
-    dbName: 'my-risk-preprod-rds'
+    dbName: 'my-risk-preprod-rds',
 ]
 
 Date date = new Date()
@@ -127,6 +127,7 @@ pipeline {
                         String newImagePath = defaults.ecrRepo + ":" + params.RELEASE_TAG
                         publishScript = """
                             TD_CURRENT=\$(aws ecs describe-task-definition --task-definition ${defaults.tdFamily} --region ${defaults.awsRegion})
+                            echo \$TD_CURRENT
                             TD_NEW_JSON=\$(echo \$TD_CURRENT | jq --arg IMAGE "${newImagePath}" '.taskDefinition | .containerDefinitions[0].image = \$IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
                             aws ecs register-task-definition --region ${defaults.awsRegion} --cli-input-json "\$TD_NEW_JSON"
                         """
