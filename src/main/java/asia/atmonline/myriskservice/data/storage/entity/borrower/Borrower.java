@@ -52,9 +52,9 @@ public class Borrower extends UserAccount {
   @Embedded
   private CollateralData collateralData;
 
-//  @Embedded
-//  private AddressData registrationAddress;
-//
+  @Embedded
+  private AddressData registrationAddress;
+
 //  @Embedded
 //  private AddressData residenceAddress;
 

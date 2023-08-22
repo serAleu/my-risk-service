@@ -35,9 +35,9 @@ public class CooldownChecksService extends BaseChecksService<CooldownRequest, Co
       CreditApplicationJpaRepository creditApplicationJpaRepository, CreditJpaRepository creditJpaRepository,
       List<? extends BaseCooldownRule<? extends BaseCooldownContext>> rules) {
     super(repositories);
+    this.rules = rules;
     this.creditApplicationJpaRepository = creditApplicationJpaRepository;
     this.creditJpaRepository = creditJpaRepository;
-    this.rules = rules;
   }
 
   @Override

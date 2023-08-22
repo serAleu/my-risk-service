@@ -78,6 +78,13 @@ aws:
         queue-name: ${FINAL_RESPONSE_RISK_QUEUE:my-risk-final-response-preprod}
 
 score:
+  paths-to-properties:
+    term:
+      max: ${DMS_SCORE_TERM_MAX:dms.score.term.max}
+      min: ${DMS_SCORE_TERM_MIN:dms.score.term.min}
+    amount:
+      max: ${DMS_SCORE_AMOUNT_MAX:dms.score.amount.max}
+      min: ${DMS_SCORE_AMOUNT_MIN:dms.score.amount.min}
   cache:
     reload-time-minutes: 10
   ds:
