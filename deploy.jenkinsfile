@@ -1,0 +1,188 @@
+import java.text.SimpleDateFormat;
+
+properties([
+    parameters([
+        gitParameter(
+            name: 'GIT_BRANCH',
+            defaultValue: 'master',
+            quickFilterEnabled: false,
+            type: 'PT_BRANCH'
+        ),
+        choice(
+            name: 'ENV_TO_DEPLOY',
+            description: 'Environment that you want to deploy',
+            choices: [
+                '',
+                'preprod',
+                'prod'
+            ].join('\n')
+        ),
+        [
+            $class: 'ChoiceParameter',
+            name: 'RELEASE_TAG',
+            description: 'Choose the Release Tag name',
+            choiceType: 'PT_SINGLE_SELECT',
+            filterable: false,
+            script: [
+                $class : 'GroovyScript',
+                script: [
+                    sandbox: true,
+                    classpath: [],
+                    script: """
+                        import com.amazonaws.auth.AWSStaticCredentialsProvider;
+                        import com.amazonaws.auth.BasicAWSCredentials;
+                        import com.amazonaws.services.ecr.AmazonECR;
+                        import com.amazonaws.services.ecr.model.ListImagesRequest;
+                        import com.amazonaws.services.ecr.AmazonECRClientBuilder;
+                        import jenkins.model.*;
+
+                        try {
+                        def jenkinsCredentials = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+                            com.cloudbees.plugins.credentials.Credentials.class,
+                            Jenkins.instance,
+                            null,
+                            null
+                        );
+
+                        def access_key;
+                        def secret_key;
+                        for (credential in jenkinsCredentials) {
+                            if ("aws_credentials_building_application".equals(credential.getId()) || "jenkins-aws-user".equals(credential.getId())) {
+                            access_key = credential.getCredentials().getAWSAccessKeyId();
+                            secret_key = credential.getCredentials().getAWSSecretKey();
+                            break;
+                            }
+                        }
+
+                        AmazonECR client = AmazonECRClientBuilder.standard()
+                            .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(access_key, secret_key)))
+                            .withRegion("ap-southeast-1").build();
+                        ListImagesRequest request = new ListImagesRequest().withRepositoryName("my-risk-service");
+                        res = client.listImages(request);
+
+                        def result = []
+                        for (image in res) {
+                            result.add(image.getImageIds());
+                        }
+
+                        return result[0].imageTag.sort().reverse();
+                        } catch (Exception e) {
+                        return [e]
+                        }
+                    """
+                ],
+            ],
+        ],
+        booleanParam(
+            name: 'CREATE_RDS_SNAPSHOT',
+            defaultValue: false,
+            description: 'Create RDS snapshot for my-risk-rds before deploy new tag'
+        ),
+    ])
+])
+
+defaults = [
+    awsRegion: 'ap-southeast-1',
+    awsAccountID: '429298334463',
+    ecrRepo: '429298334463.dkr.ecr.ap-southeast-1.amazonaws.com/my-risk-service',
+    projectUrl: 'git@bitbucket.org:atmonline/my-risk-service.git',
+    // tdFamily: (params.ENV_TO_DEPLOY == 'prod' ? '' : 'middleware-preprod'),
+    tdFamily: 'my_risk_service_preprod_fg',
+    // serviceName: (params.ENV_TO_DEPLOY == 'prod' ? '' : 'middleware-preprod'),
+    serviceName: 'my-risk-preprod',
+    clusterName: 'malaysia-preprod-fargate-cluster',
+    // dbName: (params.ENV_TO_DEPLOY == 'prod' ? '' : 'my-middleware-preprod-rds')
+    dbName: 'my-risk-preprod-rds'
+]
+
+Date date = new Date()
+String formattedDate = date.format("yyyy-MM-dd-HH-mm")
+String currentTd = ""
+
+pipeline {
+    agent { label 'atm' }
+    stages {
+        stage ('Create RDS Snapshot') {
+            when {
+                expression { params.CREATE_RDS_SNAPSHOT == true }
+            }
+            steps {
+                script {
+                    dir("./projects/${params.GIT_BRANCH}") {
+                        createSnapshotScript = """
+                            aws rds create-db-snapshot --db-snapshot-identifier ${defaults.dbName}-snap-${formattedDate} \
+                            --db-instance-identifier ${defaults.dbName} --region ${defaults.awsRegion} \
+                            --tags Key=type,Value=release-snapshot
+                        """
+                        sh "${createSnapshotScript}"
+                        sleep(10) // 10 seconds
+                    }
+                }
+            }
+        }
+        stage ('Create Task Defenition With New Image') {
+            steps {
+                script {
+                    dir("./projects/${params.GIT_BRANCH}") {
+                        String newImagePath = defaults.ecrRepo + ":" + params.RELEASE_TAG
+                        publishScript = """
+                            TD_CURRENT=\$(aws ecs describe-task-definition --task-definition ${defaults.tdFamily} --region ${defaults.awsRegion})
+                            TD_NEW_JSON=\$(echo \$TD_CURRENT | jq --arg IMAGE "${newImagePath}" '.taskDefinition | .containerDefinitions[0].image = \$IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+                            aws ecs register-task-definition --region ${defaults.awsRegion} --cli-input-json "\$TD_NEW_JSON"
+                        """
+                        sh "${publishScript}"
+                        sleep(10)
+                    }
+                }
+            }
+        }
+        stage ('Update ECS my-risk Service') {
+            steps {
+                script {
+                    dir("./projects/${params.GIT_BRANCH}") {
+                        tdDescribeCommand = "aws ecs describe-task-definition --task-definition ${defaults.tdFamily} --region ${defaults.awsRegion}"
+                        def tdDescribeOutput = readJSON(text: sh(script: tdDescribeCommand, returnStdout: true).trim())
+                        currentTd = "${tdDescribeOutput.taskDefinition.family}:${tdDescribeOutput.taskDefinition.revision}"
+                        echo "currentTd: ${currentTd}"
+                        updateServiceCommand = "aws ecs update-service --cluster ${defaults.clusterName} --service ${defaults.serviceName} --task-definition ${currentTd} --region ${defaults.awsRegion}"
+                        sh "${updateServiceCommand}"
+                        sleep(60)
+                    }
+                }
+            }
+        }
+        stage ('Final Health Check') {
+            steps {
+                script {
+                    dir("./projects/${params.GIT_BRANCH}") {
+                        describeServiceCommand = "aws ecs describe-services --cluster ${defaults.clusterName} --service ${defaults.serviceName} --region ${defaults.awsRegion}"
+                        def startTime = System.currentTimeMillis()
+                        def timeout = 10 * 60 * 1000 // 10 minutes
+                        tryCount = 1
+                        while ((System.currentTimeMillis() - startTime) < timeout) {
+                            echo "Checking the New Service Availability during 10 minutes; attempt ${tryCount}"
+                            output = readJSON(text: sh(script: describeServiceCommand, returnStdout: true).trim())
+                            echo "Running tasks count: ${output.services.runningCount[0]}"
+                            echo "Pending tasks count: ${output.services.pendingCount[0]}"
+                            echo "Currend task defenition: ${output.services.taskDefinition[0]}"
+                            if (output.services.pendingCount[0] == 0 && output.services.taskDefinition[0].contains(currentTd) && output.services.runningCount[0] == output.services.desiredCount[0]) {
+                                echo "Health check passed."
+                                break
+                            }
+                            sleep(10) // 10 seconds
+                            tryCount += 1
+                        }
+                        if ((System.currentTimeMillis() - startTime) >= timeout) {
+                            error("health check timed out, something went wrong, please contact your AWS administrator to check")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
