@@ -7,7 +7,6 @@ import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.config.QueueMessageHandlerFactory;
 import org.springframework.cloud.aws.messaging.config.SimpleMessageListenerContainerFactory;
@@ -25,7 +24,7 @@ import org.springframework.messaging.handler.invocation.HandlerMethodArgumentRes
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
-@Getter
+//@Getter
 @EnableSqs
 public class AwsConfig {
 
@@ -33,8 +32,6 @@ public class AwsConfig {
   private String awsCredentialsAccessKey;
   @Value("${aws.credentials.secret-key}")
   private String awsCredentialsSecretKey;
-  @Value("${aws.default-task-executor.thread-name-prefix}")
-  private String awsDefaultTaskExecutorThreadNamePrefix;
   @Value("${aws.default-task-executor.core-pool-size}")
   private Integer awsDefaultTaskExecutorCorePoolSize;
   @Value("${aws.default-task-executor.max-pool-size}")
@@ -47,8 +44,6 @@ public class AwsConfig {
   private Integer awsSqsMaxNumberOfMessages;
 //  @Value("{$aws.sqs.back-off-time}")
 //  private String awsSqsBackOffTime;
-  @Value("{$aws.sqs.auto-startup}")
-  private String awsSqsAutoStartup;
 
   @Bean
   @Primary
@@ -62,16 +57,6 @@ public class AwsConfig {
   @Bean
   public BasicAWSCredentials awsCredentialsProvider() {
     return new BasicAWSCredentials(awsCredentialsAccessKey,awsCredentialsSecretKey);
-  }
-
-  @Bean
-  public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory() {
-    SimpleMessageListenerContainerFactory factory = new SimpleMessageListenerContainerFactory();
-    factory.setAmazonSqs(awsSQSAsync());
-    factory.setAutoStartup(Boolean.parseBoolean(awsSqsAutoStartup));
-    factory.setMaxNumberOfMessages(awsSqsMaxNumberOfMessages);
-    factory.setBackOffTime(60000L);
-    return factory;
   }
 
   @Bean
@@ -89,15 +74,14 @@ public class AwsConfig {
   @Bean(name = "threadPoolQueue")
   public AsyncTaskExecutor createDefaultTaskExecutor() {
     ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
-    threadPoolTaskExecutor.setThreadNamePrefix(awsDefaultTaskExecutorThreadNamePrefix);
+    threadPoolTaskExecutor.setThreadNamePrefix("SQSExecutor - ");
     threadPoolTaskExecutor.setCorePoolSize(awsDefaultTaskExecutorCorePoolSize);
     threadPoolTaskExecutor.setMaxPoolSize(awsDefaultTaskExecutorMaxPoolSize);
     threadPoolTaskExecutor.setQueueCapacity(awsDefaultTaskExecutorQueueCapacity);
     threadPoolTaskExecutor.afterPropertiesSet();
-    threadPoolTaskExecutor.setRejectedExecutionHandler(new BlockingTaskSubmissionPolicy(1000L));
+    threadPoolTaskExecutor.setRejectedExecutionHandler(new BlockingTaskSubmissionPolicy(1000));
     return threadPoolTaskExecutor;
   }
-
 
   @Bean
   public QueueMessageHandler queueMessageHandler() {
@@ -109,5 +93,15 @@ public class AwsConfig {
     list.add(resolver);
     queueMessageHandler.setArgumentResolvers(list);
     return queueMessageHandler;
+  }
+
+  @Bean
+  public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory() {
+    SimpleMessageListenerContainerFactory factory = new SimpleMessageListenerContainerFactory();
+    factory.setAmazonSqs(awsSQSAsync());
+    factory.setAutoStartup(true);
+    factory.setMaxNumberOfMessages(awsSqsMaxNumberOfMessages);
+    factory.setBackOffTime(60000L);
+    return factory;
   }
 }

@@ -1,11 +1,9 @@
 package asia.atmonline.myriskservice.listeners.basic;
 
-import asia.atmonline.myriskservice.data.entity.risk.requests.impl.BasicRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
-import asia.atmonline.myriskservice.messages.request.impl.BasicRequest;
 import asia.atmonline.myriskservice.services.basic.BasicChecksService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy;
@@ -15,27 +13,24 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class BasicSqsListener extends BaseSqsListener<BasicRequest> {
+public class BasicSqsListener extends BaseSqsListener {
 
-  private final RiskServiceEngine<BasicRequest, BasicRequestJpaEntity, BasicChecksService> engine;
-  private final ObjectMapper mapper;
+  private final RiskServiceEngine<BasicChecksService> engine;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public BasicSqsListener(AsyncTaskExecutor threadPoolQueue,
-      RiskServiceEngine<BasicRequest, BasicRequestJpaEntity, BasicChecksService> engine, ObjectMapper mapper) {
+  public BasicSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<BasicChecksService> engine) {
     super(threadPoolQueue);
     this.engine = engine;
-    this.mapper = mapper;
   }
 
   @SqsListener(value = "${aws.sqs.basic.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
-  public void listenQueue(String message) {
+  public void listenQueue(RiskRequestJpaEntity request) {
     try {
-      super.listenQueue(mapper.readValue(message, BasicRequest.class), engine);
+      super.listenQueue(request, engine);
     } catch (Exception e) {
       log.error("my-risk-service-" + activeProfile + " Error while processing message from the basic-checks request queue. " + e.getMessage()
-          + " received message = " + message);
+          + " received message = " + request.toString());
     }
   }
 }

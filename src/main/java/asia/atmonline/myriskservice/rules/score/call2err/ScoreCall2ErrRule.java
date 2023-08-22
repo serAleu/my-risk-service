@@ -4,10 +4,12 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SCORECALL2ERR;
 
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.responses.impl.ScoreResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.score.ScoreSqsProducer;
 import asia.atmonline.myriskservice.rules.score.BaseScoreContext;
 import asia.atmonline.myriskservice.rules.score.BaseScoreRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,7 +31,7 @@ public class ScoreCall2ErrRule extends BaseScoreRule<ScoreCall2ErrContext> {
   }
 
   @Override
-  public ScoreCall2ErrContext getContext(Integer decision, Long limit, Integer term) {
-    return null;
+  public ScoreCall2ErrContext getContext(ScoreResponseJpaEntity response, Map<String, Long> score3RestrictionsMap) {
+    return new ScoreCall2ErrContext(response.getDecision(), response.getScoreNodeId());
   }
 }

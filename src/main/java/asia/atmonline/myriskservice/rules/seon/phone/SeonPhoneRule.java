@@ -1,11 +1,7 @@
 package asia.atmonline.myriskservice.rules.seon.phone;
 
-import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
-import static asia.atmonline.myriskservice.enums.risk.GroupOfChecks.SEON;
-import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SEONPHONE;
+import static asia.atmonline.myriskservice.enums.risk.CheckType.SEON;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.SeonFraudResponseJpaEntity;
-import asia.atmonline.myriskservice.messages.request.impl.SeonFraudRequest;
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.producers.seon.SeonFraudSqsProducer;
 import asia.atmonline.myriskservice.rules.BaseRule;
@@ -38,16 +34,16 @@ public class SeonPhoneRule extends BaseRule<SeonPhoneRuleContext> {
   @Override
   @SuppressWarnings({"unchecked"})
   public RiskResponseJpaEntity<SeonFraudSqsProducer> execute(SeonPhoneRuleContext context) {
-    SeonFraudResponseJpaEntity responseJpaEntity = context.getResponseJpaEntity();
-    SeonFraudRequest request = context.getRequest();
-    RiskResponseJpaEntity<SeonFraudSqsProducer> riskResponseJpaEntity = getApprovedResponse(responseJpaEntity.getCreditApplicationId(), SEON, context.getRiskResponseJpaEntity());
-    if(context.getIsNewSeonData() && request.getSeonFraudPhoneStopFactorEnable() && responseJpaEntity.getSuccess()){
-      AccountDetails accountDetails = responseJpaEntity.getFraudResponse().getData().getPhoneDetails().getAccountDetails();
-      if(accountDetails != null && checkRegistrations(accountDetails)) {
-        riskResponseJpaEntity.setDecision(REJECT);
-        riskResponseJpaEntity.setRejectionReasonCode(SEONPHONE);
-      }
-    }
+    RiskResponseJpaEntity<SeonFraudSqsProducer> riskResponseJpaEntity = getApprovedResponse(context.getApplicationId(), SEON, context.getRiskResponseJpaEntity());
+//    SeonFraudResponseJpaEntity responseJpaEntity = context.getResponseJpaEntity();
+//    SeonFraudRequest request = context.getRequest();
+//    if(context.getIsNewSeonData() && request.getSeonFraudPhoneStopFactorEnable() && responseJpaEntity.getSuccess()){
+//      AccountDetails accountDetails = responseJpaEntity.getFraudResponse().getData().getPhoneDetails().getAccountDetails();
+//      if(accountDetails != null && checkRegistrations(accountDetails)) {
+//        riskResponseJpaEntity.setDecision(REJECT);
+//        riskResponseJpaEntity.setRejectionReasonCode(SEONPHONE);
+//      }
+//    }
     return riskResponseJpaEntity;
   }
 

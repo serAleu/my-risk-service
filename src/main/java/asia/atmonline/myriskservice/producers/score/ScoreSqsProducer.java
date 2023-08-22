@@ -18,6 +18,6 @@ public class ScoreSqsProducer extends BaseSqsProducer {
 
   @Override
   public void sendResponse(RiskResponseJpaEntity<? extends BaseSqsProducer> riskResponseJpaEntity) {
-    super.sendResponseToQueue(riskResponseJpaEntity, awsSqsScoreProducerQueueName);
+    super.sendResponseToQueue(riskResponseJpaEntity, "my-risk-score-response-preprod");
   }
 }

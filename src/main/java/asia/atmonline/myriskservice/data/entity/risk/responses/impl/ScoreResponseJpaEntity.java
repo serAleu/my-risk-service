@@ -28,7 +28,7 @@ public class ScoreResponseJpaEntity extends BaseJpaEntity {
   @Column(name = "limit")
   private Long limit;
   @Column(name = "term")
-  private Integer term;
+  private Long term;
   @Column(name = "grade")
   private String grade;
   @Column(name = "score")

@@ -1,11 +1,9 @@
 package asia.atmonline.myriskservice.listeners.seon;
 
-import asia.atmonline.myriskservice.data.entity.risk.requests.impl.SeonFraudRequestJpaEntity;
+import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
-import asia.atmonline.myriskservice.messages.request.impl.SeonFraudRequest;
 import asia.atmonline.myriskservice.services.seon.SeonFraudService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy;
@@ -15,27 +13,24 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class SeonFraudSqsListener extends BaseSqsListener<SeonFraudRequest> {
+public class SeonFraudSqsListener extends BaseSqsListener {
 
-  private final RiskServiceEngine<SeonFraudRequest, SeonFraudRequestJpaEntity, SeonFraudService> engine;
-  private final ObjectMapper mapper;
+  private final RiskServiceEngine<SeonFraudService> engine;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public SeonFraudSqsListener(AsyncTaskExecutor threadPoolQueue,
-      RiskServiceEngine<SeonFraudRequest, SeonFraudRequestJpaEntity, SeonFraudService> engine, ObjectMapper mapper) {
+  public SeonFraudSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<SeonFraudService> engine) {
     super(threadPoolQueue);
     this.engine = engine;
-    this.mapper = mapper;
   }
 
   @SqsListener(value = "${aws.sqs.seon-fraud.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
-  public void listenQueue(String message) {
+  public void listenQueue(RiskRequestJpaEntity request) {
     try {
-      super.listenQueue(mapper.readValue(message, SeonFraudRequest.class), engine);
+      super.listenQueue(request, engine);
     } catch (Exception e) {
       log.error("my-risk-service-" + activeProfile + " Error while processing message from the seon-fraud-checks request queue. " + e.getMessage()
-          + " received message = " + message);
+          + " received message = " + request.toString());
     }
   }
 }

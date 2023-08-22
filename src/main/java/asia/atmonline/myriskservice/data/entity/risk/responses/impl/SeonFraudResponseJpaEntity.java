@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,6 +44,8 @@ public class SeonFraudResponseJpaEntity extends BaseJpaEntity {
   private Boolean deviceFingerprintRequest;
   @Column(name = "original_response")
   private String originalResponse;
+  @Column(name = "created_at")
+  private LocalDateTime createdAt;
 
   @Transient
   private FraudResponse fraudResponse;

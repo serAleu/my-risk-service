@@ -1,6 +1,7 @@
 package asia.atmonline.myriskservice.data.storage.entity.application;
 
 import asia.atmonline.myriskservice.data.storage.entity.BaseCreditEntity;
+import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.CpaUtmData;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.UtmParametersData;
 import asia.atmonline.myriskservice.enums.application.ApplicationFormType;
@@ -12,7 +13,10 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import java.math.BigDecimal;
@@ -35,6 +39,11 @@ public class CreditApplication extends BaseCreditEntity {
 
   @Column(name = "requested_term")
   private Integer requestedTerm;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "borrower_id", nullable = false)
+  private Borrower borrower;
 
   @Column(name = "approved_term")
   private Integer approvedTerm;

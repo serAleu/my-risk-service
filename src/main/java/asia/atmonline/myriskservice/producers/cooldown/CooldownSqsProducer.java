@@ -18,6 +18,6 @@ public class CooldownSqsProducer extends BaseSqsProducer {
 
   @Override
   public void sendResponse(RiskResponseJpaEntity<? extends BaseSqsProducer> riskResponseJpaEntity) {
-    super.sendResponseToQueue(riskResponseJpaEntity, awsSqsDedup2ProducerQueueName);
+    super.sendResponseToQueue(riskResponseJpaEntity, "my-risk-cooldown-response-preprod");
   }
 }
