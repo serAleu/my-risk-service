@@ -24,6 +24,12 @@ spring:
   activemq:
     broker-url:
 
+rules:
+  basic:
+    age-2-low: 21
+    age-2-high: 70
+    income: 350
+
 datasource:
   connectionTimeout: ${DATASOURCE_CONNECTION_TIMEOUT:60000}
   maximumPoolSize: ${DATASOURCE_POOL_SIZE:20}
@@ -114,6 +120,41 @@ score:
       rs2: ${BITBUCKET_PATH_TO_RS2:my_scoreservice_preprod/rs2/app.sql}
       rs3: ${BITBUCKET_PATH_TO_RS3:my_scoreservice_preprod/rs3/app.sql}
     token: ${BASIC_AUTH_BITBUCKET:Basic c2VyX2FsZXU6QVRCQkR2RHFrUTRYdXdGS1U0UjhyUXpYdWg4YkU2RTNFN0E2}
+
+seon-fraud:
+  #  !PROD! license-key: ${SEON_LICENSE_KEY:6fb041e6-86ac-433e-93f6-ab128c72bceb}
+  license-key: ${SEON_LICENSE_KEY:1856407c-4c65-43b7-b597-70ed5f228b0d}
+  base-url: ${SEON_BASE_URL:https://api.seon.io}
+  paths-to-properties:
+    timeout: ${DMS_SEON_TIMEOUT:dms.seon.timeout}
+    requests-limit: ${DMS_SEON_REQUESTS_LIMIT:dms.seon.requests.limit}
+    ip:
+      api-version: ${DMS_SEON_IP_API_VERSION:dms.seon.ip.api.version}
+    email:
+      enable: ${DMS_SEON_EMAIL_ENABLE:dms.seon.email.enable}
+      api-version: ${DMS_SEON_EMAIL_API_VERSION:dms.seon.email.api.version}
+    phone:
+      enable: ${DMS_SEON_PHONE_ENABLE:dms.seon.phone.enable}
+      api-version: ${DMS_SEON_PHONE_API_VERSION:dms.seon.phone.api.version}
+      stop-factor:
+        enable: ${DMS_SEON_PHONE_STOP_FACTOR_ENABLE:dms.seon.phone.stop.factor.enable}
+    fingerprint:
+      enable: ${DMS_SEON_FINGERPRINT_ENABLE:dms.seon.fingerprint.enable}
+  default:
+    timeout: ${DEFAULT_SEON_TIMEOUT:30000}
+    requests-limit: ${DEFAULT_SEON_REQUESTS_LIMIT:30}
+    ip:
+      api-version: ${DEFAULT_SEON_IP_API_VERSION:1.1}
+    email:
+      enable: ${DEFAULT_SEON_EMAIL_ENABLE:true}
+      api-version: ${DEFAULT_SEON_EMAIL_API_VERSION:2.2}
+    phone:
+      enable: ${DEFAULT_SEON_PHONE_ENABLE:true}
+      api-version: ${DEFAULT_SEON_PHONE_API_VERSION:1.3}
+      stop-factor:
+        enable: ${DEFAULT_SEON_PHONE_STOP_FACTOR_ENABLE:false}
+    fingerprint:
+      enable: ${DEFAULT_SEON_FINGERPRINT_ENABLE:true}
 
 #seon-fraud:
 ##  !PROD! license-key: ${SEON_LICENSE_KEY:6fb041e6-86ac-433e-93f6-ab128c72bceb}
