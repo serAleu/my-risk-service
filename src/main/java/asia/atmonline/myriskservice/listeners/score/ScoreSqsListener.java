@@ -19,9 +19,9 @@ public class ScoreSqsListener extends BaseSqsListener {
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public ScoreSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<ScoreChecksService> engine) {
+  public ScoreSqsListener(AsyncTaskExecutor threadPoolQueue, ScoreChecksService scoreChecksService) {
     super(threadPoolQueue);
-    this.engine = engine;
+    this.engine = new RiskServiceEngine<>(scoreChecksService);
   }
 
   @SqsListener(value = "${aws.sqs.score.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)

@@ -24,7 +24,7 @@ public class BasicIncome2LowRule extends BaseBasicRule<BasicIncome2LowContext> {
     RiskResponseJpaEntity<BasicSqsProducer> response = super.execute(context);
     if(true) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(INCOME2LOW);
+      response.setRejection_reason_code(INCOME2LOW);
     }
     return response;
   }

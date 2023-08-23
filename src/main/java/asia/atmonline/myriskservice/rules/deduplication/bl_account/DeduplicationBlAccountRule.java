@@ -21,7 +21,7 @@ public class DeduplicationBlAccountRule extends BaseDeduplicationRule<Deduplicat
     RiskResponseJpaEntity<DeduplicationSqsProducer> response = super.execute(context);
     if(context.isBankAccountMatchedWithBlAccount()) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(BL_ACCOUNT);
+      response.setRejection_reason_code(BL_ACCOUNT);
     }
     return response;
   }

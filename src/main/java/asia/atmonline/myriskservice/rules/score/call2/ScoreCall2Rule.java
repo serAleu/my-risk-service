@@ -23,7 +23,7 @@ public class ScoreCall2Rule extends BaseScoreRule<ScoreCall2Context> {
     RiskResponseJpaEntity<ScoreSqsProducer> response = super.execute(context);
     if(context.getScoreNodeId() == 2 && 0 == context.getDecision()) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(SCORECALL2);
+      response.setRejection_reason_code(SCORECALL2);
     }
     return response;
   }

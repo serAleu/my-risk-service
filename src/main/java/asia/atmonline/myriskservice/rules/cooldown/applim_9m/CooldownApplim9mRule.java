@@ -24,7 +24,7 @@ public class CooldownApplim9mRule extends BaseCooldownRule<CooldownApplim9mConte
     RiskResponseJpaEntity<CooldownSqsProducer> response = super.execute(context);
     if(context.getNumOf9mApplications() > CooldownApplim9mContext.APPLICATIONS_LIMIT_NUM) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(APPLIM_9M);
+      response.setRejection_reason_code(APPLIM_9M);
     }
     return response;
   }

@@ -19,9 +19,9 @@ public class CooldownSqsListener extends BaseSqsListener {
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public CooldownSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<CooldownChecksService> engine) {
+  public CooldownSqsListener(AsyncTaskExecutor threadPoolQueue, CooldownChecksService cooldownChecksService) {
     super(threadPoolQueue);
-    this.engine = engine;
+    this.engine = new RiskServiceEngine<>(cooldownChecksService);
   }
 
   @SqsListener(value = "${aws.sqs.cooldown.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)

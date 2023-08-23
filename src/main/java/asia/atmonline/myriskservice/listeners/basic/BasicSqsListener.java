@@ -19,9 +19,9 @@ public class BasicSqsListener extends BaseSqsListener {
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public BasicSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<BasicChecksService> engine) {
+  public BasicSqsListener(AsyncTaskExecutor threadPoolQueue, BasicChecksService basicChecksService) {
     super(threadPoolQueue);
-    this.engine = engine;
+    this.engine = new RiskServiceEngine<>(basicChecksService);
   }
 
   @SqsListener(value = "${aws.sqs.basic.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)

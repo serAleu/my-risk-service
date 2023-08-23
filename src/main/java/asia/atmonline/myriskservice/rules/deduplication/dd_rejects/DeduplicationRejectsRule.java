@@ -21,7 +21,7 @@ public class DeduplicationRejectsRule extends BaseDeduplicationRule<Deduplicatio
     RiskResponseJpaEntity<DeduplicationSqsProducer> response = super.execute(context);
     if(context.getRejectedApplicationsCount() >= 2 && context.getApprovedApplicationsCount() == 0) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(DD_REJECTS);
+      response.setRejection_reason_code(DD_REJECTS);
     }
     return response;
   }

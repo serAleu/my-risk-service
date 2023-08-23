@@ -47,12 +47,13 @@ public class DeduplicationChecksService extends BaseChecksService {
   private final BorrowerJpaRepository borrowerJpaRepository;
   private final CreditJpaRepository creditJpaRepository;
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
+  private final DeduplicationSqsProducer producer;
 
   public DeduplicationChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories,
       List<? extends BaseDeduplicationRule<? extends BaseDeduplicationContext>> rules, BlacklistChecksService blacklistChecksService,
       BorrowerAdditionalPhoneJpaRepository borrowerAdditionalPhoneJpaRepository,
       BorrowerAdditionalIdNumberJpaRepository borrowerAdditionalIdNumberJpaRepository, BorrowerJpaRepository borrowerJpaRepository,
-      CreditJpaRepository creditJpaRepository, CreditApplicationJpaRepository creditApplicationJpaRepository) {
+      CreditJpaRepository creditJpaRepository, CreditApplicationJpaRepository creditApplicationJpaRepository, DeduplicationSqsProducer producer) {
     super(repositories);
     this.rules = rules;
     this.blacklistChecksService = blacklistChecksService;
@@ -61,6 +62,12 @@ public class DeduplicationChecksService extends BaseChecksService {
     this.borrowerJpaRepository = borrowerJpaRepository;
     this.creditJpaRepository = creditJpaRepository;
     this.creditApplicationJpaRepository = creditApplicationJpaRepository;
+    this.producer = producer;
+  }
+
+  @SuppressWarnings({"unchecked"})
+  public DeduplicationSqsProducer getProducer() {
+    return producer;
   }
 
   @Override
@@ -84,8 +91,8 @@ public class DeduplicationChecksService extends BaseChecksService {
             rule.getContext(approvedApplicationsCount, rejectedApplicationsCount, countInProgress, notFinishedCreditsCount, maxDpdCount,
                 isBankAccountMatchedWithBlAccount, isPassportNumMatchedWithBlIdNumber));
         if (response != null && REJECT.equals(response.getDecision())) {
-          if (response.getRejectionReasonCode() != null) {
-            rule.saveToBlacklists(borrowerId, response.getRejectionReasonCode());
+          if (response.getRejection_reason_code() != null) {
+            rule.saveToBlacklists(borrowerId, response.getRejection_reason_code());
           }
           return response;
         }

@@ -24,7 +24,7 @@ public class BasicOccupationRule extends BaseBasicRule<BasicOccupationContext> {
     RiskResponseJpaEntity<BasicSqsProducer> response = super.execute(context);
     if(true) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(OCCUPATION);
+      response.setRejection_reason_code(OCCUPATION);
     }
     return response;
   }

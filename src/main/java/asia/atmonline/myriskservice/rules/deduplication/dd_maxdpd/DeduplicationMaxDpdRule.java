@@ -21,7 +21,7 @@ public class DeduplicationMaxDpdRule extends BaseDeduplicationRule<Deduplication
     RiskResponseJpaEntity<DeduplicationSqsProducer> response = super.execute(context);
     if(context.getMaxDpdCount() > 0) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(DD_MAXDPD);
+      response.setRejection_reason_code(DD_MAXDPD);
     }
     return response;
   }

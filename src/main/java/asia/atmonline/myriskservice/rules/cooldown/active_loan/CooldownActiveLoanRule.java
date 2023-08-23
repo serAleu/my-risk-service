@@ -25,7 +25,7 @@ public class CooldownActiveLoanRule extends BaseCooldownRule<CooldownActiveLoanC
     context.getCreditList().forEach(credit -> {
       if(credit.getStatus() != null && !credit.getStatus().isEnding()) {
         response.setDecision(REJECT);
-        response.setRejectionReasonCode(ACTIVE_LOAN);
+        response.setRejection_reason_code(ACTIVE_LOAN);
       }
     });
     return response;

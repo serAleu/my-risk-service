@@ -16,27 +16,22 @@ import asia.atmonline.myriskservice.producers.seon.SeonFraudSqsProducer;
 import asia.atmonline.myriskservice.services.BaseChecksService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 @Slf4j
-@Scope("prototype")
+//@Scope("prototype")
 public class RiskServiceEngine<S extends BaseChecksService> {
 
   private final S service;
-  @Autowired
-  private QueueMessagingTemplate queueMessagingTemplate;
+
 
 //  public void process(RiskRequestJpaEntity request) {
 //    Long requestId = service.save(request);
 //    if (service.accept(request)) {
 //      RiskResponseJpaEntity<? extends BaseSqsProducer> response = service.process(request);
 //      response.setRequestId(requestId);
-//      response.getProducer().sendResponse(response);
+//      service.getProducer().sendResponse(response);
 //      service.save(response);
 //    } else {
 //      log.warn("Unacceptable request to Risk Service. request = " + request.toString());
@@ -50,30 +45,17 @@ public class RiskServiceEngine<S extends BaseChecksService> {
     RiskResponseJpaEntity<? extends BaseSqsProducer> response = getResponse(request);
     response.setDecision(APPROVE);
     response.setCheck(request.getCheckType());
-    response.setBorrowerId(response.getBorrowerId());
-    response.setCreditApplicationId(request.getCreditApplicationId());
-    response.setBorrowerId(1L);
+    response.setBorrower_id(response.getBorrower_id());
+    response.setCredit_application_id(request.getCreditApplicationId());
+    response.setBorrower_id(1L);
 //    response.setAdditionalField("additional_field", "Hey! I'm a message from Risk service!");
     try {
       response.setRequestId(service.save(request));
       service.save(response);
-      defineSqsProducer(request).sendResponse(response);
+      service.getProducer().sendResponse(response);
     } catch (Exception e) {
       log.error("Error while saving message " + e.getMessage());
     }
-  }
-
-  private BaseSqsProducer defineSqsProducer(RiskRequestJpaEntity request) {
-    return switch (request.getCheckType()) {
-      case BASIC -> new BasicSqsProducer(queueMessagingTemplate);
-      case BL -> new BlacklistSqsProducer(queueMessagingTemplate);
-      case BUREAU -> new BureauSqsProducer(queueMessagingTemplate);
-      case COOLDOWN -> new CooldownSqsProducer(queueMessagingTemplate);
-      case DEDUP -> new DeduplicationSqsProducer(queueMessagingTemplate);
-      case FINAL -> new FinalSqsProducer(queueMessagingTemplate);
-      case SCORE -> new ScoreSqsProducer(queueMessagingTemplate);
-      case SEON -> new SeonFraudSqsProducer(queueMessagingTemplate);
-    };
   }
 
   private RiskResponseJpaEntity<? extends BaseSqsProducer> getResponse(RiskRequestJpaEntity request) {

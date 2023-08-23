@@ -21,7 +21,7 @@ public class DeduplicationBlPassportRule extends BaseDeduplicationRule<Deduplica
     RiskResponseJpaEntity<DeduplicationSqsProducer> response = super.execute(context);
     if(context.isPassportNumMatchedWithBlPassportNum()) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(BL_PASSPORT);
+      response.setRejection_reason_code(BL_PASSPORT);
     }
     return response;
   }

@@ -21,7 +21,7 @@ public class DeduplicationActApplRule extends BaseDeduplicationRule<Deduplicatio
     RiskResponseJpaEntity<DeduplicationSqsProducer> response = super.execute(context);
     if(context.getCountInProgress() > 0) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(DD_ACTAPPL);
+      response.setRejection_reason_code(DD_ACTAPPL);
     }
     return response;
   }

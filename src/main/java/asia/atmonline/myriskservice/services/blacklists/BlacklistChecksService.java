@@ -55,11 +55,13 @@ public class BlacklistChecksService extends BaseChecksService {
   private final ClientBlLevelJpaRepository clientBlLevelJpaRepository;
   private final CreditJpaRepository creditJpaRepository;
   private final BorrowerJpaRepository borrowerJpaRepository;
+  private final BlacklistSqsProducer producer;
 
   public BlacklistChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories, BlacklistPhoneRule blacklistPhoneRule,
       BlacklistPhoneJpaRepository blacklistPhoneJpaRepository, BlacklistBankAccountJpaRepository blacklistBankAccountJpaRepository,
       BlacklistPassportNumberJpaRepository blacklistPassportNumberJpaRepository, BlacklistRuleJpaRepository blacklistRuleJpaRepository,
-      ClientBlLevelJpaRepository clientBlLevelJpaRepository, CreditJpaRepository creditJpaRepository, BorrowerJpaRepository borrowerJpaRepository) {
+      ClientBlLevelJpaRepository clientBlLevelJpaRepository, CreditJpaRepository creditJpaRepository, BorrowerJpaRepository borrowerJpaRepository,
+      BlacklistSqsProducer producer) {
     super(repositories);
     this.blacklistPhoneRule = blacklistPhoneRule;
     this.blacklistPhoneJpaRepository = blacklistPhoneJpaRepository;
@@ -69,6 +71,12 @@ public class BlacklistChecksService extends BaseChecksService {
     this.clientBlLevelJpaRepository = clientBlLevelJpaRepository;
     this.creditJpaRepository = creditJpaRepository;
     this.borrowerJpaRepository = borrowerJpaRepository;
+    this.producer = producer;
+  }
+
+  @SuppressWarnings({"unchecked"})
+  public BlacklistSqsProducer getProducer() {
+    return producer;
   }
 
   @Override

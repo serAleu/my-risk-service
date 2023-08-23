@@ -16,7 +16,7 @@ public abstract class BaseDeduplicationRule<P extends BaseDeduplicationContext> 
   @Override
   @SuppressWarnings({"unchecked"})
   public RiskResponseJpaEntity<DeduplicationSqsProducer> execute(P context) {
-    return (RiskResponseJpaEntity<DeduplicationSqsProducer>) getApprovedResponse(context.getRiskResponseJpaEntity().getCreditApplicationId(), DEDUP,
+    return (RiskResponseJpaEntity<DeduplicationSqsProducer>) getApprovedResponse(context.getRiskResponseJpaEntity().getCredit_application_id(), DEDUP,
         context.getRiskResponseJpaEntity());
   }
 

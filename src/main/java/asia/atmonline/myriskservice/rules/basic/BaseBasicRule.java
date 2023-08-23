@@ -19,7 +19,7 @@ public abstract class BaseBasicRule<P extends BaseBasicContext> extends BaseRule
   @Override
   @SuppressWarnings({"unchecked"})
   public RiskResponseJpaEntity<BasicSqsProducer> execute(P context) {
-    return (RiskResponseJpaEntity<BasicSqsProducer>) getApprovedResponse(context.getRiskResponseJpaEntity().getCreditApplicationId(), BASIC,
+    return (RiskResponseJpaEntity<BasicSqsProducer>) getApprovedResponse(context.getRiskResponseJpaEntity().getCredit_application_id(), BASIC,
         context.getRiskResponseJpaEntity());
   }
 

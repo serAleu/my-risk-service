@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter
@@ -34,7 +34,7 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
   @JsonProperty("rejection_reason")
   @Enumerated(EnumType.STRING)
   @Column(name = "rejection_reason_code")
-  private RejectionReasonCode rejectionReasonCode;
+  private RejectionReasonCode rejection_reason_code;
 
   @JsonProperty("check_type")
   @Enumerated(EnumType.STRING)
@@ -43,11 +43,11 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
 
   @JsonProperty("credit_application_id")
   @Column(name = "credit_application_id")
-  private Long creditApplicationId;
+  private Long credit_application_id;
 
   @JsonProperty("borrower_id")
   @Column(name = "borrower_id")
-  private Long borrowerId;
+  private Long borrower_id;
 
   @JsonProperty("phone_num")
   @Column(name = "phone_num")
@@ -82,7 +82,8 @@ public class RiskResponseJpaEntity<P extends BaseSqsProducer> extends BaseJpaEnt
   @Override
   @Transient
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+    ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
+    return ReflectionToStringBuilder.toStringExclude(this, "id","requestId","producer");
   }
 
   @Override

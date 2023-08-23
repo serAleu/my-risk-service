@@ -19,9 +19,9 @@ public class FinalSqsListener extends BaseSqsListener {
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public FinalSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<FinalChecksService> engine) {
+  public FinalSqsListener(AsyncTaskExecutor threadPoolQueue, FinalChecksService finalChecksService) {
     super(threadPoolQueue);
-    this.engine = engine;
+    this.engine = new RiskServiceEngine<>(finalChecksService);
   }
 
   @SqsListener(value = "${aws.sqs.final.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)

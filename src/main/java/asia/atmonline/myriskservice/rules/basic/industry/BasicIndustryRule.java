@@ -24,7 +24,7 @@ public class BasicIndustryRule extends BaseBasicRule<BasicIndustryContext> {
     RiskResponseJpaEntity<BasicSqsProducer> response = super.execute(context);
     if(true) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(INDUSTRY);
+      response.setRejection_reason_code(INDUSTRY);
     }
     return response;
   }

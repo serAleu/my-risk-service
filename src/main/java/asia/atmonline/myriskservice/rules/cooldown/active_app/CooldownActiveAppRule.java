@@ -25,7 +25,7 @@ public class CooldownActiveAppRule extends BaseCooldownRule<CooldownActiveAppCon
     context.getCreditApplicationList().forEach(application -> {
       if(application.getStatus() != null && application.getStatus().isAlive()) {
         response.setDecision(REJECT);
-        response.setRejectionReasonCode(ACTIVE_APP);
+        response.setRejection_reason_code(ACTIVE_APP);
       }
     });
     return response;

@@ -7,6 +7,7 @@ import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEnti
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.BaseJpaRepository;
 import asia.atmonline.myriskservice.data.repositories.impl.risk.responses.SeonFraudResponseJpaRepository;
+import asia.atmonline.myriskservice.producers.score.ScoreSqsProducer;
 import asia.atmonline.myriskservice.producers.seon.SeonFraudSqsProducer;
 import asia.atmonline.myriskservice.rules.seon.phone.SeonPhoneRule;
 import asia.atmonline.myriskservice.services.BaseChecksService;
@@ -24,14 +25,21 @@ public class SeonFraudService extends BaseChecksService {
   private final ObjectMapper mapper;
   private final SeonFraudResponseJpaRepository seonFraudResponseJpaRepository;
   private final SeonPhoneRule seonPhoneRule;
+  private final ScoreSqsProducer producer;
 
   public SeonFraudService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories, SeonFraudFeignClient client,
-      ObjectMapper mapper, SeonFraudResponseJpaRepository seonFraudResponseJpaRepository, SeonPhoneRule seonPhoneRule) {
+      ObjectMapper mapper, SeonFraudResponseJpaRepository seonFraudResponseJpaRepository, SeonPhoneRule seonPhoneRule, ScoreSqsProducer producer) {
     super(repositories);
     this.client = client;
     this.mapper = mapper;
     this.seonFraudResponseJpaRepository = seonFraudResponseJpaRepository;
     this.seonPhoneRule = seonPhoneRule;
+    this.producer = producer;
+  }
+
+  @SuppressWarnings({"unchecked"})
+  public ScoreSqsProducer getProducer() {
+    return producer;
   }
 
   @Override

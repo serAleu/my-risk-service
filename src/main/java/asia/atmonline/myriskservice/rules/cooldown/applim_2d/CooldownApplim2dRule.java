@@ -24,7 +24,7 @@ public class CooldownApplim2dRule extends BaseCooldownRule<CooldownApplim2dConte
     RiskResponseJpaEntity<CooldownSqsProducer> response = super.execute(context);
     if(context.getNumOf2dApplications() > CooldownApplim2dContext.APPLICATIONS_LIMIT_NUM) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(APPLIM_2D);
+      response.setRejection_reason_code(APPLIM_2D);
     }
     return response;
   }

@@ -19,9 +19,9 @@ public class BureauSqsListener extends BaseSqsListener {
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public BureauSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<BureauChecksService> engine) {
+  public BureauSqsListener(AsyncTaskExecutor threadPoolQueue, BureauChecksService bureauChecksService) {
     super(threadPoolQueue);
-    this.engine = engine;
+    this.engine = new RiskServiceEngine<>(bureauChecksService);
   }
 
   @SqsListener(value = "${aws.sqs.bureau.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)

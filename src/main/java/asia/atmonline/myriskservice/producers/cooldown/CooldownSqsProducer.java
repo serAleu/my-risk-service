@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class CooldownSqsProducer extends BaseSqsProducer {
 
   @Value("${aws.sqs.cooldown.producer.queue-name}")
-  private String awsSqsDedup2ProducerQueueName;
+  private String awsSqsCooldownProducerQueueName;
 
   public CooldownSqsProducer(QueueMessagingTemplate queueMessagingTemplate) {
     super(queueMessagingTemplate);
@@ -18,6 +18,6 @@ public class CooldownSqsProducer extends BaseSqsProducer {
 
   @Override
   public void sendResponse(RiskResponseJpaEntity<? extends BaseSqsProducer> riskResponseJpaEntity) {
-    super.sendResponseToQueue(riskResponseJpaEntity, "my-risk-cooldown-response-preprod");
+    super.sendResponseToQueue(riskResponseJpaEntity, awsSqsCooldownProducerQueueName);
   }
 }

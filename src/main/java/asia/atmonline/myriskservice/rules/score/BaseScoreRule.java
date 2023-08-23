@@ -18,7 +18,7 @@ public abstract class BaseScoreRule<P extends BaseScoreContext> extends BaseRule
   @Override
   @SuppressWarnings({"unchecked"})
   public RiskResponseJpaEntity<ScoreSqsProducer> execute(P context) {
-    return (RiskResponseJpaEntity<ScoreSqsProducer>) getApprovedResponse(context.getRiskResponseJpaEntity().getCreditApplicationId(), SCORE,
+    return (RiskResponseJpaEntity<ScoreSqsProducer>) getApprovedResponse(context.getRiskResponseJpaEntity().getCredit_application_id(), SCORE,
         context.getRiskResponseJpaEntity());
   }
 

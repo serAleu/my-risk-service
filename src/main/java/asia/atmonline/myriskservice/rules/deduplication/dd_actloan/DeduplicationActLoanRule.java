@@ -21,7 +21,7 @@ public class DeduplicationActLoanRule extends BaseDeduplicationRule<Deduplicatio
     RiskResponseJpaEntity<DeduplicationSqsProducer> response = super.execute(context);
     if(context.getNotFinishedCreditsCount() > 0) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(DD_ACTLOAN);
+      response.setRejection_reason_code(DD_ACTLOAN);
     }
     return response;
   }

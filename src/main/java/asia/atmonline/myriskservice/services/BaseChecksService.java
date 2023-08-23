@@ -16,6 +16,7 @@ public abstract class BaseChecksService {
   private final Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories;
   public abstract RiskResponseJpaEntity<? extends BaseSqsProducer> process(RiskRequestJpaEntity request);
   public abstract boolean accept(RiskRequestJpaEntity request);
+  public abstract <P extends BaseSqsProducer> P getProducer();
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   public Long save(BaseJpaEntity entity) {

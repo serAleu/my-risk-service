@@ -29,19 +29,27 @@ public class BasicChecksService extends BaseChecksService {
 
   private final List<? extends BaseBasicRule<? extends BaseBasicContext>> rules;
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
+  private final BasicSqsProducer producer;
 
   public BasicChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories,
-      List<? extends BaseBasicRule<? extends BaseBasicContext>> rules, CreditApplicationJpaRepository creditApplicationJpaRepository) {
+      List<? extends BaseBasicRule<? extends BaseBasicContext>> rules, CreditApplicationJpaRepository creditApplicationJpaRepository,
+      BasicSqsProducer producer) {
     super(repositories);
     this.rules = rules;
     this.creditApplicationJpaRepository = creditApplicationJpaRepository;
+    this.producer = producer;
+  }
+
+  @SuppressWarnings({"unchecked"})
+  public BasicSqsProducer getProducer() {
+    return producer;
   }
 
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
   public RiskResponseJpaEntity<BasicSqsProducer> process(RiskRequestJpaEntity request) {
     RiskResponseJpaEntity<BasicSqsProducer> response = new RiskResponseJpaEntity<>();
-    Optional<CreditApplication> creditApplication = creditApplicationJpaRepository.findById(response.getCreditApplicationId());
+    Optional<CreditApplication> creditApplication = creditApplicationJpaRepository.findById(response.getCredit_application_id());
     if (creditApplication.isPresent() && creditApplication.get().getBorrower() != null) {
       Borrower borrower = creditApplication.get().getBorrower();
       Integer age = Period.between(borrower.getPersonalData().getBirthDate(), LocalDate.now()).getYears();
@@ -52,8 +60,8 @@ public class BasicChecksService extends BaseChecksService {
       for (BaseBasicRule rule : rules) {
         response = rule.execute(rule.getContext(age, workingIndustry, occupationType, income, registrationsAddressData));
         if (response != null && REJECT.equals(response.getDecision())) {
-          if (response.getRejectionReasonCode() != null) {
-            rule.saveToBlacklists(borrower.getId(), response.getRejectionReasonCode());
+          if (response.getRejection_reason_code() != null) {
+            rule.saveToBlacklists(borrower.getId(), response.getRejection_reason_code());
           }
           return response;
         }

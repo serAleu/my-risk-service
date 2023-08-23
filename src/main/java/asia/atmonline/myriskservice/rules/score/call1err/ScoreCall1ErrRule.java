@@ -25,7 +25,7 @@ public class ScoreCall1ErrRule extends BaseScoreRule<ScoreCall1ErrContext> {
     if (context.getScoreNodeId() == 1 && (context.getDecision() == null ||
         !BaseScoreContext.DECISION_POSSIBLE_VALUES_LIST.contains(context.getDecision()))) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(SCORECALL1ERR);
+      response.setRejection_reason_code(SCORECALL1ERR);
     }
     return response;
   }

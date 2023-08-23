@@ -25,7 +25,7 @@ public class BlacklistPhoneRule extends BaseRule<BlacklistPhoneContext> {
     context.getEntities().forEach(entity -> {
       if(entity != null && numberOfNotFinishedCredits <= 0 && context.getNumberOfFinishedCredits() <= entity.getBlLevel()) {
         response.setDecision(REJECT);
-        response.setRejectionReasonCode(BLACKLIST);
+        response.setRejection_reason_code(BLACKLIST);
       }
     });
     return response;

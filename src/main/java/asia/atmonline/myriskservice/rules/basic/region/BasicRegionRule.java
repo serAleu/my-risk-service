@@ -24,7 +24,7 @@ public class BasicRegionRule extends BaseBasicRule<BasicRegionContext> {
     RiskResponseJpaEntity<BasicSqsProducer> response = super.execute(context);
     if(true) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(REGION);
+      response.setRejection_reason_code(REGION);
     }
     return response;
   }

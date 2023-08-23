@@ -14,8 +14,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class FinalChecksService extends BaseChecksService {
 
-  public FinalChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories) {
+  private final FinalSqsProducer producer;
+
+  public FinalChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories, FinalSqsProducer producer) {
     super(repositories);
+    this.producer = producer;
+  }
+
+  @SuppressWarnings({"unchecked"})
+  public FinalSqsProducer getProducer() {
+    return producer;
   }
 
   @Override

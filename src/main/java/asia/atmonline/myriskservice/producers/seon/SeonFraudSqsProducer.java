@@ -18,6 +18,6 @@ public class SeonFraudSqsProducer extends BaseSqsProducer {
 
   @Override
   public void sendResponse(RiskResponseJpaEntity<? extends BaseSqsProducer> riskResponseJpaEntity) {
-    super.sendResponseToQueue(riskResponseJpaEntity, "my-risk-seon-fraud-response-preprod");
+    super.sendResponseToQueue(riskResponseJpaEntity, awsSqsSeonDataProducerQueueName);
   }
 }

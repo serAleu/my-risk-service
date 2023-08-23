@@ -19,9 +19,9 @@ public class BlacklistSqsListener extends BaseSqsListener {
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public BlacklistSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<BlacklistChecksService> engine) {
+  public BlacklistSqsListener(AsyncTaskExecutor threadPoolQueue, BlacklistChecksService blacklistChecksService) {
     super(threadPoolQueue);
-    this.engine = engine;
+    this.engine = new RiskServiceEngine<>(blacklistChecksService);
   }
 
   @SqsListener(value = "${aws.sqs.blacklists.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)

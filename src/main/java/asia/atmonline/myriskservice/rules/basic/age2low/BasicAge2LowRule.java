@@ -24,7 +24,7 @@ public class BasicAge2LowRule extends BaseBasicRule<BasicAge2LowContext> {
     RiskResponseJpaEntity<BasicSqsProducer> response = super.execute(context);
     if (true) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(AGE2LOW);
+      response.setRejection_reason_code(AGE2LOW);
     }
     return response;
   }

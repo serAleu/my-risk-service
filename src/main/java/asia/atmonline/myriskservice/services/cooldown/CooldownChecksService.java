@@ -30,14 +30,21 @@ public class CooldownChecksService extends BaseChecksService {
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
   private final CreditJpaRepository creditJpaRepository;
   private final List<? extends BaseCooldownRule<? extends BaseCooldownContext>> rules;
+  private final CooldownSqsProducer producer;
 
   public CooldownChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories,
       CreditApplicationJpaRepository creditApplicationJpaRepository, CreditJpaRepository creditJpaRepository,
-      List<? extends BaseCooldownRule<? extends BaseCooldownContext>> rules) {
+      List<? extends BaseCooldownRule<? extends BaseCooldownContext>> rules, CooldownSqsProducer producer) {
     super(repositories);
     this.rules = rules;
     this.creditApplicationJpaRepository = creditApplicationJpaRepository;
     this.creditJpaRepository = creditJpaRepository;
+    this.producer = producer;
+  }
+
+  @SuppressWarnings({"unchecked"})
+  public CooldownSqsProducer getProducer() {
+    return producer;
   }
 
   @Override
@@ -59,8 +66,8 @@ public class CooldownChecksService extends BaseChecksService {
         response = rule.execute(
             rule.getContext(creditApplicationList, creditList, numOf2DApplications, numOf5wApplications, numOf9mApplications));
         if (response != null && REJECT.equals(response.getDecision())) {
-          if (response.getRejectionReasonCode() != null) {
-            rule.saveToBlacklists(borrowerId, response.getRejectionReasonCode());
+          if (response.getRejection_reason_code() != null) {
+            rule.saveToBlacklists(borrowerId, response.getRejection_reason_code());
           }
           return response;
         }

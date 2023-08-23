@@ -24,7 +24,7 @@ public class CooldownApplim5wRule extends BaseCooldownRule<CooldownApplim5wConte
     RiskResponseJpaEntity<CooldownSqsProducer> response = super.execute(context);
     if(context.getNumOf5wApplications() > CooldownApplim5wContext.APPLICATIONS_LIMIT_NUM) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(APPLIM_5W);
+      response.setRejection_reason_code(APPLIM_5W);
     }
     return response;
   }

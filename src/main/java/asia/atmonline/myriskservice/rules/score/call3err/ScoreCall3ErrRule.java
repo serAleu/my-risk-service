@@ -41,7 +41,7 @@ public class ScoreCall3ErrRule extends BaseScoreRule<ScoreCall3ErrContext> {
         || context.getTermFromScore() > context.getTermMaxRestriction()
         || context.getTermFromScore() < context.getTermMinRestriction())) {
       response.setDecision(REJECT);
-      response.setRejectionReasonCode(SCORECALL3ERR);
+      response.setRejection_reason_code(SCORECALL3ERR);
     }
     return response;
   }

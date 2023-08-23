@@ -18,6 +18,6 @@ public class BureauSqsProducer extends BaseSqsProducer {
 
   @Override
   public void sendResponse(RiskResponseJpaEntity<? extends BaseSqsProducer> riskResponseJpaEntity) {
-    super.sendResponseToQueue(riskResponseJpaEntity, "my-risk-bureau-response-preprod");
+    super.sendResponseToQueue(riskResponseJpaEntity, awsSqsBureauProducerQueueName);
   }
 }

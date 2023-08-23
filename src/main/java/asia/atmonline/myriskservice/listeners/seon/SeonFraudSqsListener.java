@@ -19,9 +19,9 @@ public class SeonFraudSqsListener extends BaseSqsListener {
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public SeonFraudSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<SeonFraudService> engine) {
+  public SeonFraudSqsListener(AsyncTaskExecutor threadPoolQueue, SeonFraudService seonFraudService) {
     super(threadPoolQueue);
-    this.engine = engine;
+    this.engine = new RiskServiceEngine<>(seonFraudService);
   }
 
   @SqsListener(value = "${aws.sqs.seon-fraud.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)

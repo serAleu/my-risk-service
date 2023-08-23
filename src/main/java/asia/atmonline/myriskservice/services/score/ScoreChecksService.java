@@ -36,6 +36,7 @@ public class ScoreChecksService extends BaseChecksService {
   private final BitbucketService bitbucketService;
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
   private final SystemPropertyJpaRepository systemPropertyJpaRepository;
+  private final ScoreSqsProducer producer;
 
   @Value("${score.paths-to-properties.term.max}")
   private String scorePathTermMax;
@@ -48,13 +49,20 @@ public class ScoreChecksService extends BaseChecksService {
 
   public ScoreChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories,
       List<? extends BaseScoreRule<? extends BaseScoreContext>> rules, DataScoreService dataScoreService, BitbucketService bitbucketService,
-      CreditApplicationJpaRepository creditApplicationJpaRepository, SystemPropertyJpaRepository systemPropertyJpaRepository) {
+      CreditApplicationJpaRepository creditApplicationJpaRepository, SystemPropertyJpaRepository systemPropertyJpaRepository,
+      ScoreSqsProducer producer) {
     super(repositories);
     this.rules = rules;
     this.dataScoreService = dataScoreService;
     this.bitbucketService = bitbucketService;
     this.creditApplicationJpaRepository = creditApplicationJpaRepository;
     this.systemPropertyJpaRepository = systemPropertyJpaRepository;
+    this.producer = producer;
+  }
+
+  @SuppressWarnings({"unchecked"})
+  public ScoreSqsProducer getProducer() {
+    return producer;
   }
 
   @Override
@@ -74,8 +82,8 @@ public class ScoreChecksService extends BaseChecksService {
         response = rule.execute(
             rule.getContext(scoreResponseJpaEntity, score3RestrictionsMap));
         if (response != null && REJECT.equals(response.getDecision())) {
-          if (response.getRejectionReasonCode() != null) {
-            rule.saveToBlacklists(application.get().getBorrower().getId(), response.getRejectionReasonCode());
+          if (response.getRejection_reason_code() != null) {
+            rule.saveToBlacklists(application.get().getBorrower().getId(), response.getRejection_reason_code());
 
           }
           return response;

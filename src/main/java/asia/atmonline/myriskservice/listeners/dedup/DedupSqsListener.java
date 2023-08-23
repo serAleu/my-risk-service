@@ -19,9 +19,9 @@ public class DedupSqsListener extends BaseSqsListener {
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public DedupSqsListener(AsyncTaskExecutor threadPoolQueue, RiskServiceEngine<DeduplicationChecksService> engine) {
+  public DedupSqsListener(AsyncTaskExecutor threadPoolQueue, DeduplicationChecksService deduplicationChecksService) {
     super(threadPoolQueue);
-    this.engine = engine;
+    this.engine = new RiskServiceEngine<>(deduplicationChecksService);
   }
 
   @SqsListener(value = "${aws.sqs.dedup.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)

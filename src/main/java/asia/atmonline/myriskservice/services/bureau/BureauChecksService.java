@@ -14,8 +14,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class BureauChecksService extends BaseChecksService {
 
-  public BureauChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories) {
+  private final BureauSqsProducer producer;
+
+  public BureauChecksService(Map<String, ? extends BaseJpaRepository<? extends BaseJpaEntity>> repositories, BureauSqsProducer producer) {
     super(repositories);
+    this.producer = producer;
+  }
+
+  @SuppressWarnings({"unchecked"})
+  public BureauSqsProducer getProducer() {
+    return producer;
   }
 
   @Override

@@ -27,7 +27,7 @@ public abstract class BaseRule<T extends BaseRuleContext> {
 
   @SuppressWarnings({"rawtypes"})
   protected RiskResponseJpaEntity getApprovedResponse(Long creditApplicationId, CheckType check, RiskResponseJpaEntity riskResponseJpaEntity) {
-    riskResponseJpaEntity.setCreditApplicationId(creditApplicationId);
+    riskResponseJpaEntity.setCredit_application_id(creditApplicationId);
     riskResponseJpaEntity.setDecision(APPROVE);
     riskResponseJpaEntity.setCheck(check);
     return riskResponseJpaEntity;
