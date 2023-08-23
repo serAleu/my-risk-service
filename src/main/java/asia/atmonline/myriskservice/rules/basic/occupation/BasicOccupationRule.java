@@ -36,9 +36,9 @@ public class BasicOccupationRule extends BaseBasicRule<BasicOccupationContext> {
   }
 
   @Override
-  public BasicOccupationContext getContext(Boolean isFinalChecks, List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
+  public BasicOccupationContext getContext(List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
       List<DictionaryWorkingIndustry> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
       WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressData registrationsAddressData) {
-    return new BasicOccupationContext(isFinalChecks, occupationType, dictionaryOccupationTypes);
+    return new BasicOccupationContext(occupationType, dictionaryOccupationTypes);
   }
 }

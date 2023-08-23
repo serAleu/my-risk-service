@@ -11,8 +11,8 @@ public class BasicAge2LowContext extends BaseBasicContext {
   private final Integer age;
   private final Integer permittedLowAge;
 
-  public BasicAge2LowContext(Boolean isFinalChecks, Integer age, Integer permittedLowAge) {
-    super(isFinalChecks);
+  public BasicAge2LowContext(Integer age, Integer permittedLowAge) {
+    super();
     this.age = age;
     this.permittedLowAge = permittedLowAge;
   }

@@ -36,9 +36,9 @@ public class BasicIndustryRule extends BaseBasicRule<BasicIndustryContext> {
   }
 
   @Override
-  public BasicIndustryContext getContext(Boolean isFinalChecks, List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
+  public BasicIndustryContext getContext(List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
       List<DictionaryWorkingIndustry> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
       WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressData registrationsAddressData) {
-    return new BasicIndustryContext(isFinalChecks, workingIndustry, dictionaryWorkingIndustries);
+    return new BasicIndustryContext(workingIndustry, dictionaryWorkingIndustries);
   }
 }

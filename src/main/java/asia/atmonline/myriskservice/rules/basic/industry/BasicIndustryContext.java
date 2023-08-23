@@ -14,8 +14,8 @@ public class BasicIndustryContext extends BaseBasicContext {
   private final WorkingIndustry workingIndustry;
   private final List<DictionaryWorkingIndustry> dictionaryWorkingIndustries;
 
-  public BasicIndustryContext(Boolean isFinalChecks, WorkingIndustry workingIndustry, List<DictionaryWorkingIndustry> dictionaryWorkingIndustries) {
-    super(isFinalChecks);
+  public BasicIndustryContext(WorkingIndustry workingIndustry, List<DictionaryWorkingIndustry> dictionaryWorkingIndustries) {
+    super();
     this.workingIndustry = workingIndustry;
     this.dictionaryWorkingIndustries = dictionaryWorkingIndustries;
   }

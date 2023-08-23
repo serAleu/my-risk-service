@@ -26,6 +26,7 @@ public class ScoreSqsListener extends BaseSqsListener {
   @SqsListener(value = "${aws.sqs.score.receiver.queue-name}")
   public void listenQueue(RiskRequestJpaEntity request) {
     try {
+      log.info(request.toString());
       super.listenQueue(request, engine);
     } catch (Exception e) {
       log.error("my-risk-service-" + activeProfile + " Error while processing message from the score-checks request queue. " + e.getMessage()

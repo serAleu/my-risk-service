@@ -40,9 +40,9 @@ public class BasicRegionRule extends BaseBasicRule<BasicRegionContext> {
   }
 
   @Override
-  public BasicRegionContext getContext(Boolean isFinalChecks, List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
+  public BasicRegionContext getContext(List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
       List<DictionaryWorkingIndustry> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
       WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressData registrationsAddressData) {
-    return new BasicRegionContext(isFinalChecks, registrationsAddressData, dictionaryAddressCities);
+    return new BasicRegionContext(registrationsAddressData, dictionaryAddressCities);
   }
 }

@@ -5,6 +5,7 @@ import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.services.seon.SeonFraudService;
 import io.awspring.cloud.sqs.annotation.SqsListener;
+import asia.atmonline.myriskservice.services.seon.SeonFraudChecksService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -14,18 +15,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class SeonFraudSqsListener extends BaseSqsListener {
 
-  private final RiskServiceEngine<SeonFraudService> engine;
+  private final RiskServiceEngine<SeonFraudChecksService> engine;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public SeonFraudSqsListener(AsyncTaskExecutor threadPoolQueue, SeonFraudService seonFraudService) {
+  public SeonFraudSqsListener(AsyncTaskExecutor threadPoolQueue, SeonFraudChecksService seonFraudChecksService) {
     super(threadPoolQueue);
-    this.engine = new RiskServiceEngine<>(seonFraudService);
+    this.engine = new RiskServiceEngine<>(seonFraudChecksService);
   }
 
   @SqsListener(value = "${aws.sqs.seon-fraud.receiver.queue-name}")
   public void listenQueue(RiskRequestJpaEntity request) {
     try {
+      log.info(request.toString());
       super.listenQueue(request, engine);
     } catch (Exception e) {
       log.error("my-risk-service-" + activeProfile + " Error while processing message from the seon-fraud-checks request queue. " + e.getMessage()

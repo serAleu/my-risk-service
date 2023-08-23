@@ -14,8 +14,8 @@ public class BasicOccupationContext extends BaseBasicContext {
   private final OccupationType occupationType;
   private final List<DictionaryOccupationType> dictionaryOccupationTypes;
 
-  public BasicOccupationContext(Boolean isFinalChecks, OccupationType occupationType, List<DictionaryOccupationType> dictionaryOccupationTypes) {
-    super(isFinalChecks);
+  public BasicOccupationContext(OccupationType occupationType, List<DictionaryOccupationType> dictionaryOccupationTypes) {
+    super();
     this.occupationType = occupationType;
     this.dictionaryOccupationTypes = dictionaryOccupationTypes;
   }

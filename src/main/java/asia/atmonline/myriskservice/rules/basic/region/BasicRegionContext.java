@@ -14,8 +14,8 @@ public class BasicRegionContext extends BaseBasicContext {
   private final AddressData registrationsAddressData;
   private final List<DictionaryAddressCity> dictionaryAddressCities;
 
-  public BasicRegionContext(Boolean isFinalChecks, AddressData registrationsAddressData, List<DictionaryAddressCity> dictionaryAddressCities) {
-    super(isFinalChecks);
+  public BasicRegionContext(AddressData registrationsAddressData, List<DictionaryAddressCity> dictionaryAddressCities) {
+    super();
     this.registrationsAddressData = registrationsAddressData;
     this.dictionaryAddressCities = dictionaryAddressCities;
   }

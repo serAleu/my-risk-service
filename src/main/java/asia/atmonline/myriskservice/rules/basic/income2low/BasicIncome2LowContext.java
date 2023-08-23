@@ -11,8 +11,8 @@ public class BasicIncome2LowContext extends BaseBasicContext {
   private final Long income;
   private final Long permittedIncome;
 
-  public BasicIncome2LowContext(Boolean isFinalChecks, Long income, Long permittedIncome) {
-    super(isFinalChecks);
+  public BasicIncome2LowContext(Long income, Long permittedIncome) {
+    super();
     this.income = income;
     this.permittedIncome = permittedIncome;
   }
