@@ -6,15 +6,15 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.awspring.cloud.core.env.ResourceIdResolver;
 import io.awspring.cloud.messaging.config.QueueMessageHandlerFactory;
+import io.awspring.cloud.messaging.config.annotation.EnableSqs;
+import io.awspring.cloud.messaging.core.QueueMessagingTemplate;
 import io.awspring.cloud.messaging.listener.QueueMessageHandler;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.aws.core.env.ResourceIdResolver;
-import org.springframework.cloud.aws.messaging.config.annotation.EnableSqs;
-import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -27,7 +27,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
 //@Getter
-@EnableSqs
 public class AwsConfig {
 
   @Value("${aws.credentials.access-key}")
@@ -61,13 +60,6 @@ public class AwsConfig {
     return new BasicAWSCredentials(awsCredentialsAccessKey, awsCredentialsSecretKey);
   }
 
-//  @Bean
-//  public SimpleMessageListenerContainer simpleMessageListenerContainer() {
-//    SimpleMessageListenerContainer messageListenerContainer = simpleMessageListenerContainerFactory().createSimpleMessageListenerContainer();
-//    messageListenerContainer.setMessageHandler(queueMessageHandler());
-//    return messageListenerContainer;
-//  }
-
   @Bean
   public QueueMessagingTemplate queueMessagingTemplate(AmazonSQSAsync amazonSQSAsync, MessageConverter messageConverter) {
     return new QueueMessagingTemplate(amazonSQSAsync, (ResourceIdResolver) null, messageConverter);
@@ -83,18 +75,6 @@ public class AwsConfig {
     threadPoolTaskExecutor.afterPropertiesSet();
     threadPoolTaskExecutor.setRejectedExecutionHandler(new BlockingTaskSubmissionPolicy(1000));
     return threadPoolTaskExecutor;
-  }
-
-  @Bean
-  public QueueMessageHandler queueMessageHandler() {
-    QueueMessageHandlerFactory queueMsgHandlerFactory = new QueueMessageHandlerFactory();
-    queueMsgHandlerFactory.setAmazonSqs(awsSQSAsync());
-    QueueMessageHandler queueMessageHandler = queueMsgHandlerFactory.createQueueMessageHandler();
-    List<HandlerMethodArgumentResolver> list = new ArrayList<>();
-    HandlerMethodArgumentResolver resolver = new PayloadMethodArgumentResolver(new MappingJackson2MessageConverter());
-    list.add(resolver);
-    queueMessageHandler.setArgumentResolvers(list);
-    return queueMessageHandler;
   }
 
   @Bean
