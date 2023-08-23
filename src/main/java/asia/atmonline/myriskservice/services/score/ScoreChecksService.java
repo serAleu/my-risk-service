@@ -103,23 +103,23 @@ public class ScoreChecksService extends BaseChecksService {
     if(3 == request.getScoreNodeId()) {
 //      Optional<SystemProperty> termMaxProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathTermMax);
       Optional<SystemProperty> termMaxProperty = null;
-      if(termMaxProperty.isPresent() && termMaxProperty.get().getTerm() != null) {
-        map.put(scorePathTermMax, termMaxProperty.get().getTerm());
+      if(termMaxProperty.isPresent() && termMaxProperty.get().getValue() != null) {
+        map.put(scorePathTermMax, Long.parseLong(termMaxProperty.get().getValue()));
       }
 //      Optional<SystemProperty> amountMaxProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathAmountMax);
       Optional<SystemProperty> amountMaxProperty = null;
-      if(amountMaxProperty.isPresent() && amountMaxProperty.get().getAmount() != null) {
-        map.put(scorePathAmountMax, amountMaxProperty.get().getAmount());
+      if(amountMaxProperty.isPresent() && amountMaxProperty.get().getValue() != null) {
+        map.put(scorePathAmountMax, Long.parseLong(amountMaxProperty.get().getValue()));
       }
 //      Optional<SystemProperty> termMinProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathTermMin);
       Optional<SystemProperty> termMinProperty = null;
-      if(termMinProperty.isPresent() && termMinProperty.get().getTerm() != null) {
-        map.put(scorePathTermMin, termMinProperty.get().getTerm());
+      if(termMinProperty.isPresent() && termMinProperty.get().getValue() != null) {
+        map.put(scorePathTermMin, Long.parseLong(termMinProperty.get().getValue()));
       }
 //      Optional<SystemProperty> amountMinProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathAmountMin);
       Optional<SystemProperty> amountMinProperty = null;
-      if(amountMinProperty.isPresent() && amountMinProperty.get().getAmount() != null) {
-        map.put(scorePathAmountMin, amountMinProperty.get().getAmount());
+      if(amountMinProperty.isPresent() && amountMinProperty.get().getValue() != null) {
+        map.put(scorePathAmountMin, Long.parseLong(amountMinProperty.get().getValue()));
       }
     }
     return map;

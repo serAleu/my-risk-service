@@ -9,17 +9,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "system_property")
+@Table(name = "dictionary_working_industry")
 @NoArgsConstructor
 @Getter
 @Setter
-public class SystemProperty extends BaseStorageEntity {
+public class DictionaryWorkingIndustry extends BaseStorageEntity {
 
-  @Column(name = "value", nullable = false)
-  private String value;
-  @Column(name = "type", nullable = false)
-  private Long type;
-  @Column(name = "property_key", nullable = false)
-  private Integer propertyKey;
-
+  @Column(name = "deleted")
+  private Boolean deleted;
+  @Column(name = "active")
+  private Boolean active;
+  @Column(name = "nameen")
+  private String nameEn;
+  @Column(name = "namemy")
+  private String nameMy;
 }

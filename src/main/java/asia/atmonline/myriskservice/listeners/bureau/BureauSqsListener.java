@@ -27,6 +27,7 @@ public class BureauSqsListener extends BaseSqsListener {
   @SqsListener(value = "${aws.sqs.bureau.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(RiskRequestJpaEntity request) {
     try {
+      log.info(request.toString());
       super.listenQueue(request, engine);
     } catch (Exception e) {
       log.error("my-risk-service-" + activeProfile + " Error while processing message from the bureau-checks request queue. " + e.getMessage()

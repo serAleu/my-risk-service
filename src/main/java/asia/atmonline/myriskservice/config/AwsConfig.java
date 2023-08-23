@@ -24,7 +24,6 @@ import org.springframework.messaging.handler.invocation.HandlerMethodArgumentRes
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
-//@Getter
 @EnableSqs
 public class AwsConfig {
 
@@ -38,12 +37,8 @@ public class AwsConfig {
   private Integer awsDefaultTaskExecutorMaxPoolSize;
   @Value("${aws.default-task-executor.queue-capacity}")
   private Integer awsDefaultTaskExecutorQueueCapacity;
-//  @Value("{$aws.default-task-executor.blocking-task-timeout}")
-//  private Long awsDefaultTaskExecutorBlockingTaskTimeout;
   @Value("${aws.sqs.max-number-of-messages}")
   private Integer awsSqsMaxNumberOfMessages;
-//  @Value("{$aws.sqs.back-off-time}")
-//  private String awsSqsBackOffTime;
 
   @Bean
   @Primary
