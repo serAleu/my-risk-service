@@ -5,20 +5,22 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.awspring.cloud.messaging.config.QueueMessageHandlerFactory;
+import io.awspring.cloud.messaging.listener.QueueMessageHandler;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.aws.messaging.config.QueueMessageHandlerFactory;
-import org.springframework.cloud.aws.messaging.config.SimpleMessageListenerContainerFactory;
+import org.springframework.cloud.aws.core.env.ResourceIdResolver;
 import org.springframework.cloud.aws.messaging.config.annotation.EnableSqs;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
-import org.springframework.cloud.aws.messaging.listener.QueueMessageHandler;
-import org.springframework.cloud.aws.messaging.listener.SimpleMessageListenerContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.handler.annotation.support.PayloadMethodArgumentResolver;
 import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -38,7 +40,7 @@ public class AwsConfig {
   private Integer awsDefaultTaskExecutorMaxPoolSize;
   @Value("${aws.default-task-executor.queue-capacity}")
   private Integer awsDefaultTaskExecutorQueueCapacity;
-//  @Value("{$aws.default-task-executor.blocking-task-timeout}")
+  //  @Value("{$aws.default-task-executor.blocking-task-timeout}")
 //  private Long awsDefaultTaskExecutorBlockingTaskTimeout;
   @Value("${aws.sqs.max-number-of-messages}")
   private Integer awsSqsMaxNumberOfMessages;
@@ -56,19 +58,19 @@ public class AwsConfig {
 
   @Bean
   public BasicAWSCredentials awsCredentialsProvider() {
-    return new BasicAWSCredentials(awsCredentialsAccessKey,awsCredentialsSecretKey);
+    return new BasicAWSCredentials(awsCredentialsAccessKey, awsCredentialsSecretKey);
   }
 
-  @Bean
-  public SimpleMessageListenerContainer simpleMessageListenerContainer() {
-    SimpleMessageListenerContainer messageListenerContainer = simpleMessageListenerContainerFactory().createSimpleMessageListenerContainer();
-    messageListenerContainer.setMessageHandler(queueMessageHandler());
-    return messageListenerContainer;
-  }
+//  @Bean
+//  public SimpleMessageListenerContainer simpleMessageListenerContainer() {
+//    SimpleMessageListenerContainer messageListenerContainer = simpleMessageListenerContainerFactory().createSimpleMessageListenerContainer();
+//    messageListenerContainer.setMessageHandler(queueMessageHandler());
+//    return messageListenerContainer;
+//  }
 
   @Bean
-  public QueueMessagingTemplate queueMessagingTemplate() {
-    return new QueueMessagingTemplate(awsSQSAsync());
+  public QueueMessagingTemplate queueMessagingTemplate(AmazonSQSAsync amazonSQSAsync, MessageConverter messageConverter) {
+    return new QueueMessagingTemplate(amazonSQSAsync, (ResourceIdResolver) null, messageConverter);
   }
 
   @Bean(name = "threadPoolQueue")
@@ -96,12 +98,28 @@ public class AwsConfig {
   }
 
   @Bean
-  public SimpleMessageListenerContainerFactory simpleMessageListenerContainerFactory() {
-    SimpleMessageListenerContainerFactory factory = new SimpleMessageListenerContainerFactory();
-    factory.setAmazonSqs(awsSQSAsync());
-    factory.setAutoStartup(true);
-    factory.setMaxNumberOfMessages(awsSqsMaxNumberOfMessages);
-    factory.setBackOffTime(60000L);
-    return factory;
+  public QueueMessageHandlerFactory queueMessageHandlerFactory(
+      final AmazonSQSAsync amazonSQSAsync,
+      final MessageConverter messageConverter,
+      final ObjectMapper mapper) {
+
+    final QueueMessageHandlerFactory queueHandlerFactory = new QueueMessageHandlerFactory();
+    queueHandlerFactory.setAmazonSqs(amazonSQSAsync);
+    queueHandlerFactory.setArgumentResolvers(Collections.singletonList(new PayloadMethodArgumentResolver(messageConverter)));
+    queueHandlerFactory.setObjectMapper(mapper);
+    queueHandlerFactory.setMessageConverters(Collections.singletonList(messageConverter));
+    return queueHandlerFactory;
+  }
+
+  @Bean
+  protected MessageConverter messageConverter(ObjectMapper objectMapper) {
+
+    var converter = new MappingJackson2MessageConverter();
+    converter.setObjectMapper(objectMapper);
+    // Serialization support:
+    converter.setSerializedPayloadClass(String.class);
+    // Deserialization support: (suppress "contentType=application/json" header requirement)
+    converter.setStrictContentTypeMatch(false);
+    return converter;
   }
 }
