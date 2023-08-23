@@ -4,9 +4,10 @@ import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEnti
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
-import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
+import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ public class BlacklistSqsListener extends BaseSqsListener {
     this.engine = new RiskServiceEngine<>(blacklistChecksService);
   }
 
-  @SqsListener(value = "${aws.sqs.blacklists.receiver.queue-name}")
+  @SqsListener(value = "${aws.sqs.blacklists.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
   public void listenQueue(RiskRequestJpaEntity request) {
     try {
       log.info(request.toString());
