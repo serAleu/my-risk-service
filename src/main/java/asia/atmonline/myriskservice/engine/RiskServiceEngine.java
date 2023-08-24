@@ -34,7 +34,7 @@ public class RiskServiceEngine<S extends BaseChecksService> {
 //      service.getProducer().sendResponse(response);
 //      service.save(response);
 //    } else {
-//      log.warn("Unacceptable request to Risk Service. request = " + request.toString());
+//      log.warn("Unacceptable request to Risk Service. request = " + request);
 //    }
 //  }
 

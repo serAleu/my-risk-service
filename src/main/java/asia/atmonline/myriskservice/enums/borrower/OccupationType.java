@@ -35,5 +35,4 @@ public enum OccupationType {
         .sorted(Comparator.comparing(OccupationType::name))
         .toArray(OccupationType[]::new);
   }
-
 }

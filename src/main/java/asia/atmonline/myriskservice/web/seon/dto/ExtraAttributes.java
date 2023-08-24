@@ -10,10 +10,9 @@ import org.apache.commons.collections4.MapUtils;
 @Getter
 @AllArgsConstructor
 public enum ExtraAttributes {
-  SEON_SESSION_ID (true),
+  SEON_SESSION_ID(true),
   SEON_SESSION(true),
-  PUSH_NOTIFICATION_ELIGIBILITY(true),
-  ;
+  PUSH_NOTIFICATION_ELIGIBILITY(true);
 
   private final boolean updatable;
 

@@ -9,9 +9,11 @@ import lombok.Setter;
 public class BasicIncome2LowContext extends BaseBasicContext {
 
   private final Long income;
+  private final Long permittedIncome;
 
-  public BasicIncome2LowContext(Long income) {
+  public BasicIncome2LowContext(Long income, Long permittedIncome) {
     super();
     this.income = income;
+    this.permittedIncome = permittedIncome;
   }
 }
