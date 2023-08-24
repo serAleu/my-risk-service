@@ -4,10 +4,9 @@ import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEnti
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
 import asia.atmonline.myriskservice.services.fin.FinalChecksService;
+import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
-import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,7 @@ public class FinalSqsListener extends BaseSqsListener {
     this.engine = new RiskServiceEngine<>(finalChecksService);
   }
 
-  @SqsListener(value = "${aws.sqs.final.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+  @SqsListener(value = "${aws.sqs.final.receiver.queue-name}")
   public void listenQueue(RiskRequestJpaEntity request) {
     try {
       super.listenQueue(request, engine);
