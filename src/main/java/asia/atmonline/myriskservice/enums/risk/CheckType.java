@@ -8,5 +8,7 @@ public enum CheckType {
   DEDUP,
   FINAL,
   SCORE,
-  SEON
+  SEON,
+  CREDIT_HISTORY_AVAILABILITY,
+  EXPERIAN
 }

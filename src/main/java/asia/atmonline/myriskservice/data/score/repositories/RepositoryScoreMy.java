@@ -30,12 +30,12 @@ public class RepositoryScoreMy {
     List<String> scoreFilesList;
     if (IL.equals(code)) {
       Map<String, Object> map = new HashMap<>();
-      map.put("creditApplicationId", request.getCreditApplicationId());
+      map.put("creditApplicationId", request.getApplicationId());
       map.put("nodeId", request.getScoreNodeId());
       scoreFilesList = namedParameterJdbcTemplateMy.query(scoreModel, map, (rs, rowNum) -> rs.getString(1));
     } else {
       scoreFilesList = namedParameterJdbcTemplateMy.query(scoreModel,
-          new MapSqlParameterSource("creditApplicationId", request.getCreditApplicationId()), (rs, rowNum) -> rs.getString(1));
+          new MapSqlParameterSource("creditApplicationId", request.getApplicationId()), (rs, rowNum) -> rs.getString(1));
     }
     return scoreFilesList.get(0);
   }

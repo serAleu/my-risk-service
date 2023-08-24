@@ -24,28 +24,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @SequenceGenerator(name = "sequence-generator", sequenceName = "risk_request_id_seq", allocationSize = 1)
 public class RiskRequestJpaEntity extends BaseJpaEntity {
 
-  @JsonProperty("check_type")
   @Enumerated(EnumType.STRING)
   @Column(name = "check_type", nullable = false)
   private CheckType checkType;
 
-  @JsonProperty("application_id")
   @Column(name = "credit_application_id")
-  private Long creditApplicationId;
+  private Long applicationId;
 
-  @JsonProperty("phone_num")
   @Column(name = "phone_num")
-  private String phoneNum;
+  private String phone;
 
-  @JsonProperty("score_node_id")
   @Column(name = "score_node_id")
   private Long scoreNodeId;
-
-  @Override
-  @Transient
-  public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-  }
 
   @Override
   public String repositoryName() {

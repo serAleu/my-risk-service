@@ -27,7 +27,7 @@ public class DataScoreService {
       ScoreResponseJpaEntity scoreResponseJpaEntity = mapper.readValue(scoreModelResponse, ScoreResponseJpaEntity.class);
       return scoreResponseJpaRepository.save(scoreResponseJpaEntity);
     } catch (Exception e) {
-      log.error("Error while score model executing. credit_application_id = " + request.getCreditApplicationId() + " " + e.getMessage());
+      log.error("Error while score model executing. credit_application_id = " + request.getApplicationId() + " " + e.getMessage());
       return null;
     }
   }

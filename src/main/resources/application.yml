@@ -44,6 +44,9 @@ datasource:
   username: ${DB_MY_LOGIN:postgres}
   password: ${DB_MY_PASSWORD:postgres}
 
+request:
+  queue: ${REQUEST_QUEUES:my-risk-bl-request-preprod,my-risk-cooldown-request-preprod,my-risk-dedup-request-preprod,my-risk-basic-request-preprod,my-risk-score-request-preprod,my-risk-seon-fraud-request-preprod,my-risk-bureau-request-preprod,my-risk-final-request-preprod,my-risk-experian-request-preprod,my-risk-credit-history-request-preprod}
+
 aws:
   credentials:
     access-key: ${AWS_ACCESS_KEY:AKIAWH5BMXL7TDQER3MH}
