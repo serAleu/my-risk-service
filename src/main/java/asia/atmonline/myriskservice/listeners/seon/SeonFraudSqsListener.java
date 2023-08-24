@@ -3,11 +3,10 @@ package asia.atmonline.myriskservice.listeners.seon;
 import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.engine.RiskServiceEngine;
 import asia.atmonline.myriskservice.listeners.BaseSqsListener;
-import asia.atmonline.myriskservice.services.seon.SeonFraudChecksService;
+import asia.atmonline.myriskservice.services.seon.SeonFraudService;
+import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
-import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -15,19 +14,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class SeonFraudSqsListener extends BaseSqsListener {
 
-  private final RiskServiceEngine<SeonFraudChecksService> engine;
+  private final RiskServiceEngine<SeonFraudService> engine;
   @Value("${spring.config.activate.on-profile}")
   private String activeProfile;
 
-  public SeonFraudSqsListener(AsyncTaskExecutor threadPoolQueue, SeonFraudChecksService seonFraudChecksService) {
+  public SeonFraudSqsListener(AsyncTaskExecutor threadPoolQueue, SeonFraudService seonFraudService) {
     super(threadPoolQueue);
-    this.engine = new RiskServiceEngine<>(seonFraudChecksService);
+    this.engine = new RiskServiceEngine<>(seonFraudService);
   }
 
-  @SqsListener(value = "${aws.sqs.seon-fraud.receiver.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ALWAYS)
+  @SqsListener(value = "${aws.sqs.seon-fraud.receiver.queue-name}")
   public void listenQueue(RiskRequestJpaEntity request) {
     try {
-      log.info(request.toString());
       super.listenQueue(request, engine);
     } catch (Exception e) {
       log.error("my-risk-service-" + activeProfile + " Error while processing message from the seon-fraud-checks request queue. " + e.getMessage()
