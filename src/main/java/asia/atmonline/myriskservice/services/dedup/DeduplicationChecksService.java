@@ -107,7 +107,7 @@ public class DeduplicationChecksService extends BaseChecksService {
   }
 
   @Transactional(readOnly = true)
-  private Integer countApproved(Set<Long> borrowerIds) {
+  public Integer countApproved(Set<Long> borrowerIds) {
     if (borrowerIds.isEmpty()) {
       return 0;
     }
@@ -115,12 +115,12 @@ public class DeduplicationChecksService extends BaseChecksService {
   }
 
   @Transactional(readOnly = true)
-  private Integer countByApplicationRejectedAndBorrowerIdIn(Set<Long> borrowerIds) {
+  public Integer countByApplicationRejectedAndBorrowerIdIn(Set<Long> borrowerIds) {
     return borrowerJpaRepository.countByApplicationRejectedAndBorrowerIdIn(borrowerIds, CreditApplicationStatus.REJECTED.getCode());
   }
 
   @Transactional(readOnly = true)
-  private Integer countInProgress(Set<Long> borrowerIds) {
+  public Integer countInProgress(Set<Long> borrowerIds) {
     if (borrowerIds.isEmpty()) {
       return 0;
     }
@@ -129,7 +129,7 @@ public class DeduplicationChecksService extends BaseChecksService {
   }
 
   @Transactional(readOnly = true)
-  private Integer countNotFinishedCredits(Set<Long> borrowerIds) {
+  public Integer countNotFinishedCredits(Set<Long> borrowerIds) {
     if (borrowerIds.isEmpty()) {
       return 0;
     }
@@ -137,7 +137,7 @@ public class DeduplicationChecksService extends BaseChecksService {
   }
 
   @Transactional(readOnly = true)
-  private Integer countDPDMaxMoreThan(Set<Long> borrowerIds) {
+  public Integer countDPDMaxMoreThan(Set<Long> borrowerIds) {
     if (borrowerIds.isEmpty()) {
       return 0;
     }
@@ -145,7 +145,7 @@ public class DeduplicationChecksService extends BaseChecksService {
   }
 
   @Transactional(readOnly = true)
-  private Set<Long> getDuplicatedBorrowerIdsForPostPvRoute(Borrower borrower) {
+  public Set<Long> getDuplicatedBorrowerIdsForPostPvRoute(Borrower borrower) {
     Set<Long> borrowerIds = new HashSet<>();
     borrowerIds.addAll(getBorrowerIdsByAdditionalPhone(borrower));
     borrowerIds.addAll(getBorrowerIdsByAdditionalNic(borrower));
