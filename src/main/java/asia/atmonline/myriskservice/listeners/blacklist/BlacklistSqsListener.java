@@ -7,6 +7,8 @@ import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
+import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 
