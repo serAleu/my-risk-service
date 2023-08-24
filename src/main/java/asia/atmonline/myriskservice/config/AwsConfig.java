@@ -1,6 +1,7 @@
 package asia.atmonline.myriskservice.config;
 
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.awspring.cloud.autoconfigure.sqs.SqsProperties.Listener;
 import io.awspring.cloud.sqs.config.SqsBootstrapConfiguration;
 import io.awspring.cloud.sqs.config.SqsMessageListenerContainerFactory;
@@ -10,7 +11,6 @@ import io.awspring.cloud.sqs.operations.SqsTemplate;
 import io.awspring.cloud.sqs.operations.TemplateAcknowledgementMode;
 import io.awspring.cloud.sqs.support.converter.SqsMessagingMessageConverter;
 import java.time.Duration;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -21,18 +21,23 @@ import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 @Configuration
 public class AwsConfig {
 
-  @NotNull
-  private static SqsMessagingMessageConverter getSqsMessagingMessageConverter() {
+  @Bean
+  public SqsMessagingMessageConverter getSqsMessagingMessageConverter(ObjectMapper mapper) {
     SqsMessagingMessageConverter messageConverter = new SqsMessagingMessageConverter();
     MappingJackson2MessageConverter payloadConverter = new MappingJackson2MessageConverter();
     payloadConverter.setPrettyPrint(true);
+    payloadConverter.setObjectMapper(mapper);
     messageConverter.setPayloadMessageConverter(payloadConverter);
     return messageConverter;
   }
 
   @Bean
-  public SqsTemplate template(SqsAsyncClient sqsAsyncClient) {
+  public SqsTemplate template(SqsAsyncClient sqsAsyncClient, ObjectMapper mapper) {
     return SqsTemplate.builder()
+        .configureDefaultConverter(converter -> {
+              converter.setObjectMapper(mapper);
+            }
+        )
         .sqsAsyncClient(sqsAsyncClient)
         .configure(options -> options
             .acknowledgementMode(TemplateAcknowledgementMode.MANUAL)
@@ -47,7 +52,8 @@ public class AwsConfig {
   }
 
   @Bean
-  SqsMessageListenerContainerFactory<Object> defaultSqsListenerContainerFactory(SqsAsyncClient sqsAsyncClient) {
+  SqsMessageListenerContainerFactory<Object> defaultSqsListenerContainerFactory(SqsAsyncClient sqsAsyncClient,
+      SqsMessagingMessageConverter messageConverter) {
     return SqsMessageListenerContainerFactory
         .builder()
         .configure(options -> options
@@ -55,7 +61,7 @@ public class AwsConfig {
             .acknowledgementInterval(Duration.ofSeconds(3))
             .acknowledgementThreshold(5)
             .acknowledgementOrdering(AcknowledgementOrdering.ORDERED)
-            .messageConverter(getSqsMessagingMessageConverter())
+            .messageConverter(messageConverter)
         )
         .sqsAsyncClient(sqsAsyncClient)
         .build();
