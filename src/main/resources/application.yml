@@ -9,6 +9,20 @@ spring:
     open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
   main:
     allow-bean-definition-overriding: ${SPRING_ALLOW_BEAN_OVERRIDING:true}
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    aws:
+      region:
+        auto: false
+        static: ap-southeast-1
+      credentials:
+        access-key: AKIAWH5BMXL72YM6U76D
+        secret-key: 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
+      stack:
+        auto: false
+  activemq:
+    broker-url:
 
 datasource:
   connectionTimeout: ${DATASOURCE_CONNECTION_TIMEOUT:60000}
@@ -119,3 +133,7 @@ score:
 #      enable: ${SEON_PHONE_STOP_FACTOR_ENABLE:false}
 #  fingerprint:
 #    enable: ${SEON_FINGERPRINT_ENABLE:true}
+
+
+
+
