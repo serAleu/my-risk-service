@@ -77,7 +77,7 @@ public class BasicChecksService extends BaseChecksService {
       Long income = borrower.getEmploymentData().getIncome().longValue();
       AddressData registrationsAddressData = borrower.getRegistrationAddress();
       for (BaseBasicRule rule : rules) {
-        response = rule.execute(rule.getContext(dictionaryAddressCityJpaRepository.findAll(), dictionaryOccupationTypeJpaRepository.findAll(),
+        response = rule.execute(rule.getContext(false, dictionaryAddressCityJpaRepository.findAll(), dictionaryOccupationTypeJpaRepository.findAll(),
             dictionaryWorkingIndustryJpaRepository.findAll(), age, rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, workingIndustry,
             occupationType, income, rulesBasicPermittedIncome, registrationsAddressData));
         if (response != null && REJECT.equals(response.getDecision())) {

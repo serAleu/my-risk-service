@@ -6,7 +6,10 @@ import asia.atmonline.myriskservice.rules.BaseRuleContext;
 
 public abstract class BaseBasicContext extends BaseRuleContext {
 
-  public BaseBasicContext() {
+  private final Boolean isFinalChecks;
+
+  public BaseBasicContext(Boolean isFinalChecks) {
     super(new RiskResponseJpaEntity<BasicSqsProducer>());
+    this.isFinalChecks = isFinalChecks;
   }
 }

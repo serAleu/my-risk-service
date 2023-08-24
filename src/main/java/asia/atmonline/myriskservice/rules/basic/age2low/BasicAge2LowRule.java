@@ -34,9 +34,9 @@ public class BasicAge2LowRule extends BaseBasicRule<BasicAge2LowContext> {
   }
 
   @Override
-  public BasicAge2LowContext getContext(List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
+  public BasicAge2LowContext getContext(Boolean isFinalChecks, List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
       List<DictionaryWorkingIndustry> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
       WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressData registrationsAddressData) {
-    return new BasicAge2LowContext(age, permittedLowAge);
+    return new BasicAge2LowContext(isFinalChecks, age, permittedLowAge);
   }
 }
