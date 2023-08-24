@@ -157,8 +157,6 @@ seon-fraud:
         enable: ${DEFAULT_SEON_PHONE_STOP_FACTOR_ENABLE:false}
     fingerprint:
       enable: ${DEFAULT_SEON_FINGERPRINT_ENABLE:true}
-server:
-  port: 8081
 
 
 
