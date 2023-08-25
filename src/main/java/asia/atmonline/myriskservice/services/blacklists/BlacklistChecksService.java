@@ -41,7 +41,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Primary
-@Profile("!mock")
 @Slf4j
 @RequiredArgsConstructor
 public class BlacklistChecksService implements BaseRiskChecksService {
