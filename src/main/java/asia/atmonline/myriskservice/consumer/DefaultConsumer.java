@@ -27,7 +27,7 @@ public class DefaultConsumer {
   @SneakyThrows
   @SqsListener("#{'${aws.sqs.request.queue}'.split(',')}")
   public void listen(RequestPayload payload) {
-    log.info(objectMapper.writeValueAsString(payload));
+    log.info(payload.toString());
     RiskRequestJpaEntity request = entityService.save(payloadMapper.payloadToEntity(payload));
     processors.stream()
         .filter(processor -> processor.isSuitable(request))

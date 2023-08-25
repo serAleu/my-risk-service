@@ -6,6 +6,8 @@ import asia.atmonline.myriskservice.enums.risk.RejectionReasonCode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter
 @Setter
@@ -18,4 +20,9 @@ public class ResponsePayload {
   private Long applicationId;
   private String phone;
   private Long borrowerId;
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+  }
 }
