@@ -1,6 +1,5 @@
 package asia.atmonline.myriskservice.data;
 
-import asia.atmonline.myriskservice.consumer.payload.RequestPayload;
 import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.risk.RiskRequestJpaRepository;
@@ -23,8 +22,8 @@ public class JpaEntityService {
   }
 
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public RiskResponseJpaEntity save(RiskResponseJpaEntity request) {
-    return responseJpaRepository.save(request);
+  public RiskResponseJpaEntity save(RiskResponseJpaEntity response) {
+    return responseJpaRepository.save(response);
   }
 
 }

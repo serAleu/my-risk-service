@@ -18,20 +18,20 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DefaultConsumer {
 
-  private final List<BaseRequestProcessor> services;
+  private final List<BaseRequestProcessor> processors;
 
   private final ObjectMapper objectMapper;
   private final PayloadMapper payloadMapper;
   private final JpaEntityService entityService;
 
   @SneakyThrows
-  @SqsListener("#{'${request.queue}'.split(',')}")
+  @SqsListener("#{'${aws.sqs.request.queue}'.split(',')}")
   public void listen(RequestPayload payload) {
     log.info(objectMapper.writeValueAsString(payload));
     RiskRequestJpaEntity request = entityService.save(payloadMapper.payloadToEntity(payload));
-    services.stream()
-        .filter(service -> service.isSuitable(payload))
-        .map(service -> service.process(request))
+    processors.stream()
+        .filter(processor -> processor.isSuitable(request))
+        .map(processor -> processor.process(request))
         .forEach(entityService::save);
   }
 

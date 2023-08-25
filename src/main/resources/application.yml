@@ -44,9 +44,6 @@ datasource:
   username: ${DB_MY_LOGIN:postgres}
   password: ${DB_MY_PASSWORD:postgres}
 
-request:
-  queue: ${REQUEST_QUEUES:my-risk-bl-request-preprod,my-risk-cooldown-request-preprod,my-risk-dedup-request-preprod,my-risk-basic-request-preprod,my-risk-score-request-preprod,my-risk-seon-fraud-request-preprod,my-risk-bureau-request-preprod,my-risk-final-request-preprod,my-risk-experian-request-preprod,my-risk-credit-history-request-preprod}
-
 aws:
   credentials:
     access-key: ${AWS_ACCESS_KEY:AKIAWH5BMXL7TDQER3MH}
@@ -59,44 +56,30 @@ aws:
   sqs:
     max-number-of-messages: ${SQS_MAX_NUMBER_OF_MESSAGES:10}
     back-off-time: ${SQS_BACK_OFF_TIME:60000}
+    request:
+      queue: ${REQUEST_QUEUES:my-risk-bl-request-preprod,my-risk-cooldown-request-preprod,my-risk-dedup-request-preprod,my-risk-basic-request-preprod,my-risk-score-request-preprod,my-risk-seon-fraud-request-preprod,my-risk-bureau-request-preprod,my-risk-final-request-preprod,my-risk-experian-request-preprod,my-risk-credit-history-request-preprod}
     blacklists:
-      receiver:
-        queue-name: ${BL_REQUEST_RISK_QUEUE:my-risk-bl-request-preprod}
       producer:
         queue-name: ${BL_RESPONSE_RISK_QUEUE:my-risk-bl-response-preprod}
     cooldown:
-      receiver:
-        queue-name: ${COOLDOWN_REQUEST_RISK_QUEUE:my-risk-cooldown-request-preprod}
       producer:
         queue-name: ${COOLDOWN_RESPONSE_RISK_QUEUE:my-risk-cooldown-response-preprod}
     dedup:
-      receiver:
-        queue-name: ${DEDUP_REQUEST_RISK_QUEUE:my-risk-dedup-request-preprod}
       producer:
         queue-name: ${DEDUP_RESPONSE_RISK_QUEUE:my-risk-dedup-response-preprod}
     basic:
-      receiver:
-        queue-name: ${BASIC_REQUEST_RISK_QUEUE:my-risk-basic-request-preprod}
       producer:
         queue-name: ${BASIC_RESPONSE_RISK_QUEUE:my-risk-basic-response-preprod}
     score:
-      receiver:
-        queue-name: ${SCORE_REQUEST_RISK_QUEUE:my-risk-score-request-preprod}
       producer:
         queue-name: ${SCORE_RESPONSE_RISK_QUEUE:my-risk-score-response-preprod}
     seon-fraud:
-      receiver:
-        queue-name: ${SEON_FRAUD_REQUEST_RISK_QUEUE:my-risk-seon-fraud-request-preprod}
       producer:
         queue-name: ${SEON_FRAUD_RESPONSE_RISK_QUEUE:my-risk-seon-fraud-response-preprod}
     bureau:
-      receiver:
-        queue-name: ${BUREAU_REQUEST_RISK_QUEUE:my-risk-bureau-request-preprod}
       producer:
         queue-name: ${BUREAU_RESPONSE_RISK_QUEUE:my-risk-bureau-response-preprod}
     final:
-      receiver:
-        queue-name: ${FINAL_REQUEST_RISK_QUEUE:my-risk-final-request-preprod}
       producer:
         queue-name: ${FINAL_RESPONSE_RISK_QUEUE:my-risk-final-response-preprod}
 

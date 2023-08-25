@@ -1,5 +1,7 @@
 package asia.atmonline.myriskservice.services.basic;
 
+import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
+
 import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.repositories.impl.risk.RiskRequestJpaRepository;
@@ -13,8 +15,12 @@ import asia.atmonline.myriskservice.data.storage.repositories.property.Dictionar
 import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryWorkingIndustryJpaRepository;
 import asia.atmonline.myriskservice.enums.borrower.OccupationType;
 import asia.atmonline.myriskservice.enums.borrower.WorkingIndustry;
+import asia.atmonline.myriskservice.rules.basic.BaseBasicContext;
+import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
+import asia.atmonline.myriskservice.services.BaseRiskChecksService;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +30,9 @@ import org.springframework.stereotype.Service;
 @Service
 @Profile("!mock")
 @RequiredArgsConstructor
-public class BasicChecksService {
+public class BasicChecksService implements BaseRiskChecksService {
 
-//  private final List<? extends BaseBasicRule<? extends BaseBasicContext>> rules;
+  private final List<? extends BaseBasicRule<? extends BaseBasicContext>> rules;
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
   private final DictionaryAddressCityJpaRepository dictionaryAddressCityJpaRepository;
   private final DictionaryWorkingIndustryJpaRepository dictionaryWorkingIndustryJpaRepository;
@@ -41,7 +47,13 @@ public class BasicChecksService {
   @Value("${rules.basic.income}")
   private Long rulesBasicPermittedIncome;
 
+  @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+    return process(request, false);
+  }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request, boolean isFinalCheck) {
     RiskResponseJpaEntity response = new RiskResponseJpaEntity();
     response.setRequestId(request.getId());
     Optional<CreditApplication> creditApplication = creditApplicationJpaRepository.findById(response.getApplicationId());
@@ -52,17 +64,17 @@ public class BasicChecksService {
       OccupationType occupationType = borrower.getBorrowerOccupationType();
       Long income = borrower.getEmploymentData().getIncome().longValue();
       AddressData registrationsAddressData = borrower.getRegistrationAddress();
-//      for (BaseBasicRule rule : rules) {
-//        response = rule.execute(rule.getContext(dictionaryAddressCityJpaRepository.findAll(), dictionaryOccupationTypeJpaRepository.findAll(),
-//            dictionaryWorkingIndustryJpaRepository.findAll(), age, rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, workingIndustry,
-//            occupationType, income, rulesBasicPermittedIncome, registrationsAddressData));
-//        if (response != null && REJECT.equals(response.getDecision())) {
-//          if (response.getRejection_reason_code() != null) {
-//            rule.saveToBlacklists(borrower.getId(), response.getRejection_reason_code());
-//          }
-//          return response;
-//        }
-//      }
+      for (BaseBasicRule rule : rules) {
+        response = rule.execute(rule.getContext(isFinalCheck, dictionaryAddressCityJpaRepository.findAll(), dictionaryOccupationTypeJpaRepository.findAll(),
+            dictionaryWorkingIndustryJpaRepository.findAll(), age, rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, workingIndustry,
+            occupationType, income, rulesBasicPermittedIncome, registrationsAddressData));
+        if (response != null && REJECT.equals(response.getDecision())) {
+          if (response.getRejectionReason() != null) {
+            rule.saveToBlacklists(borrower.getId(), response.getRejectionReason());
+          }
+          return response;
+        }
+      }
     }
     return response;
   }

@@ -2,14 +2,13 @@ package asia.atmonline.myriskservice.processors.impl;
 
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.APPROVE;
 
-import asia.atmonline.myriskservice.consumer.payload.RequestPayload;
 import asia.atmonline.myriskservice.consumer.payload.ResponsePayload;
 import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.enums.risk.CheckType;
 import asia.atmonline.myriskservice.mapper.PayloadMapper;
-import asia.atmonline.myriskservice.producers.DefaultProducer;
 import asia.atmonline.myriskservice.processors.BaseRequestProcessor;
+import asia.atmonline.myriskservice.producers.DefaultProducer;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,7 @@ public class MockRequestProcessor extends BaseRequestProcessor {
   private final PayloadMapper payloadMapper;
 
   @Override
-  public boolean isSuitable(RequestPayload payload) {
+  public boolean isSuitable(RiskRequestJpaEntity request) {
     return true;
   }
 
