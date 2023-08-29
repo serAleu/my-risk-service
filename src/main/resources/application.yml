@@ -109,6 +109,13 @@ score:
       rs3: ${BITBUCKET_PATH_TO_RS3:my_scoreservice_preprod/rs3/app.sql}
     token: ${BASIC_AUTH_BITBUCKET:Basic c2VyX2FsZXU6QVRCQkR2RHFrUTRYdXdGS1U0UjhyUXpYdWg4YkU2RTNFN0E2}
 
+experian:
+  base-url: ${EXPERIAN_BASE_URL:https://b2buat.experian.com.my/index.php/b2bgateway}
+  ccris:
+    url: ${EXPERIAN_CCRIS_SEARCH_URL:xxx}
+  retrieve-report:
+    url: ${EXPERIAN_RETRIEVE_REPORT_URL:xxx}
+
 seon-fraud:
   #  !PROD! license-key: ${SEON_LICENSE_KEY:6fb041e6-86ac-433e-93f6-ab128c72bceb}
   license-key: ${SEON_LICENSE_KEY:1856407c-4c65-43b7-b597-70ed5f228b0d}

@@ -28,6 +28,7 @@
 		<spring-cloud-starter-openfeign.version>4.0.3</spring-cloud-starter-openfeign.version>
 		<aws-java-sdk.version>2.20.132</aws-java-sdk.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+		<jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
 	</properties>
 
 	<dependencyManagement>
@@ -50,6 +51,11 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>${jaxb-api.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
