@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.config;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.awspring.cloud.autoconfigure.sqs.SqsProperties.Listener;
 import io.awspring.cloud.sqs.config.SqsBootstrapConfiguration;
@@ -41,7 +41,7 @@ public class AwsConfig {
         .sqsAsyncClient(sqsAsyncClient)
         .configure(options -> options
             .acknowledgementMode(TemplateAcknowledgementMode.MANUAL)
-            .defaultPayloadClass(RiskResponseJpaEntity.class)
+            .defaultPayloadClass(RiskResponseRiskJpaEntity.class)
         )
         .build();
   }

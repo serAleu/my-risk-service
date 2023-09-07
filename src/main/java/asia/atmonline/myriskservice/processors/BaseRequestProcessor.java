@@ -1,12 +1,12 @@
 package asia.atmonline.myriskservice.processors;
 
-import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 
 public abstract class BaseRequestProcessor {
 
-  public abstract boolean isSuitable(RiskRequestJpaEntity request);
+  public abstract boolean isSuitable(RiskRequestRiskJpaEntity request);
 
-  public abstract RiskResponseJpaEntity process(RiskRequestJpaEntity request);
+  public abstract RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request);
 
 }

@@ -1,22 +1,20 @@
 package asia.atmonline.myriskservice.data.storage.entity.borrower;
 
-import asia.atmonline.myriskservice.enums.application.ApplicationFormType;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressStateDictionary;
 import asia.atmonline.myriskservice.enums.application.ApplicationsStep;
 import asia.atmonline.myriskservice.enums.borrower.LoanPurpose;
-import asia.atmonline.myriskservice.enums.borrower.Occupation;
-import asia.atmonline.myriskservice.enums.borrower.OccupationType;
-import asia.atmonline.myriskservice.enums.borrower.WorkingIndustry;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,38 +42,24 @@ public class Borrower extends UserAccount {
   private UtmParametersData utmParametersData;
 
 //  @Embedded
-//  private ContactPersonData contactPerson1;
-//
-//  @Embedded
-//  private ContactPersonData contactPerson2;
+//  private ContactPersonData relative;
 
-  @Embedded
-  private CollateralData collateralData;
+  @JoinColumn(name = "ad_state_id")
+  @OneToOne(fetch = FetchType.LAZY)
+  private AddressStateDictionary residenceState;
 
-  @Embedded
-  private AddressData registrationAddress;
+  @JoinColumn(name = "ad_city_id")
+  @OneToOne(fetch = FetchType.LAZY)
+  private AddressCityDictionary residenceCity;
 
-//  @Embedded
-//  private AddressData residenceAddress;
+  @Column(name = "residence_house_street")
+  private String residenceHouseStreet;
 
   @Column(name = "bd_same_address", nullable = false, columnDefinition = "bool default false")
   private boolean sameAddress = false;
 
-//  private Set<PaymentCard> paymentCards;
-//  private Set<Comment> comments;
-//  private Set<Tag> tags;
-//  private Set<IovationData> iovationData;
-
   @Column(name = "dpd_max", nullable = false, columnDefinition = "integer default 0")
   private Integer DPDMax;
-
-  @Enumerated(EnumType.STRING)
-  @Column(name = "form_type")
-  private ApplicationFormType formType;
-
-//  @Enumerated(EnumType.STRING)
-//  @Column(name = "filled_form_step")
-//  private ApplicationFilledFormStep filledFormStep;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "loan_purpose")
@@ -84,9 +68,6 @@ public class Borrower extends UserAccount {
   @Column(name = "juicy_score_session_id")
   private String juicyScoreSessionId;
 
-//  @Column(name = "extra_attributes")
-//  private Map<ExtraAttributes, String> attributes;
-
   @Column(name = "last_application_step")
   @Enumerated(EnumType.STRING)
   private ApplicationsStep lastApplicationStep = ApplicationsStep.STEP_0;
@@ -94,28 +75,10 @@ public class Borrower extends UserAccount {
   @Column(name = "last_application_step_updated_at")
   private LocalDateTime lastApplicationStepUpdatedAt = LocalDateTime.now();
 
-//  public AddressData getResidenceAddress() {
-//    if (this.residenceAddress == null) {
-//      this.residenceAddress = new AddressData();
-//    }
-//    return residenceAddress;
-//  }
-
-//  public void setResidenceAddress(AddressData residenceAddress) {
-//    this.residenceAddress = residenceAddress;
-//  }
-
-//  public Set<IovationData> getIovationData() {
-//    if (iovationData == null) {
-//      iovationData = new HashSet<>();
-//    }
-//    return iovationData;
-//  }
-
   @Transient
   public String getName() {
     if (personalData != null) {
-      return personalData.getFirstName() + " " + personalData.getSecondName() + " " + personalData.getLastName();
+      return personalData.getFullName();
     } else {
       return "";
     }
@@ -160,55 +123,6 @@ public class Borrower extends UserAccount {
     return bankDetailsData;
   }
 
-//  public ContactPersonData getContactPerson1() {
-//    if (this.contactPerson1 == null) {
-//      contactPerson1 = new ContactPersonData();
-//    }
-//    return contactPerson1;
-//  }
-
-  public CollateralData getCollateralData() {
-    return this.collateralData != null ? this.collateralData : new CollateralData();
-  }
-
-//  public AddressData getRegistrationAddress() {
-//    if (this.registrationAddress == null) {
-//      this.registrationAddress = new AddressData();
-//    }
-//    return registrationAddress;
-//  }
-
-  public BigDecimal getBorrowerIncome() {
-    return Optional.ofNullable(getEmploymentData()).map(EmploymentData::getIncome).orElse(BigDecimal.ZERO);
-  }
-
-  public int getBorrowerAge() {
-    final LocalDate birthDate = Optional.ofNullable(getPersonalData()).map(PersonalData::getBirthDate).orElse(LocalDate.MIN);
-    return Period.between(birthDate, LocalDate.now()).getYears();
-  }
-
-  public OccupationType getBorrowerOccupationType() {
-    return Optional.ofNullable(getEmploymentData())
-        .map(EmploymentData::getOccupationType)
-        .orElse(OccupationType.UNEMPLOYED);
-  }
-
-  public WorkingIndustry getBorrowerWorkingIndustry() {
-    return Optional.ofNullable(getEmploymentData())
-        .map(EmploymentData::getWorkingIndustry)
-        .orElse(null);
-  }
-
-  public String getBorrowerWorkingIndustryName() {
-    return Optional.ofNullable(getEmploymentData().getWorkingIndustry())
-            .map(WorkingIndustry::name).orElse(null);
-  }
-
-  public String getBorrowerOccupationName() {
-    return Optional.ofNullable(getEmploymentData().getOccupation())
-            .map(Occupation::name).orElse(null);
-  }
-
   public String getBorrowerNIC() {
     return Optional.ofNullable(getIdentityData())
         .map(IdentityData::getPrimaryId)
@@ -251,36 +165,17 @@ public class Borrower extends UserAccount {
         .orElse(StringUtils.EMPTY);
   }
 
-//  public String getBorrowerFirstContactPersonPhone() {
-//    return Optional.ofNullable(getContactPerson1())
-//        .map(ContactPersonData::getPhone)
-//        .orElse(StringUtils.EMPTY);
-//  }
-
-//  public String getBorrowerSecondContactPersonPhone() {
-//    return Optional.ofNullable(getContactPerson2())
-//        .map(ContactPersonData::getPhone)
-//        .orElse(StringUtils.EMPTY);
-//  }
-
-//  public String getBorrowerEmployerPhone() {
-//    return Optional.ofNullable(getEmploymentData())
-//        .map(EmploymentData::getEmployerPhone)
-//        .orElse(StringUtils.EMPTY);
-//  }
-
-  public String getJuicyScoreSessionId() {
-    return juicyScoreSessionId;
-  }
-
   public void setJuicyScoreSessionId(String juicyScoreSessionId) {
     this.juicyScoreSessionId = juicyScoreSessionId;
   }
 
-//  public Map<ExtraAttributes, String> getAttributes() {
-//    if (this.attributes == null) {
-//      this.attributes = new EnumMap<>(ExtraAttributes.class);
-//    }
-//    return this.attributes;
+//  @Override
+//  public UserAccount setCreatedAt(LocalDateTime createdAt) {
+//    return super.setCreatedAt(createdAt);
 //  }
+
+  @Override
+  public LocalDateTime getCreatedAt() {
+    return super.getCreatedAt();
+  }
 }

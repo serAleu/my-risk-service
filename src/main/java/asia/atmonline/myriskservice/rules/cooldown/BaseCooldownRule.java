@@ -2,7 +2,7 @@ package asia.atmonline.myriskservice.rules.cooldown;
 
 import static asia.atmonline.myriskservice.enums.risk.CheckType.DEDUP;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;
 import asia.atmonline.myriskservice.rules.BaseRule;
@@ -17,7 +17,7 @@ public abstract class BaseCooldownRule<P extends BaseCooldownContext> extends Ba
 
   @Override
   @SuppressWarnings({"unchecked"})
-  public RiskResponseJpaEntity execute(P context) {
+  public RiskResponseRiskJpaEntity execute(P context) {
     return getApprovedResponse(context.getRiskResponseJpaEntity().getApplicationId(), DEDUP, context.getRiskResponseJpaEntity());
   }
 

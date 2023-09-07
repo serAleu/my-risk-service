@@ -2,14 +2,10 @@ package asia.atmonline.myriskservice.data.storage.entity.application;
 
 import asia.atmonline.myriskservice.data.storage.entity.BaseCreditEntity;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
-import asia.atmonline.myriskservice.data.storage.entity.borrower.CpaUtmData;
-import asia.atmonline.myriskservice.data.storage.entity.borrower.UtmParametersData;
-import asia.atmonline.myriskservice.enums.application.ApplicationFormType;
 import asia.atmonline.myriskservice.enums.application.CreditApplicationStatus;
 import asia.atmonline.myriskservice.enums.borrower.LoanPurpose;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,7 +14,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -93,10 +88,10 @@ public class CreditApplication extends BaseCreditEntity {
 //  @JoinColumn(name = "outgoing_transaction_id")
 //  private PaymentTransaction outgoingTransaction;
 
-  private UtmParametersData utmParametersData;
+//  private UtmParametersData utmParametersData;
 
-  @Embedded
-  private CpaUtmData cpaUtmData;
+//  @Embedded
+//  private CpaUtmData cpaUtmData;
 
   @Column(name = "underwriter_decision_made_at")
   private LocalDateTime underwriterDecisionMadeAt;
@@ -116,8 +111,8 @@ public class CreditApplication extends BaseCreditEntity {
   @Column(name = "lender_signed")
   private Boolean signedByLeander;
 
-  @Column(name = "signer")
-  private String signer;
+//  @Column(name = "signer")
+//  private String signer;
 
 //  @OneToOne(fetch = FetchType.LAZY)
 //  @JoinColumn(name = "device_info_id")
@@ -129,8 +124,8 @@ public class CreditApplication extends BaseCreditEntity {
 //  @Column(name = "rejection_reason", columnDefinition = "jsonb default '{}'")
 //  private RejectionReason rejectionReason;
 
-  @Column(name = "kyc_checked", columnDefinition = "boolean default false")
-  private boolean kycChecked = false;
+//  @Column(name = "kyc_checked", columnDefinition = "boolean default false")
+//  private boolean kycChecked = false;
 
   @JsonIgnore
   @Column(name = "rejection_reason_code")
@@ -143,8 +138,8 @@ public class CreditApplication extends BaseCreditEntity {
 //  @Column(name = "cpa_request_status")
 //  private CpaRequestStatus cpaRequestStatus;
 
-  @Column(name = "repaid_loan_amount", nullable = false, updatable = false, columnDefinition = "bigint default 0")
-  private long repaidLoanAmount;
+//  @Column(name = "repaid_loan_amount", nullable = false, updatable = false, columnDefinition = "bigint default 0")
+//  private long repaidLoanAmount;
 
   @Column(name = "domain")
   private String domain;
@@ -186,8 +181,8 @@ public class CreditApplication extends BaseCreditEntity {
 //  @Column(name = "script_log", columnDefinition = "jsonb default '[]'")
 //  private List<String> scriptLog = new ArrayList<>();
 
-  @Transient
-  private Long contractId;
+//  @Transient
+//  private Long contractId;
 
   @Column(name = "auto_disbursement_passed")
   private boolean autoDisbursementPassed = false;
@@ -217,8 +212,8 @@ public class CreditApplication extends BaseCreditEntity {
 //  @Transient
 //  private FollowUpType followUpType;
 
-  @Transient
-  private LocalDateTime followUpReminderTime;
+//  @Transient
+//  private LocalDateTime followUpReminderTime;
 
   @Column(name = "score_results")
   private Integer scoreResult;
@@ -235,14 +230,14 @@ public class CreditApplication extends BaseCreditEntity {
   @Column(name = "pilot")
   private String pilot;
 
-  @Enumerated(EnumType.STRING)
-  @JsonIgnore
-  @Column(name = "form_type")
-  private ApplicationFormType formType;
+//  @Enumerated(EnumType.STRING)
+//  @JsonIgnore
+//  @Column(name = "form_type")
+//  private ApplicationFormType formType;
 
-  public boolean isFollowUpReminderTimeExpired() {
-    return followUpReminderTime != null && followUpReminderTime.isBefore(LocalDateTime.now());
-  }
+//  public boolean isFollowUpReminderTimeExpired() {
+//    return followUpReminderTime != null && followUpReminderTime.isBefore(LocalDateTime.now());
+//  }
 
   public void addPilotItem(String pilotItem) {
     Set<String> pilotList = new HashSet<>();

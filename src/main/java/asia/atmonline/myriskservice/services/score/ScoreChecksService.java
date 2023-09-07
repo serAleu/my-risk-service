@@ -2,12 +2,12 @@ package asia.atmonline.myriskservice.services.score;
 
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
-import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.ScoreResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.score.DataScoreService;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
-import asia.atmonline.myriskservice.data.storage.entity.property.SystemProperty;
+import asia.atmonline.myriskservice.data.storage.entity.property.impl.SystemProperty;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.property.SystemPropertyJpaRepository;
 import asia.atmonline.myriskservice.enums.application.ProductCode;
@@ -44,9 +44,9 @@ public class ScoreChecksService implements BaseRiskChecksService {
   private String scorePathAmountMin;
 
   @Override
-  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
-    ScoreResponseJpaEntity scoreResponseJpaEntity = new ScoreResponseJpaEntity().setCreditApplicationId(request.getApplicationId());
+  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
+    RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
+    ScoreResponseRiskJpaEntity scoreResponseJpaEntity = new ScoreResponseRiskJpaEntity().setCreditApplicationId(request.getApplicationId());
     Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getApplicationId());
     if(application.isPresent()) {
       ProductCode code = ProductCode.getProductByCode(application.get().getCreditProductId());
@@ -69,7 +69,7 @@ public class ScoreChecksService implements BaseRiskChecksService {
     return response;
   }
 
-  private Map<String, Long> getScoreLimitAndDecisionRestrictions(RiskRequestJpaEntity request) {
+  private Map<String, Long> getScoreLimitAndDecisionRestrictions(RiskRequestRiskJpaEntity request) {
     Map<String, Long> map = new HashMap<>();
     if(3 == request.getScoreNodeId()) {
 //      Optional<SystemProperty> termMaxProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathTermMax);

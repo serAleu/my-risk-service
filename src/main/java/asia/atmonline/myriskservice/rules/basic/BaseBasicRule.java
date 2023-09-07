@@ -2,11 +2,10 @@ package asia.atmonline.myriskservice.rules.basic;
 
 import static asia.atmonline.myriskservice.enums.risk.CheckType.BASIC;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.storage.entity.borrower.AddressData;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryAddressCity;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryOccupationType;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryWorkingIndustry;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.enums.borrower.OccupationType;
 import asia.atmonline.myriskservice.enums.borrower.WorkingIndustry;
 import asia.atmonline.myriskservice.rules.BaseRule;
@@ -20,12 +19,12 @@ public abstract class BaseBasicRule<P extends BaseBasicContext> extends BaseRule
   }
 
   @Override
-  public RiskResponseJpaEntity execute(P context) {
+  public RiskResponseRiskJpaEntity execute(P context) {
     return getApprovedResponse(context.getRiskResponseJpaEntity().getApplicationId(), BASIC, context.getRiskResponseJpaEntity());
   }
 
-  public abstract P getContext(boolean isFinalChecks, List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
-      List<DictionaryWorkingIndustry> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
-      WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressData registrationsAddressData);
+  public abstract P getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
+      List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
+      WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData);
 }
 

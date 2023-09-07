@@ -3,7 +3,7 @@ package asia.atmonline.myriskservice.rules.cooldown.applim_5w;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.APPLIM_5W;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;
 import asia.atmonline.myriskservice.rules.cooldown.BaseCooldownRule;
@@ -19,8 +19,8 @@ public class CooldownApplim5wRule extends BaseCooldownRule<CooldownApplim5wConte
   }
 
   @Override
-  public RiskResponseJpaEntity execute(CooldownApplim5wContext context) {
-    RiskResponseJpaEntity response = super.execute(context);
+  public RiskResponseRiskJpaEntity execute(CooldownApplim5wContext context) {
+    RiskResponseRiskJpaEntity response = super.execute(context);
     if(context.getNumOf5wApplications() > CooldownApplim5wContext.APPLICATIONS_LIMIT_NUM) {
       response.setDecision(REJECT);
       response.setRejectionReason(APPLIM_5W);

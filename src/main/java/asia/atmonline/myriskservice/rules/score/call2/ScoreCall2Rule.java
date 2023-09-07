@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.rules.score.call2;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SCORECALL2;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.ScoreResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.score.BaseScoreRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import java.util.Map;
@@ -18,8 +18,8 @@ public class ScoreCall2Rule extends BaseScoreRule<ScoreCall2Context> {
   }
 
   @Override
-  public RiskResponseJpaEntity execute(ScoreCall2Context context) {
-    RiskResponseJpaEntity response = super.execute(context);
+  public RiskResponseRiskJpaEntity execute(ScoreCall2Context context) {
+    RiskResponseRiskJpaEntity response = super.execute(context);
     if(context.getScoreNodeId() == 2 && 0 == context.getDecision()) {
       response.setDecision(REJECT);
       response.setRejectionReason(SCORECALL2);
@@ -28,7 +28,7 @@ public class ScoreCall2Rule extends BaseScoreRule<ScoreCall2Context> {
   }
 
   @Override
-  public ScoreCall2Context getContext(ScoreResponseJpaEntity response, Map<String, Long> score3RestrictionsMap) {
+  public ScoreCall2Context getContext(ScoreResponseRiskJpaEntity response, Map<String, Long> score3RestrictionsMap) {
     return new ScoreCall2Context(response.getDecision(), response.getScoreNodeId());
   }
 }

@@ -2,13 +2,13 @@ package asia.atmonline.myriskservice.services.basic;
 
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
-import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.repositories.impl.risk.RiskRequestJpaRepository;
-import asia.atmonline.myriskservice.data.repositories.impl.risk.RiskResponseJpaRepository;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.repositories.RiskRequestJpaRepository;
+import asia.atmonline.myriskservice.data.risk.repositories.RiskResponseJpaRepository;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
-import asia.atmonline.myriskservice.data.storage.entity.borrower.AddressData;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryAddressCityJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryOccupationTypeJpaRepository;
@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,22 +46,22 @@ public class BasicChecksService implements BaseRiskChecksService {
   private Long rulesBasicPermittedIncome;
 
   @Override
-  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
     return process(request, false);
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public RiskResponseJpaEntity process(RiskRequestJpaEntity request, boolean isFinalCheck) {
-    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
+  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request, boolean isFinalCheck) {
+    RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
     response.setRequestId(request.getId());
     Optional<CreditApplication> creditApplication = creditApplicationJpaRepository.findById(response.getApplicationId());
     if (creditApplication.isPresent() && creditApplication.get().getBorrower() != null) {
       Borrower borrower = creditApplication.get().getBorrower();
       Integer age = Period.between(borrower.getPersonalData().getBirthDate(), LocalDate.now()).getYears();
       WorkingIndustry workingIndustry = borrower.getEmploymentData().getWorkingIndustry();
-      OccupationType occupationType = borrower.getBorrowerOccupationType();
+      OccupationType occupationType = borrower.getEmploymentData().getOccupationType();
       Long income = borrower.getEmploymentData().getIncome().longValue();
-      AddressData registrationsAddressData = borrower.getRegistrationAddress();
+      AddressCityDictionary registrationsAddressData = borrower.getResidenceCity();
       for (BaseBasicRule rule : rules) {
         response = rule.execute(rule.getContext(isFinalCheck, dictionaryAddressCityJpaRepository.findAll(), dictionaryOccupationTypeJpaRepository.findAll(),
             dictionaryWorkingIndustryJpaRepository.findAll(), age, rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, workingIndustry,

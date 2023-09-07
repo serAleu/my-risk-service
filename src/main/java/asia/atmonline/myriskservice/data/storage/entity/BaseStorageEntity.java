@@ -1,9 +1,11 @@
 package asia.atmonline.myriskservice.data.storage.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
@@ -11,15 +13,19 @@ import org.hibernate.proxy.HibernateProxy;
 @MappedSuperclass
 @Getter
 @Setter
-public class BaseStorageEntity {
+public class BaseStorageEntity implements Serializable {
 
   public static final int DEFAULT_BATCH_SIZE = 500;
+
   public static final int DEFAULT_AMOUNT_SCALE = 0;
   public static final int AMOUNT_SCALE_4_SIGNS = 4;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Column(name = "deleted", nullable = false, columnDefinition = "bool default false")
+  private boolean deleted;
 
   @Override
   public int hashCode() {
@@ -40,6 +46,8 @@ public class BaseStorageEntity {
     if (obj == null) {
       return false;
     }
+    // need to get superclass while comparing entity with Hibernate proxy
+    // Super class is applicable because we are use CGLIB proxying.
     Class<?> objClass = (obj instanceof HibernateProxy)
         ? obj.getClass().getSuperclass()
         : obj.getClass();
@@ -48,9 +56,12 @@ public class BaseStorageEntity {
     }
     BaseStorageEntity other = (BaseStorageEntity) obj;
     if (this.getId() == null) {
-      return other.getId() == null;
-    } else {
-      return this.getId().equals(other.getId());
+      if (other.getId() != null) {
+        return false;
+      }
+    } else if (!this.getId().equals(other.getId())) {
+      return false;
     }
+    return true;
   }
 }

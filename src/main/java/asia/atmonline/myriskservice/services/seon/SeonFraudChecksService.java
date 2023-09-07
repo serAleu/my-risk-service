@@ -1,9 +1,9 @@
 package asia.atmonline.myriskservice.services.seon;
 
-import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.SeonFraudResponseJpaEntity;
-import asia.atmonline.myriskservice.data.repositories.impl.risk.responses.SeonFraudResponseJpaRepository;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.SeonFraudResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.repositories.external_responses.SeonFraudResponseJpaRepository;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.rules.seon.phone.SeonPhoneRule;
@@ -45,14 +45,14 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
   private final SeonPropertyManager seonPropertyManager;
 
   @Override
-  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
     Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getApplicationId());
     if (application.isPresent() && application.get().getBorrower() != null) {
       boolean isNewSeonData = false;
-      Optional<SeonFraudResponseJpaEntity> seonFraudOldResponseJpaEntityOptional = seonFraudResponseJpaRepository
+      Optional<SeonFraudResponseRiskJpaEntity> seonFraudOldResponseJpaEntityOptional = seonFraudResponseJpaRepository
           .findTop1ByBorrowerIdAndCreatedAtGreaterThanAndSuccessOrderByCreatedAtDesc(application.get().getBorrower().getId(),
               LocalDateTime.now().minus(seonPropertyManager.getSeonFraudRequestLimit(), ChronoUnit.DAYS), true);
-      SeonFraudResponseJpaEntity currentResponse;
+      SeonFraudResponseRiskJpaEntity currentResponse;
       if (seonFraudOldResponseJpaEntityOptional.isEmpty() || isNeedToGetNewSeonInfo(application.get(), seonFraudOldResponseJpaEntityOptional.get())) {
         currentResponse = getFraudData(application.get());
         isNewSeonData = true;
@@ -65,11 +65,11 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
       return seonPhoneRule.execute(new SeonPhoneRuleContext(application.get().getId(), currentResponse, isNewSeonData,
           seonPropertyManager.getSeonFraudPhoneStopFactorEnable()));
     }
-    return new RiskResponseJpaEntity();
+    return new RiskResponseRiskJpaEntity();
   }
 
   @Transactional
-  public SeonFraudResponseJpaEntity getFraudData(CreditApplication application) {
+  public SeonFraudResponseRiskJpaEntity getFraudData(CreditApplication application) {
     boolean seonEmailEnabled =
         seonPropertyManager.getSeonFraudEmailEnable() && StringUtils.isNoneBlank(application.getBorrower().getPersonalData().getPdEmail());
 
@@ -89,19 +89,19 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
 //        .sessionId(application.getBorrower().getAttributes().get(SEON_SESSION_ID))
         .session("TEST")
         .sessionId("TEST")
-        .userfullname(application.getBorrower().getPersonalData().getFullName())
+        .userfullname(application.getBorrower().getEmploymentData().getEmployerName())
         .userDob(application.getBorrower().getPersonalData().getBirthDate())
         .userId(application.getBorrower().getId()).userCountry("MY")
         .customFields(Collections.emptyMap()).build();
 
-    SeonFraudResponseJpaEntity seonFraudResponseJpaEntity;
+    SeonFraudResponseRiskJpaEntity seonFraudResponseJpaEntity;
     try {
       Object response = client.getSeonFraud(seonPropertyManager.getSeonFraudLicenseKey(), fraudRequest, seonPropertyManager.getSeonFraudTimeout());
       seonFraudResponseJpaEntity = extractSeonFraudResponseJpaEntity(response, application);
     } catch (Exception e) {
       log.error("Failed to get Seon fraud Response with Borrower id: {}, Application id: {}", application.getBorrower().getId(), application.getId(),
           e);
-      seonFraudResponseJpaEntity = SeonFraudResponseJpaEntity.builder()
+      seonFraudResponseJpaEntity = SeonFraudResponseRiskJpaEntity.builder()
           .borrowerId(application.getBorrower().getId())
           .creditApplicationId(application.getId())
           .phone(application.getBorrower().getPersonalData().getMobilePhone())
@@ -115,11 +115,11 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
     return seonFraudResponseJpaEntity;
   }
 
-  private SeonFraudResponseJpaEntity extractSeonFraudResponseJpaEntity(Object response, CreditApplication application)
+  private SeonFraudResponseRiskJpaEntity extractSeonFraudResponseJpaEntity(Object response, CreditApplication application)
       throws JsonProcessingException {
     String responseString = mapper.writeValueAsString(response);
     FraudResponse fraudResponse = JsonUtils.decodeDefault(responseString, FraudResponse.class);
-    SeonFraudResponseJpaEntity seonFraudResponseJpaEntity = new SeonFraudResponseJpaEntity().setCreditApplicationId(application.getId())
+    SeonFraudResponseRiskJpaEntity seonFraudResponseJpaEntity = new SeonFraudResponseRiskJpaEntity().setCreditApplicationId(application.getId())
         .setBorrowerId(application.getBorrower().getId())
         .setPhone(application.getBorrower().getPersonalData().getMobilePhone())
         .setFraudResponse(fraudResponse)
@@ -128,7 +128,7 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
     return seonFraudResponseJpaEntity;
   }
 
-  private boolean isNeedToGetNewSeonInfo(CreditApplication application, SeonFraudResponseJpaEntity seonFraudOldResponseJpaEntity) {
+  private boolean isNeedToGetNewSeonInfo(CreditApplication application, SeonFraudResponseRiskJpaEntity seonFraudOldResponseJpaEntity) {
     if (BooleanUtils.isNotTrue(seonFraudOldResponseJpaEntity.getSuccess())) {
       return true;
     }

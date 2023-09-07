@@ -4,11 +4,10 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.INCOME2LOW;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.INCOME2LOW_F;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.storage.entity.borrower.AddressData;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryAddressCity;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryOccupationType;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryWorkingIndustry;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.enums.borrower.OccupationType;
 import asia.atmonline.myriskservice.enums.borrower.WorkingIndustry;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
@@ -24,8 +23,8 @@ public class BasicIncome2LowRule extends BaseBasicRule<BasicIncome2LowContext> {
   }
 
   @Override
-  public RiskResponseJpaEntity execute(BasicIncome2LowContext context) {
-    RiskResponseJpaEntity response = super.execute(context);
+  public RiskResponseRiskJpaEntity execute(BasicIncome2LowContext context) {
+    RiskResponseRiskJpaEntity response = super.execute(context);
     if(context.getPermittedIncome() < context.getIncome()) {
       if (context.isFinalChecks) {
         response.setRejectionReason(INCOME2LOW_F);
@@ -38,9 +37,9 @@ public class BasicIncome2LowRule extends BaseBasicRule<BasicIncome2LowContext> {
   }
 
   @Override
-  public BasicIncome2LowContext getContext(boolean isFinalChecks, List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
-      List<DictionaryWorkingIndustry> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
-      WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressData registrationsAddressData) {
+  public BasicIncome2LowContext getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
+      List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
+      WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData) {
     return new BasicIncome2LowContext(isFinalChecks, income, permittedIncome);
   }
 }

@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.BL_PASSPORT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.BL_PASSPORT_F;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.deduplication.BaseDeduplicationRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import org.springframework.stereotype.Component;
@@ -17,8 +17,8 @@ public class DeduplicationBlPassportRule extends BaseDeduplicationRule<Deduplica
   }
 
   @Override
-  public RiskResponseJpaEntity execute(DeduplicationBlPassportContext context) {
-    RiskResponseJpaEntity response = super.execute(context);
+  public RiskResponseRiskJpaEntity execute(DeduplicationBlPassportContext context) {
+    RiskResponseRiskJpaEntity response = super.execute(context);
     if(context.isPassportNumMatchedWithBlPassportNum()) {
       if (context.isFinalChecks) {
         response.setRejectionReason(BL_PASSPORT_F);

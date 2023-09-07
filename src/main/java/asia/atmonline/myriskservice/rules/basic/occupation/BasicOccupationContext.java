@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.rules.basic.occupation;
 
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryOccupationType;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
 import asia.atmonline.myriskservice.enums.borrower.OccupationType;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicContext;
 import java.util.List;
@@ -12,11 +12,11 @@ import lombok.Setter;
 public class BasicOccupationContext extends BaseBasicContext {
 
   private final OccupationType occupationType;
-  private final List<DictionaryOccupationType> dictionaryOccupationTypes;
+  private final List<OccupationTypeDictionary> occupationTypeDictionaries;
 
-  public BasicOccupationContext(boolean isFinalChecks, OccupationType occupationType, List<DictionaryOccupationType> dictionaryOccupationTypes) {
+  public BasicOccupationContext(boolean isFinalChecks, OccupationType occupationType, List<OccupationTypeDictionary> occupationTypeDictionaries) {
     super(isFinalChecks);
     this.occupationType = occupationType;
-    this.dictionaryOccupationTypes = dictionaryOccupationTypes;
+    this.occupationTypeDictionaries = occupationTypeDictionaries;
   }
 }

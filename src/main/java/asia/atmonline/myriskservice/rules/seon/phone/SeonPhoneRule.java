@@ -4,8 +4,8 @@ import static asia.atmonline.myriskservice.enums.risk.CheckType.SEON;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SEONPHONE;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.SeonFraudResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.SeonFraudResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.BaseRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import asia.atmonline.myriskservice.web.seon.dto.AccountDetails;
@@ -34,9 +34,9 @@ public class SeonPhoneRule extends BaseRule<SeonPhoneRuleContext> {
   }
 
   @Override
-  public RiskResponseJpaEntity execute(SeonPhoneRuleContext context) {
-    RiskResponseJpaEntity riskResponseJpaEntity = getApprovedResponse(context.getApplicationId(), SEON, context.getRiskResponseJpaEntity());
-    SeonFraudResponseJpaEntity responseJpaEntity = context.getResponseJpaEntity();
+  public RiskResponseRiskJpaEntity execute(SeonPhoneRuleContext context) {
+    RiskResponseRiskJpaEntity riskResponseJpaEntity = getApprovedResponse(context.getApplicationId(), SEON, context.getRiskResponseJpaEntity());
+    SeonFraudResponseRiskJpaEntity responseJpaEntity = context.getResponseJpaEntity();
     if(context.getIsNewSeonData() && context.getIsSeonFraudPhoneStopFactorEnable() && responseJpaEntity.getSuccess()){
       AccountDetails accountDetails = responseJpaEntity.getFraudResponse().getData().getPhoneDetails().getAccountDetails();
       if(accountDetails != null && checkRegistrations(accountDetails)) {

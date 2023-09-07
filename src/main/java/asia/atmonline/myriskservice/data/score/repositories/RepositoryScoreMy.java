@@ -2,7 +2,7 @@ package asia.atmonline.myriskservice.data.score.repositories;
 
 import static asia.atmonline.myriskservice.enums.application.ProductCode.IL;
 
-import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
 import asia.atmonline.myriskservice.enums.application.ProductCode;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +26,7 @@ public class RepositoryScoreMy {
     namedParameterJdbcTemplateMy = context.getBean(NamedParameterJdbcTemplate.class);
   }
 
-  public String executeScoreSqlQuery(String scoreModel, RiskRequestJpaEntity request, ProductCode code) {
+  public String executeScoreSqlQuery(String scoreModel, RiskRequestRiskJpaEntity request, ProductCode code) {
     List<String> scoreFilesList;
     if (IL.equals(code)) {
       Map<String, Object> map = new HashMap<>();

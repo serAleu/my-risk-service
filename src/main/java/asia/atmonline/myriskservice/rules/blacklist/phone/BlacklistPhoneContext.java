@@ -1,7 +1,7 @@
 package asia.atmonline.myriskservice.rules.blacklist.phone;
 
-import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.BlacklistPhoneJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.blacklists.impl.BlacklistPhoneRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.BaseRuleContext;
 import java.util.List;
 import lombok.Getter;
@@ -11,12 +11,12 @@ import lombok.Setter;
 @Setter
 public class BlacklistPhoneContext extends BaseRuleContext {
 
-  private List<BlacklistPhoneJpaEntity> entities;
+  private List<BlacklistPhoneRiskJpaEntity> entities;
   private Integer numberOfNotFinishedCredits;
   private Integer numberOfFinishedCredits;
 
-  public BlacklistPhoneContext(List<BlacklistPhoneJpaEntity> entities, Integer numberOfNotFinishedCredits, Integer numberOfFinishedCredits) {
-    super(new RiskResponseJpaEntity());
+  public BlacklistPhoneContext(List<BlacklistPhoneRiskJpaEntity> entities, Integer numberOfNotFinishedCredits, Integer numberOfFinishedCredits) {
+    super(new RiskResponseRiskJpaEntity());
     this.entities = entities;
     this.numberOfNotFinishedCredits = numberOfNotFinishedCredits;
     this.numberOfFinishedCredits = numberOfFinishedCredits;

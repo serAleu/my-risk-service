@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.processors.impl;
 import static asia.atmonline.myriskservice.enums.risk.CheckType.DEDUP;
 
 import asia.atmonline.myriskservice.consumer.payload.ResponsePayload;
-import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.mapper.PayloadMapper;
 import asia.atmonline.myriskservice.processors.BaseRequestProcessor;
 import asia.atmonline.myriskservice.producers.DefaultProducer;
@@ -27,18 +27,18 @@ public class DeduplicationChecksRequestProcessor extends BaseRequestProcessor {
   private String dedupChecksResponseQueue;
 
   @Override
-  public boolean isSuitable(RiskRequestJpaEntity request) {
+  public boolean isSuitable(RiskRequestRiskJpaEntity request) {
     return request != null && DEDUP.equals(request.getCheckType()) && request.getApplicationId() != null;
   }
 
   @Override
-  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = deduplicationChecksService.process(request);
+  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
+    RiskResponseRiskJpaEntity response = deduplicationChecksService.process(request);
     defaultProducer.send(convertToPayload(response), dedupChecksResponseQueue);
     return response;
   }
 
-  private ResponsePayload convertToPayload(RiskResponseJpaEntity response) {
+  private ResponsePayload convertToPayload(RiskResponseRiskJpaEntity response) {
     return payloadMapper.entityToPayload(response);
   }
 }

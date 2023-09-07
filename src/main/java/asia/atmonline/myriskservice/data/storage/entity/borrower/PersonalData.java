@@ -1,34 +1,37 @@
 package asia.atmonline.myriskservice.data.storage.entity.borrower;
 
 
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.HumanRaceDictionary;
 import asia.atmonline.myriskservice.enums.borrower.MaritalStatus;
 import asia.atmonline.myriskservice.enums.borrower.Sex;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Transient;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @Setter
 @Embeddable
 public class PersonalData {
 
+  public static final String PATTERN_DATEPICKER_FORMAT = "dd.MM.yyyy";
+
   @Column(name = "pd_first_name")
-  private String firstName;
-
-  @Column(name = "pd_second_name")
-  private String secondName;
-
-  @Column(name = "pd_last_name")
-  private String lastName;
+  private String fullName;
 
   @Column(name = "pd_sex")
   @Enumerated(EnumType.STRING)
   private Sex sex;
+
+  @OneToOne
+  @JoinColumn
+  private HumanRaceDictionary race;
 
   @Column(name = "pd_marital_status")
   @Enumerated(EnumType.STRING)
@@ -38,16 +41,9 @@ public class PersonalData {
   private String mobilePhone;
 
   @Column(name = "pd_email")
-  private String pdEmail;
+  private String email;
 
   @Column(name = "pd_birth_date")
+  @DateTimeFormat(pattern = PATTERN_DATEPICKER_FORMAT)
   private LocalDate birthDate;
-
-  @Column(name = "pd_amount_of_children")
-  private String amountOfChildren;
-
-  @Transient
-  public String getFullName() {
-    return firstName + " " + secondName + " " + lastName;
-  }
 }

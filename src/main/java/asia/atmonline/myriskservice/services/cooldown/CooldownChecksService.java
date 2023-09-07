@@ -2,8 +2,8 @@ package asia.atmonline.myriskservice.services.cooldown;
 
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
-import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
@@ -30,8 +30,8 @@ public class CooldownChecksService implements BaseRiskChecksService {
 
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
+  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
+    RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
     Optional<CreditApplication> creditApplication = creditApplicationJpaRepository.findById(request.getApplicationId());
     if (creditApplication.isPresent() && creditApplication.get().getBorrower() != null) {
       Long borrowerId = creditApplication.get().getBorrower().getId();

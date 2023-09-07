@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.rules.score.call3err;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SCORECALL3ERR;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.impl.ScoreResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.score.BaseScoreContext;
 import asia.atmonline.myriskservice.rules.score.BaseScoreRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
@@ -29,8 +29,8 @@ public class ScoreCall3ErrRule extends BaseScoreRule<ScoreCall3ErrContext> {
   }
 
   @Override
-  public RiskResponseJpaEntity execute(ScoreCall3ErrContext context) {
-    RiskResponseJpaEntity response = super.execute(context);
+  public RiskResponseRiskJpaEntity execute(ScoreCall3ErrContext context) {
+    RiskResponseRiskJpaEntity response = super.execute(context);
     if (context.getScoreNodeId() == 3 && (context.getDecision() == null
         || !BaseScoreContext.DECISION_POSSIBLE_VALUES_LIST.contains(context.getDecision())
         || context.getTermFromScore() == null
@@ -46,7 +46,7 @@ public class ScoreCall3ErrRule extends BaseScoreRule<ScoreCall3ErrContext> {
   }
 
   @Override
-  public ScoreCall3ErrContext getContext(ScoreResponseJpaEntity response, Map<String, Long> score3RestrictionsMap) {
+  public ScoreCall3ErrContext getContext(ScoreResponseRiskJpaEntity response, Map<String, Long> score3RestrictionsMap) {
     return new ScoreCall3ErrContext(response.getDecision(), response.getScoreNodeId(), score3RestrictionsMap.get(scorePathTermMax),
         score3RestrictionsMap.get(scorePathAmountMax), score3RestrictionsMap.get(scorePathTermMin), score3RestrictionsMap.get(scorePathAmountMin),
         response.getTerm(), response.getLimit());

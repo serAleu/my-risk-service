@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.data.storage.repositories.property;
 
-import asia.atmonline.myriskservice.data.storage.entity.property.SystemProperty;
+import asia.atmonline.myriskservice.data.storage.entity.property.impl.SystemProperty;
 import asia.atmonline.myriskservice.data.storage.repositories.BaseStorageJpaRepository;
 import org.springframework.stereotype.Repository;
 

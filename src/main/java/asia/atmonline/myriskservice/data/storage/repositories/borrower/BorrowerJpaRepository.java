@@ -12,8 +12,9 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-//@Repository
+@Repository
 public interface BorrowerJpaRepository extends BaseStorageJpaRepository<Borrower> {
 
   Optional<Borrower> findBorrowerByPersonalDataMobilePhone(String phone);

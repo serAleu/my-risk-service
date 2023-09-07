@@ -1,7 +1,7 @@
 package asia.atmonline.myriskservice.services.bureau;
 
-import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.services.BaseRiskChecksService;
 import asia.atmonline.myriskservice.web.bureau.ccris.client.ExperianCCRISFeignClient;
 import asia.atmonline.myriskservice.web.bureau.ccris.dto.confirm_entity.request.ExperianCCRISEntityRequest;
@@ -23,7 +23,7 @@ public class BureauChecksService implements BaseRiskChecksService {
   private final ExperianRetrieveReportFeignClient retrieveReportFeignClient;
 
   @Override
-  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
 
 //    первый запрос в экспириан проверяем есть ли в бюро информация о заемщике
 
@@ -43,6 +43,6 @@ public class BureauChecksService implements BaseRiskChecksService {
     String reportResponseString = retrieveReportFeignClient.getExperianReport(reportRequest.toString());
     ExperianRetrieveReportResponse reportResponse = XmlUtils.parse(reportResponseString, ExperianRetrieveReportResponse.class);
 
-    return new RiskResponseJpaEntity();
+    return new RiskResponseRiskJpaEntity();
   }
 }

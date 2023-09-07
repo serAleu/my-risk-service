@@ -4,11 +4,10 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.OCCUPATION;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.OCCUPATION_F;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.storage.entity.borrower.AddressData;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryAddressCity;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryOccupationType;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryWorkingIndustry;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.enums.borrower.OccupationType;
 import asia.atmonline.myriskservice.enums.borrower.WorkingIndustry;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
@@ -24,9 +23,9 @@ public class BasicOccupationRule extends BaseBasicRule<BasicOccupationContext> {
   }
 
   @Override
-  public RiskResponseJpaEntity execute(BasicOccupationContext context) {
-    RiskResponseJpaEntity response = super.execute(context);
-    context.getDictionaryOccupationTypes().forEach(dictionaryOccupationType -> {
+  public RiskResponseRiskJpaEntity execute(BasicOccupationContext context) {
+    RiskResponseRiskJpaEntity response = super.execute(context);
+    context.getOccupationTypeDictionaries().forEach(dictionaryOccupationType -> {
       if(!dictionaryOccupationType.getActive() && dictionaryOccupationType.getNameEn().equalsIgnoreCase(context.getOccupationType().name())) {
         if (context.isFinalChecks) {
           response.setRejectionReason(OCCUPATION_F);
@@ -40,9 +39,9 @@ public class BasicOccupationRule extends BaseBasicRule<BasicOccupationContext> {
   }
 
   @Override
-  public BasicOccupationContext getContext(boolean isFinalChecks, List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
-      List<DictionaryWorkingIndustry> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
-      WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressData registrationsAddressData) {
-    return new BasicOccupationContext(isFinalChecks, occupationType, dictionaryOccupationTypes);
+  public BasicOccupationContext getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
+      List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
+      WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData) {
+    return new BasicOccupationContext(isFinalChecks, occupationType, occupationTypeDictionaries);
   }
 }

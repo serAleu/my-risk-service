@@ -1,7 +1,6 @@
 package asia.atmonline.myriskservice.rules.basic.region;
 
-import asia.atmonline.myriskservice.data.storage.entity.borrower.AddressData;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryAddressCity;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicContext;
 import java.util.List;
 import lombok.Getter;
@@ -11,12 +10,12 @@ import lombok.Setter;
 @Setter
 public class BasicRegionContext extends BaseBasicContext {
 
-  private final AddressData registrationsAddressData;
-  private final List<DictionaryAddressCity> dictionaryAddressCities;
+  private final AddressCityDictionary clientAddressCity;
+  private final List<AddressCityDictionary> dictionaryAddressCities;
 
-  public BasicRegionContext(boolean isFinalChecks, AddressData registrationsAddressData, List<DictionaryAddressCity> dictionaryAddressCities) {
+  public BasicRegionContext(boolean isFinalChecks, AddressCityDictionary clientAddressCity, List<AddressCityDictionary> dictionaryAddressCities) {
     super(isFinalChecks);
-    this.registrationsAddressData = registrationsAddressData;
+    this.clientAddressCity = clientAddressCity;
     this.dictionaryAddressCities = dictionaryAddressCities;
   }
 }

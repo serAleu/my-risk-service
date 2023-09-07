@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.processors.impl;
 import static asia.atmonline.myriskservice.enums.risk.CheckType.BUREAU;
 
 import asia.atmonline.myriskservice.consumer.payload.ResponsePayload;
-import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.mapper.PayloadMapper;
 import asia.atmonline.myriskservice.processors.BaseRequestProcessor;
 import asia.atmonline.myriskservice.producers.DefaultProducer;
@@ -27,18 +27,18 @@ public class BureauChecksRequestProcessor extends BaseRequestProcessor {
   private String bureauChecksResponseQueue;
 
   @Override
-  public boolean isSuitable(RiskRequestJpaEntity request) {
+  public boolean isSuitable(RiskRequestRiskJpaEntity request) {
     return request != null && BUREAU.equals(request.getCheckType()) && request.getApplicationId() != null;
   }
 
   @Override
-  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = bureauChecksService.process(request);
+  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
+    RiskResponseRiskJpaEntity response = bureauChecksService.process(request);
     defaultProducer.send(convertToPayload(response), bureauChecksResponseQueue);
     return response;
   }
 
-  private ResponsePayload convertToPayload(RiskResponseJpaEntity response) {
+  private ResponsePayload convertToPayload(RiskResponseRiskJpaEntity response) {
     return payloadMapper.entityToPayload(response);
   }
 }

@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.services.seon.property;
 
-import asia.atmonline.myriskservice.data.storage.entity.property.SystemProperty;
+import asia.atmonline.myriskservice.data.storage.entity.property.impl.SystemProperty;
 import asia.atmonline.myriskservice.data.storage.repositories.property.SystemPropertyJpaRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;

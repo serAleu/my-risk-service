@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.DD_REJECTS;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.DD_REJECTS_F;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.deduplication.BaseDeduplicationRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import org.springframework.stereotype.Component;
@@ -17,8 +17,8 @@ public class DeduplicationRejectsRule extends BaseDeduplicationRule<Deduplicatio
   }
 
   @Override
-  public RiskResponseJpaEntity execute(DeduplicationRejectsContext context) {
-    RiskResponseJpaEntity response = super.execute(context);
+  public RiskResponseRiskJpaEntity execute(DeduplicationRejectsContext context) {
+    RiskResponseRiskJpaEntity response = super.execute(context);
     if(context.getRejectedApplicationsCount() >= 2 && context.getApprovedApplicationsCount() == 0) {
       if (context.isFinalChecks) {
         response.setRejectionReason(DD_REJECTS_F);

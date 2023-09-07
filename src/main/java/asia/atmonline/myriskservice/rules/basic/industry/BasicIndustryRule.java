@@ -4,11 +4,10 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.INDUSTRY;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.INDUSTRY_F;
 
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.storage.entity.borrower.AddressData;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryAddressCity;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryOccupationType;
-import asia.atmonline.myriskservice.data.storage.entity.property.DictionaryWorkingIndustry;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.enums.borrower.OccupationType;
 import asia.atmonline.myriskservice.enums.borrower.WorkingIndustry;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
@@ -24,8 +23,8 @@ public class BasicIndustryRule extends BaseBasicRule<BasicIndustryContext> {
   }
 
   @Override
-  public RiskResponseJpaEntity execute(BasicIndustryContext context) {
-    RiskResponseJpaEntity response = super.execute(context);
+  public RiskResponseRiskJpaEntity execute(BasicIndustryContext context) {
+    RiskResponseRiskJpaEntity response = super.execute(context);
     context.getDictionaryWorkingIndustries().forEach(dictionaryWorkingIndustry -> {
       if(!dictionaryWorkingIndustry.getActive() && dictionaryWorkingIndustry.getNameEn().equalsIgnoreCase(context.getWorkingIndustry().name())) {
         if (context.isFinalChecks) {
@@ -40,9 +39,9 @@ public class BasicIndustryRule extends BaseBasicRule<BasicIndustryContext> {
   }
 
   @Override
-  public BasicIndustryContext getContext(boolean isFinalChecks, List<DictionaryAddressCity> dictionaryAddressCities, List<DictionaryOccupationType> dictionaryOccupationTypes,
-      List<DictionaryWorkingIndustry> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
-      WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressData registrationsAddressData) {
+  public BasicIndustryContext getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
+      List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
+      WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData) {
     return new BasicIndustryContext(isFinalChecks, workingIndustry, dictionaryWorkingIndustries);
   }
 }

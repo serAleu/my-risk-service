@@ -2,19 +2,14 @@ package asia.atmonline.myriskservice.services.blacklists;
 
 import static asia.atmonline.myriskservice.enums.risk.BlacklistSource.SYSTEM;
 
-import asia.atmonline.myriskservice.data.entity.blacklists.calculations.ClientBlLevelJpaEntity;
-import asia.atmonline.myriskservice.data.entity.blacklists.entity.BlacklistBaseJpaEntity;
-import asia.atmonline.myriskservice.data.entity.blacklists.entity.BlacklistRule;
-import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.BlacklistBankAccountJpaEntity;
-import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.BlacklistPassportNumberJpaEntity;
-import asia.atmonline.myriskservice.data.entity.blacklists.entity.impl.BlacklistPhoneJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.requests.RiskRequestJpaEntity;
-import asia.atmonline.myriskservice.data.entity.risk.responses.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistBankAccountJpaRepository;
-import asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistPassportNumberJpaRepository;
-import asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistPhoneJpaRepository;
-import asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistRuleJpaRepository;
-import asia.atmonline.myriskservice.data.repositories.impl.blacklists.calculations.ClientBlLevelJpaRepository;
+import asia.atmonline.myriskservice.data.risk.entity.blacklists.calculations.ClientBlLevelRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.blacklists.BlacklistBaseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.blacklists.BlacklistRule;
+import asia.atmonline.myriskservice.data.risk.entity.blacklists.impl.BlacklistBankAccountRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.blacklists.impl.BlacklistPassportNumberRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.blacklists.impl.BlacklistPhoneRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.credit.CreditJpaRepository;
@@ -35,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,17 +40,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class BlacklistChecksService implements BaseRiskChecksService {
 
   private final BlacklistPhoneRule blacklistPhoneRule;
-  private final BlacklistPhoneJpaRepository blacklistPhoneJpaRepository;
-  private final BlacklistBankAccountJpaRepository blacklistBankAccountJpaRepository;
-  private final BlacklistPassportNumberJpaRepository blacklistPassportNumberJpaRepository;
-  private final BlacklistRuleJpaRepository blacklistRuleJpaRepository;
-  private final ClientBlLevelJpaRepository clientBlLevelJpaRepository;
+  private final asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistPhoneRiskJpaRepository blacklistPhoneJpaRepository;
+  private final asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistBankAccountRiskJpaRepository blacklistBankAccountJpaRepository;
+  private final asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistPassportNumberRiskJpaRepository blacklistPassportNumberJpaRepository;
+  private final asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistRuleRiskJpaRepository blacklistRuleJpaRepository;
+  private final asia.atmonline.myriskservice.data.repositories.impl.blacklists.calculations.ClientBlLevelRiskJpaRepository clientBlLevelJpaRepository;
   private final CreditJpaRepository creditJpaRepository;
   private final BorrowerJpaRepository borrowerJpaRepository;
 
   @Override
-  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
+  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
+    RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
     response.setRequestId(request.getId());
     String phoneNum = request.getPhone();
     Long borrowerId = null;
@@ -68,11 +62,11 @@ public class BlacklistChecksService implements BaseRiskChecksService {
       numberOfNotFinishedCredits = creditJpaRepository.notFinishedCreditsCount(borrowerId);
       numberOfFinishedCredits = creditJpaRepository.finishedCreditsCount(borrowerId);
     }
-    clientBlLevelJpaRepository.save(new ClientBlLevelJpaEntity()
+    clientBlLevelJpaRepository.save(new ClientBlLevelRiskJpaEntity()
         .setBorrowerId(borrowerId)
         .setPhone(phoneNum)
         .setBlLevel(numberOfFinishedCredits));
-    List<BlacklistPhoneJpaEntity> entities = blacklistPhoneJpaRepository.findByPhoneAndExpiredAtAfterOrderByAddedAtDesc(phoneNum,
+    List<BlacklistPhoneRiskJpaEntity> entities = blacklistPhoneJpaRepository.findByPhoneAndExpiredAtAfterOrderByAddedAtDesc(phoneNum,
         LocalDateTime.now());
     return blacklistPhoneRule.execute(new BlacklistPhoneContext(entities, numberOfNotFinishedCredits, numberOfFinishedCredits));
   }
@@ -138,39 +132,39 @@ public class BlacklistChecksService implements BaseRiskChecksService {
 
     Long ruleId = rule.getId();
     if (StringUtils.isNotEmpty(form.getPassportNumber()) && rule.isAddIdNumber()) {
-      List<BlacklistPassportNumberJpaEntity> blackListIdNumbers = blacklistPassportNumberJpaRepository.findByPassportNumberAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(
+      List<BlacklistPassportNumberRiskJpaEntity> blackListIdNumbers = blacklistPassportNumberJpaRepository.findByPassportNumberAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(
           form.getPassportNumber(), ruleId, LocalDateTime.now());
-      BlacklistPassportNumberJpaEntity entity;
+      BlacklistPassportNumberRiskJpaEntity entity;
       if (CollectionUtils.isNotEmpty(blackListIdNumbers)) {
         entity = blackListIdNumbers.get(0);
       } else {
-        entity = new BlacklistPassportNumberJpaEntity(null);
+        entity = new BlacklistPassportNumberRiskJpaEntity(null);
       }
       entity.setPassportNumber(form.getPassportNumber());
       entity.setCreditApplicationId(form.getCreditApplicationId());
       saveIdNumToBl(entity, form, source, userId);
     }
     if (StringUtils.isNotEmpty(form.getPhone()) && rule.isAddPhone()) {
-      List<BlacklistPhoneJpaEntity> blackListPhones = blacklistPhoneJpaRepository.findByPhoneAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(
+      List<BlacklistPhoneRiskJpaEntity> blackListPhones = blacklistPhoneJpaRepository.findByPhoneAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(
           form.getPhone(), ruleId, LocalDateTime.now());
-      BlacklistPhoneJpaEntity entity;
+      BlacklistPhoneRiskJpaEntity entity;
       if (CollectionUtils.isNotEmpty(blackListPhones)) {
         entity = blackListPhones.get(0);
       } else {
-        entity = new BlacklistPhoneJpaEntity(null);
+        entity = new BlacklistPhoneRiskJpaEntity(null);
       }
       entity.setCreditApplicationId(form.getCreditApplicationId());
       entity.setPhone(form.getPhone());
       savePhoneNumToBl(entity, form, source, userId);
     }
     if (StringUtils.isNotEmpty(form.getBankAccount()) && rule.isAddBankAccount()) {
-      BlacklistBankAccountJpaEntity entity;
-      List<BlacklistBankAccountJpaEntity> blackListBankAccounts = blacklistBankAccountJpaRepository.findByBankAccountAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(
+      BlacklistBankAccountRiskJpaEntity entity;
+      List<BlacklistBankAccountRiskJpaEntity> blackListBankAccounts = blacklistBankAccountJpaRepository.findByBankAccountAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(
           form.getBankAccount(), ruleId, LocalDateTime.now());
       if (CollectionUtils.isNotEmpty(blackListBankAccounts)) {
         entity = blackListBankAccounts.get(0);
       } else {
-        entity = new BlacklistBankAccountJpaEntity(null);
+        entity = new BlacklistBankAccountRiskJpaEntity(null);
       }
       entity.setCreditApplicationId(form.getCreditApplicationId());
       entity.setBankAccount(form.getBankAccount());
@@ -178,7 +172,7 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     }
   }
 
-  private void getFilledBlEntity(BlacklistBaseJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
+  private void getFilledBlEntity(BlacklistBaseRiskJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
     final BlacklistRule rule = blacklistRuleJpaRepository.findByRuleId(form.getRuleId());
     if (Objects.nonNull(entity.getId())) {
       entity.setExpiredAt(entity.getExpiredAt().plusDays(rule.getDays()));
@@ -194,17 +188,17 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     entity.setSource(source);
   }
 
-  private void saveIdNumToBl(BlacklistPassportNumberJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
+  private void saveIdNumToBl(BlacklistPassportNumberRiskJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
     getFilledBlEntity(entity, form, source, userId);
     blacklistPassportNumberJpaRepository.save(entity);
   }
 
-  private void savePhoneNumToBl(BlacklistPhoneJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
+  private void savePhoneNumToBl(BlacklistPhoneRiskJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
     getFilledBlEntity(entity, form, source, userId);
     blacklistPhoneJpaRepository.save(entity);
   }
 
-  private void saveBankAccountToBl(BlacklistBankAccountJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
+  private void saveBankAccountToBl(BlacklistBankAccountRiskJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
     getFilledBlEntity(entity, form, source, userId);
     blacklistBankAccountJpaRepository.save(entity);
   }
