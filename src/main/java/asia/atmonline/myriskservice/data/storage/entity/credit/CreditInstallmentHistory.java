@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "credit_installment_history")
+@Table(name = "credit_installment_history", schema = "my-back")
 @SequenceGenerator(name = "sequence-generator", sequenceName = "credit_installment_history_id_seq", allocationSize = 1)
 @NoArgsConstructor
 @Getter

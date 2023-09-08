@@ -14,12 +14,11 @@ CREATE TABLE IF NOT EXISTS risk_response (
   risk_request_id bigint,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
   credit_application_id bigint,
-  borrower_id bigint NOT NULL,
+  borrower_id bigint,
   final_decision varchar(30),
   rejection_reason_code varchar(30),
   check_type varchar(30),
-  phone_num varchar(100),
-  additional_fields text
+  phone_num varchar(100)
 );
 
 DROP TABLE IF EXISTS score_response;
@@ -117,6 +116,34 @@ CREATE TABLE IF NOT EXISTS blacklist_rule (
   rule_version varchar(255),
   status varchar(255),
   created_by bigint
+);
+
+DROP TABLE IF EXISTS blacklist_passport_number;
+CREATE TABLE IF NOT EXISTS blacklist_passport_number (
+  id serial PRIMARY KEY,
+  added_at timestamp DEFAULT CURRENT_TIMESTAMP,
+  credit_application_id bigint,
+  source varchar(255),
+  passport_number varchar(255),
+  bl_reason varchar(255),
+  added_by bigint,
+  expired_at timestamp,
+  rule_id int,
+  bl_level int
+);
+
+DROP TABLE IF EXISTS blacklist_phone;
+CREATE TABLE blacklist_phone (
+  id serial PRIMARY KEY,
+  added_at  timestamp DEFAULT CURRENT_TIMESTAMP,
+  credit_application_id bigint,
+  expired_at timestamp,
+  source varchar(255),
+  phone varchar(255) NOT NULL,
+  bl_reason varchar(255),
+  added_by bigint,
+  rule_id int,
+  bl_level int
 );
 
 DROP TABLE IF EXISTS client_bl_level;

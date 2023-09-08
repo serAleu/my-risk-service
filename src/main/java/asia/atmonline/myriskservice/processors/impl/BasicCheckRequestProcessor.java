@@ -34,6 +34,8 @@ public class BasicCheckRequestProcessor extends BaseRequestProcessor {
   @Override
   public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
     RiskResponseRiskJpaEntity response = basicChecksService.process(request);
+    response.setRequestId(request.getId());
+    response.setApplicationId(request.getApplicationId());
     defaultProducer.send(convertToPayload(response), basicChecksResponseQueue);
     return response;
   }

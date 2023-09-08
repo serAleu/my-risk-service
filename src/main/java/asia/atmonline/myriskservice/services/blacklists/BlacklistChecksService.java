@@ -20,6 +20,7 @@ import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerJ
 import asia.atmonline.myriskservice.data.storage.repositories.credit.CreditJpaRepository;
 import asia.atmonline.myriskservice.enums.application.ProductCode;
 import asia.atmonline.myriskservice.enums.risk.BlacklistSource;
+import asia.atmonline.myriskservice.enums.risk.RejectionReasonCode;
 import asia.atmonline.myriskservice.rules.blacklist.phone.BlacklistPhoneContext;
 import asia.atmonline.myriskservice.rules.blacklist.phone.BlacklistPhoneRule;
 import asia.atmonline.myriskservice.services.BaseRiskChecksService;
@@ -58,22 +59,21 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
     response.setRequestId(request.getId());
     String phoneNum = request.getPhone();
-    Long borrowerId = null;
-    Integer numberOfNotFinishedCredits = 0;
-    Integer numberOfFinishedCredits = 0;
+    Long numberOfNotFinishedCredits = 0L;
+    Long numberOfFinishedCredits = 0L;
     Optional<Borrower> borrower = borrowerJpaRepository.findBorrowerByPersonalDataMobilePhone(phoneNum);
     if (borrower.isPresent()) {
-      borrowerId = borrower.get().getId();
-      numberOfNotFinishedCredits = creditJpaRepository.notFinishedCreditsCount(borrowerId);
-      numberOfFinishedCredits = creditJpaRepository.finishedCreditsCount(borrowerId);
+      Long borrowerId = borrower.get().getId();
+//      numberOfNotFinishedCredits = creditJpaRepository.countNotFinishedCredits(borrowerId);
+//      numberOfFinishedCredits = creditJpaRepository.countFinishedCredits(borrowerId);
+      clientBlLevelJpaRepository.save(new ClientBlLevelRiskJpaEntity()
+          .setBorrowerId(borrowerId)
+          .setPhone(phoneNum)
+          .setBlLevel(numberOfFinishedCredits.intValue()));
     }
-    clientBlLevelJpaRepository.save(new ClientBlLevelRiskJpaEntity()
-        .setBorrowerId(borrowerId)
-        .setPhone(phoneNum)
-        .setBlLevel(numberOfFinishedCredits));
     List<BlacklistPhoneRiskJpaEntity> entities = blacklistPhoneJpaRepository.findByPhoneAndExpiredAtAfterOrderByAddedAtDesc(phoneNum,
         LocalDateTime.now());
-    return blacklistPhoneRule.execute(new BlacklistPhoneContext(entities, numberOfNotFinishedCredits, numberOfFinishedCredits));
+    return blacklistPhoneRule.execute(new BlacklistPhoneContext(entities, numberOfNotFinishedCredits.intValue(), numberOfFinishedCredits.intValue()));
   }
 
   @Transactional(readOnly = true)
@@ -110,17 +110,20 @@ public class BlacklistChecksService implements BaseRiskChecksService {
         && blacklistPassportNumberJpaRepository.existsByPassportNumberInAndExpiredAtAfter(passportNumberCaseSensitivity, LocalDateTime.now());
   }
 
-  public void save(Long borrowerId, Integer ruleId) {
+  public void save(Long applicationId, Long borrowerId, RejectionReasonCode code) {
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
-    borrower.ifPresent(value -> save(value, Long.valueOf(ruleId)));
+    borrower.ifPresent(value -> save(value, code, applicationId));
   }
 
-  public void save(Borrower borrower, Long ruleId) {
+  public void save(Borrower borrower, RejectionReasonCode code, Long applicationId) {
     BlacklistRecordForm form = new BlacklistRecordForm();
     form.setBankAccount(borrower.getBorrowerAccount());
     form.setPassportNumber(borrower.getBorrowerNIC());
     form.setPhone(borrower.getBorrowerPhone());
-    form.setRuleId(ruleId);
+    form.setProductCode(ProductCode.IL);
+    form.setRuleId((long) code.getRuleId());
+    form.setCode(code);
+    form.setCreditApplicationId(applicationId);
     save(form, SYSTEM, null);
   }
 
@@ -191,6 +194,7 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     entity.setRule(rule);
     entity.setAddedBy(userId);
     entity.setSource(source);
+    entity.setBlReason(form.getCode().name());
   }
 
   private void saveIdNumToBl(BlacklistPassportNumberRiskJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {

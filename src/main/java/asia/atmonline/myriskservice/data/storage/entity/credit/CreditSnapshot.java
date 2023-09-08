@@ -16,11 +16,13 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "credit_snapshot")
+@Table(name = "credit_snapshot", schema = "my-back")
 public class CreditSnapshot extends BaseStorageEntity {
 
   @Transient
@@ -142,6 +144,7 @@ public class CreditSnapshot extends BaseStorageEntity {
   private LocalDate appliedBalanceDate;
 
   @Column(name = "paid_installments", columnDefinition = "jsonb default '{}'")
+  @JdbcTypeCode(SqlTypes.JSON)
   private List<Integer> paidInstallments;
 
   @Column(name = "restructuring_fee", scale = DEFAULT_AMOUNT_SCALE)

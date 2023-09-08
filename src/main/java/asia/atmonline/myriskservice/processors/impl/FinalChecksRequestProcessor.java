@@ -34,6 +34,8 @@ public class FinalChecksRequestProcessor extends BaseRequestProcessor {
   @Override
   public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
     RiskResponseRiskJpaEntity response = finalChecksService.process(request);
+    response.setRequestId(request.getId());
+    response.setApplicationId(request.getApplicationId());
     defaultProducer.send(convertToPayload(response), finalChecksResponseQueue);
     return response;
   }

@@ -44,6 +44,7 @@ public class ScoreChecksService implements BaseRiskChecksService {
   private String scorePathAmountMin;
 
   @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
     RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
     ScoreResponseRiskJpaEntity scoreResponseJpaEntity = new ScoreResponseRiskJpaEntity().setCreditApplicationId(request.getApplicationId());
@@ -60,7 +61,7 @@ public class ScoreChecksService implements BaseRiskChecksService {
             rule.getContext(scoreResponseJpaEntity, score3RestrictionsMap));
         if (response != null && REJECT.equals(response.getDecision())) {
           if (response.getRejectionReason() != null) {
-            rule.saveToBlacklists(application.get().getBorrower().getId(), response.getRejectionReason());
+            rule.saveToBlacklists(request.getApplicationId(), application.get().getBorrower().getId(), response.getRejectionReason());
           }
           return response;
         }

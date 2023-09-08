@@ -51,9 +51,9 @@ public interface CreditJpaRepository extends BaseStorageJpaRepository<Credit> {
 
   @Query(value = "select count(cr) from Credit cr "
       + "where cr.borrower_id = ?1 and cr.status = '2000'", nativeQuery = true)
-  Integer finishedCreditsCount(Long borrowerId);
+  Long countFinishedCredits(Long borrowerId);
 
   @Query(value = "select count(cr) from Credit cr "
       + "where cr.borrower_id = ?1 and cr.status <> '2000'", nativeQuery = true)
-  Integer notFinishedCreditsCount(Long borrowerId);
+  Long countNotFinishedCredits(Long borrowerId);
 }

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "borrower_additional_phone_data")
+@Table(name = "borrower_additional_phone_data", schema = "my-back")
 @NoArgsConstructor
 @Getter
 @Setter

@@ -4,14 +4,12 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.repositories.RiskRequestJpaRepository;
-import asia.atmonline.myriskservice.data.risk.repositories.RiskResponseJpaRepository;
-import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
+import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryAddressCityJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryOccupationTypeJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryWorkingIndustryJpaRepository;
@@ -35,8 +33,7 @@ public class BasicChecksService implements BaseRiskChecksService {
   private final DictionaryAddressCityJpaRepository dictionaryAddressCityJpaRepository;
   private final DictionaryWorkingIndustryJpaRepository dictionaryWorkingIndustryJpaRepository;
   private final DictionaryOccupationTypeJpaRepository dictionaryOccupationTypeJpaRepository;
-  private final RiskResponseJpaRepository responseJpaRepository;
-  private final RiskRequestJpaRepository requestJpaRepository;
+  private final BorrowerJpaRepository borrowerJpaRepository;
 
   @Value("${rules.basic.age-2-low}")
   private Integer rulesBasicPermittedAge2Low;
@@ -53,22 +50,33 @@ public class BasicChecksService implements BaseRiskChecksService {
   @SuppressWarnings({"unchecked", "rawtypes"})
   public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request, boolean isFinalCheck) {
     RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
-    response.setRequestId(request.getId());
-    Optional<CreditApplication> creditApplication = creditApplicationJpaRepository.findById(response.getApplicationId());
-    if (creditApplication.isPresent() && creditApplication.get().getBorrower() != null) {
-      Borrower borrower = creditApplication.get().getBorrower();
-      Integer age = Period.between(borrower.getPersonalData().getBirthDate(), LocalDate.now()).getYears();
-      WorkingIndustryDictionary clientWorkingIndustry = borrower.getEmploymentData().getWorkingIndustry();
-      OccupationTypeDictionary clientOccupationType = borrower.getEmploymentData().getOccupationType();
-      Long income = borrower.getEmploymentData().getIncome().longValue();
-      AddressCityDictionary registrationsAddressData = borrower.getResidenceCity();
+    Long borrowerId = creditApplicationJpaRepository.findBorrowerIdById(request.getApplicationId());
+    Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
+    if (borrower.isPresent()) {
+      Integer age =
+          borrower.get().getPersonalData() != null ? Period.between(borrower.get().getPersonalData().getBirthDate(), LocalDate.now()).getYears()
+              : null;
+      WorkingIndustryDictionary clientWorkingIndustry =
+          borrower.get().getEmploymentData() != null && borrower.get().getEmploymentData().getWorkingIndustry() != null ? borrower.get()
+              .getEmploymentData().getWorkingIndustry() : null;
+      OccupationTypeDictionary clientOccupationType =
+          borrower.get().getEmploymentData() != null && borrower.get().getEmploymentData().getOccupationType() != null ? borrower.get()
+              .getEmploymentData().getOccupationType() : null;
+      Long income =
+          borrower.get().getEmploymentData() != null && borrower.get().getEmploymentData().getIncome() != null ? borrower.get().getEmploymentData()
+              .getIncome().longValue() : null;
+      AddressCityDictionary registrationsAddressData = borrower.get().getResidenceCity();
+      List<AddressCityDictionary> addressCityDictionaries = dictionaryAddressCityJpaRepository.findAll();
+      List<OccupationTypeDictionary> occupationTypeDictionaries = dictionaryOccupationTypeJpaRepository.findAll();
+      List<WorkingIndustryDictionary> workingIndustryDictionaries = dictionaryWorkingIndustryJpaRepository.findAll();
       for (BaseBasicRule rule : rules) {
-        response = rule.execute(rule.getContext(isFinalCheck, dictionaryAddressCityJpaRepository.findAll(), dictionaryOccupationTypeJpaRepository.findAll(),
-            dictionaryWorkingIndustryJpaRepository.findAll(), age, rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, clientWorkingIndustry,
-            clientOccupationType, income, rulesBasicPermittedIncome, registrationsAddressData));
+        response = rule.execute(
+            rule.getContext(isFinalCheck, addressCityDictionaries, occupationTypeDictionaries, workingIndustryDictionaries, age,
+                rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, clientWorkingIndustry, clientOccupationType, income,
+                rulesBasicPermittedIncome, registrationsAddressData));
         if (response != null && REJECT.equals(response.getDecision())) {
           if (response.getRejectionReason() != null) {
-            rule.saveToBlacklists(borrower.getId(), response.getRejectionReason());
+            rule.saveToBlacklists(request.getApplicationId(), borrower.get().getId(), response.getRejectionReason());
           }
           return response;
         }

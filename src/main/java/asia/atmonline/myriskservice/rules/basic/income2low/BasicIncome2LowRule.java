@@ -23,7 +23,7 @@ public class BasicIncome2LowRule extends BaseBasicRule<BasicIncome2LowContext> {
   @Override
   public RiskResponseRiskJpaEntity execute(BasicIncome2LowContext context) {
     RiskResponseRiskJpaEntity response = super.execute(context);
-    if(context.getPermittedIncome() < context.getIncome()) {
+    if(context.getPermittedIncome() > context.getIncome()) {
       if (context.isFinalChecks) {
         response.setRejectionReason(INCOME2LOW_F);
       } else {

@@ -20,8 +20,8 @@ public abstract class BaseRule<T extends BaseRuleContext> {
 
   public abstract RiskResponseRiskJpaEntity execute(T context);
 
-  public void saveToBlacklists(Long borrowerId, RejectionReasonCode code) {
-    blacklistChecksService.save(borrowerId, code.getRuleId());
+  public void saveToBlacklists(Long applicationId, Long borrowerId, RejectionReasonCode code) {
+    blacklistChecksService.save(applicationId, borrowerId, code);
   }
 
   protected RiskResponseRiskJpaEntity getApprovedResponse(Long creditApplicationId, CheckType check, RiskResponseRiskJpaEntity riskResponseJpaEntity) {

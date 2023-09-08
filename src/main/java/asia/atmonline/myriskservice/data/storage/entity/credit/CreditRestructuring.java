@@ -15,7 +15,7 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "credit_restructuring")
+@Table(name = "credit_restructuring", schema = "my-back")
 @SequenceGenerator(name = "sequence-generator", sequenceName = "credit_restructuring_id_seq", allocationSize = 1)
 @NoArgsConstructor
 @Getter

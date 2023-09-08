@@ -6,10 +6,19 @@ import asia.atmonline.myriskservice.enums.application.CreditApplicationStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CreditApplicationJpaRepository extends BaseStorageJpaRepository<CreditApplication> {
+
+  @Query("select borrower.id from CreditApplication where id = ?1")
+  Long findBorrowerIdById(Long id);
+
+  @Query(value = "select count(distinct borrower.id)" +
+      " from CreditApplication " +
+      " where borrower.id in (?1) and status = ?2")
+  Integer countByApplicationRejectedAndBorrowerIdIn(Set<Long> borrowerIds, CreditApplicationStatus status);
 
   List<CreditApplication> findByBorrowerId(Long borrowerId);
 

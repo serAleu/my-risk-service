@@ -2,7 +2,7 @@ package asia.atmonline.myriskservice.enums.risk;
 
 public enum RejectionReasonCode {
   SEONPHONE(1),
-  BLACKLIST(2),
+  BL_PHONE(2),
   ACTIVE_LOAN(3),
   ACTIVE_APP(4),
   APPLIM_2D(5),

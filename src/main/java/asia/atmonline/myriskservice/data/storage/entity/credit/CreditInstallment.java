@@ -14,9 +14,11 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
-@Table(name = "credit_installment")
+@Table(name = "credit_installment", schema = "my-back")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -56,6 +58,7 @@ public class CreditInstallment extends BaseStorageEntity {
   private boolean paid = false;
 
   @Column(name = "applied_restructuring")
+  @JdbcTypeCode(SqlTypes.JSON)
   private Set<Long> appliedRestructuring = new HashSet<>();
 
   @Column(name = "period_num")

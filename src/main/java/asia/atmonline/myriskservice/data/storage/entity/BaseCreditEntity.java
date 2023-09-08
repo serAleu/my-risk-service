@@ -1,7 +1,6 @@
 package asia.atmonline.myriskservice.data.storage.entity;
 
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
-import asia.atmonline.myriskservice.data.storage.entity.credit.CreditProduct;
 import asia.atmonline.myriskservice.enums.application.CreditApplicationSource;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
@@ -10,7 +9,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -49,19 +47,19 @@ public abstract class BaseCreditEntity extends BaseStorageEntity {
 //  @BatchSize(size = DEFAULT_BATCH_SIZE)
 //  private Set<Comment> comments;
 
-  @Transient
-  private transient CreditProduct creditProduct;
+//  @Transient
+//  private transient CreditProduct creditProduct;
 
-  @Transient
-  public CreditProduct getCreditProduct() {
+//  @Transient
+//  public CreditProduct getCreditProduct() {
 //    if (this.creditProduct != null) {
 //      return creditProduct;
 //    }
 //    creditProduct = ApplicationContextProvider.getApplicationContext()
 //        .getBean(AuditedEntityRepository.class)
 //        .getEntityWithCache(CreditProduct.class, getCreditProductId(), getCreditProductRevision());
-    return creditProduct;
-  }
+//    return creditProduct;
+//  }
 //  @Override
 //  public Set<Comment> getComments() {
 //    // проверка на null для импорта

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "dictionary_working_industry")
+@Table(name = "dictionary_working_industry", schema = "my-back")
 @NoArgsConstructor
 @Getter
 @Setter

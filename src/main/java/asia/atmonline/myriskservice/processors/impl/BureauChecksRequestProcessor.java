@@ -34,6 +34,8 @@ public class BureauChecksRequestProcessor extends BaseRequestProcessor {
   @Override
   public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
     RiskResponseRiskJpaEntity response = bureauChecksService.process(request);
+    response.setRequestId(request.getId());
+    response.setApplicationId(request.getApplicationId());
     defaultProducer.send(convertToPayload(response), bureauChecksResponseQueue);
     return response;
   }

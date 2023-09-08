@@ -2,16 +2,10 @@ package asia.atmonline.myriskservice.services.dedup;
 
 import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.INITIAL;
 import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.OUTGOING_PAYMENT_SUCCEED;
-import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.READY_TO_PICK_UP_FOR_SIGN;
-import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.SCORING_IN_PROGRESS;
-import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.SENT_TO_UNDERWRITING;
-import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.UNDERWRITING_IN_PROGRESS;
-import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.WAITING_FOR_CLIENT_SIGN;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
-import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerAdditionalIdNumberJpaRepository;
@@ -52,13 +46,12 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
   @SuppressWarnings({"unchecked", "rawtypes"})
   public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request, boolean isFinalCheck) {
     RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
-    Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getApplicationId());
-    if (application.isPresent() && application.get().getBorrower() != null) {
-      Borrower borrower = application.get().getBorrower();
-      Long borrowerId = borrower.getId();
-      boolean isBankAccountMatchedWithBlAccount = blacklistChecksService.checkBankAccountBlacklist(borrower.getBorrowerAccount());
-      boolean isPassportNumMatchedWithBlIdNumber = blacklistChecksService.checkPassportNumberBlacklist(borrower.getBorrowerNIC());
-      Set<Long> borrowerIds = getDuplicatedBorrowerIdsForPostPvRoute(borrower);
+    Long borrowerId = creditApplicationJpaRepository.findBorrowerIdById(request.getApplicationId());
+    Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
+    if (borrower.isPresent()) {
+      boolean isBankAccountMatchedWithBlAccount = blacklistChecksService.checkBankAccountBlacklist(borrower.get().getBorrowerAccount());
+      boolean isPassportNumMatchedWithBlIdNumber = blacklistChecksService.checkPassportNumberBlacklist(borrower.get().getBorrowerNIC());
+      Set<Long> borrowerIds = getDuplicatedBorrowerIdsForPostPvRoute(borrower.get());
       Integer maxDpdCount = countDPDMaxMoreThan(borrowerIds);
       Integer notFinishedCreditsCount = countNotFinishedCredits(borrowerIds);
       Integer countInProgress = countInProgress(borrowerIds);
@@ -70,7 +63,7 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
                 isBankAccountMatchedWithBlAccount, isPassportNumMatchedWithBlIdNumber));
         if (response != null && REJECT.equals(response.getDecision())) {
           if (response.getRejectionReason() != null) {
-            rule.saveToBlacklists(borrowerId, response.getRejectionReason());
+            rule.saveToBlacklists(request.getApplicationId(), borrowerId, response.getRejectionReason());
           }
           return response;
         }
@@ -89,7 +82,8 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
 
   @Transactional(readOnly = true)
   public Integer countByApplicationRejectedAndBorrowerIdIn(Set<Long> borrowerIds) {
-    return borrowerJpaRepository.countByApplicationRejectedAndBorrowerIdIn(borrowerIds, CreditApplicationStatus.REJECTED.getCode());
+    return !borrowerIds.isEmpty() ? creditApplicationJpaRepository.countByApplicationRejectedAndBorrowerIdIn(borrowerIds,
+        CreditApplicationStatus.REJECTED) : 0;
   }
 
   @Transactional(readOnly = true)
@@ -97,8 +91,7 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
     if (borrowerIds.isEmpty()) {
       return 0;
     }
-    return creditApplicationJpaRepository.countByBorrowerIdInAndStatusIn(borrowerIds, List.of(INITIAL, SCORING_IN_PROGRESS,
-        SENT_TO_UNDERWRITING, UNDERWRITING_IN_PROGRESS, WAITING_FOR_CLIENT_SIGN, READY_TO_PICK_UP_FOR_SIGN));
+    return creditApplicationJpaRepository.countByBorrowerIdInAndStatusIn(borrowerIds, List.of(INITIAL));
   }
 
   @Transactional(readOnly = true)
@@ -115,7 +108,7 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
       return 0;
     }
 //    return creditJpaRepository.countByBorrowerIdInAndDPDMaxGreaterThan(borrowerIds, DeduplicationMaxDpdContext.MAX_HISTORICAL_OVERDUE_DAYS);
-  return 0;
+    return 0;
   }
 
   @Transactional(readOnly = true)
@@ -129,8 +122,7 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
   }
 
   private Set<Long> getBorrowerIdsByConfirmedEmail(Borrower borrower) {
-//    Set<Long> borrowerIds = borrowerJpaRepository.findBorrowerIdsByPersonalDataPdEmail(List.of(borrower.getPersonalData().getPdEmail()));
-    Set<Long> borrowerIds = new HashSet<>();
+    Set<Long> borrowerIds = borrowerJpaRepository.findBorrowerIdsByPersonalDataPdEmail(List.of(borrower.getPersonalData().getEmail()));
     if (!borrowerIds.isEmpty()) {
       borrowerIds.remove(borrower.getId());
     }

@@ -1,6 +1,7 @@
 package asia.atmonline.myriskservice.web.blacklist.dto;
 
 import asia.atmonline.myriskservice.enums.application.ProductCode;
+import asia.atmonline.myriskservice.enums.risk.RejectionReasonCode;
 
 public class BlacklistRecordForm {
 
@@ -21,6 +22,16 @@ public class BlacklistRecordForm {
   private String decisionTreeVersion;
 
   private ProductCode productCode;
+
+  public RejectionReasonCode getCode() {
+    return code;
+  }
+
+  public void setCode(RejectionReasonCode code) {
+    this.code = code;
+  }
+
+  private RejectionReasonCode code;
 
   public ProductCode getProductCode() {
     return productCode;

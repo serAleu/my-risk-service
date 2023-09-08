@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "system_property",
-    indexes = @Index(name = "idx_property_key", columnList = "property_key"))
+    indexes = @Index(name = "idx_property_key", columnList = "property_key"), schema = "my-back")
 public class SystemProperty extends Property {
 
   public SystemProperty() {

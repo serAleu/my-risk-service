@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "borrower_credit_history")
+@Table(name = "borrower_credit_history", schema = "my-back")
 public class BorrowerCreditHistory extends BaseStorageEntity {
 
   @Column(name = "bank_id")

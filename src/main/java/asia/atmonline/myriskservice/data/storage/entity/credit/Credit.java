@@ -8,7 +8,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
@@ -19,7 +18,6 @@ import jakarta.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -31,10 +29,9 @@ import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Where;
 
 @Entity
-@Table(name = "credit", indexes = @Index(columnList = "status"))
+@Table(name = "credit", schema = "my-back")
 @Getter
 @Setter
-@BatchSize(size = BaseCreditEntity.DEFAULT_BATCH_SIZE)
 public class Credit extends BaseCreditEntity {
 
   @JsonIgnore
@@ -244,20 +241,20 @@ public class Credit extends BaseCreditEntity {
     return issueDate.plusDays(initialTerm);
   }
 
-  @JsonIgnore
-  @Transient
-  public long getTerm(ChronoUnit unit) {
-    LocalDateTime from = this.getIssuedAt();
-    if (from == null) {
-      from = this.getCreditApplication().getRequestedAt();
-    }
-    if (from == null) {
-      from = LocalDateTime.now();
-    }
-    LocalDateTime to = from;
-    to = to.plus(this.getTerm(), this.getCreditProduct().getTermUnit());
-    return unit.between(from, to);
-  }
+//  @JsonIgnore
+//  @Transient
+//  public long getTerm(ChronoUnit unit) {
+//    LocalDateTime from = this.getIssuedAt();
+//    if (from == null) {
+//      from = this.getCreditApplication().getRequestedAt();
+//    }
+//    if (from == null) {
+//      from = LocalDateTime.now();
+//    }
+//    LocalDateTime to = from;
+//    to = to.plus(this.getTerm(), this.getCreditProduct().getTermUnit());
+//    return unit.between(from, to);
+//  }
 
   @Transient
   public boolean needApplyGracePeriodRule(LocalDate currentSnapshotDate) {

@@ -34,6 +34,8 @@ public class CooldownChecksRequestProcessor extends BaseRequestProcessor {
   @Override
   public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
     RiskResponseRiskJpaEntity response = cooldownChecksService.process(request);
+    response.setRequestId(request.getId());
+    response.setApplicationId(request.getApplicationId());
     defaultProducer.send(convertToPayload(response), cooldownChecksResponseQueue);
     return response;
   }

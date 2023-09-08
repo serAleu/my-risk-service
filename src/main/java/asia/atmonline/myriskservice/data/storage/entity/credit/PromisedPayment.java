@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "promised_payment")
+@Table(name = "promised_payment", schema = "my-back")
 public class PromisedPayment extends BaseStorageEntity {
 
   @JoinColumn(name = "credit_id")

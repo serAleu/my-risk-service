@@ -44,8 +44,8 @@ public class BlacklistRule extends BaseRiskJpaEntity {
   @Column(name = "add_bank_account", nullable = false, columnDefinition = "bool default false")
   private boolean addBankAccount;
 
-  @Column(name = "add_card_number", nullable = false, columnDefinition = "bool default false")
-  private boolean addCardNumber;
+//  @Column(name = "add_card_number", nullable = false, columnDefinition = "bool default false")
+//  private boolean addCardNumber;
 
   @Transient
   public String getRuleName() {

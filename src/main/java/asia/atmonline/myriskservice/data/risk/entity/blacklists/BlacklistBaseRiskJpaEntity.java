@@ -35,6 +35,9 @@ public abstract class BlacklistBaseRiskJpaEntity extends BaseRiskJpaEntity {
   @Column(name = "bl_level")
   private Integer blLevel;
 
+  @Column(name = "bl_reason")
+  private String blReason;
+
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "rule_id")
   private BlacklistRule rule;

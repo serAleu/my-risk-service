@@ -9,93 +9,50 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum CreditApplicationStatus {
-  /**
-   * Заявка создана
-   */
-  INITIAL(1000, true, false),
-  /**
-   * Заявка проходит автоматическую верификацию
-   */
-  SCORING_IN_PROGRESS(1100, true, false),
 
-  WAIT_FOR_RISK_DECISION(1110, true,true),
-  /**
-   * Заявка отправлена на ручное рассмотрение
-   */
-  SENT_TO_UNDERWRITING(1120, true, false),
-  /**
-   * Заявка рассматривается верификатором
-   */
-  UNDERWRITING_IN_PROGRESS(1140, true, true),
-  /**
-   * Заявка ожидает подписи клиента на портале
-   */
-  WAITING_FOR_CLIENT_SIGN(1150, true, true),
-  /**
-   * Заявка переведена на верификатора для получения подписи клиента
-   */
-  READY_TO_PICK_UP_FOR_SIGN(1160, true, true),
-  /**
-   * Заявка отклонена
-   */
-  REJECTED(1200, false, true),
-  // currently used only for MOBILE application
-  REJECTED_BY_VERIFIER(1201, false, true),
-  /**
-   * Заявка одобрена, оплата клиенту пока не подтверждена
-   */
-  APPROVED(1250, true, true),
-  /**
-   * Клиент отказался от заявки
-   */
-  CANCELED_BY_CLIENT(1300, false, true),
-  /**
-   * Клиент согласился на конечные условия заявки
-   */
-  CONFIRMED_BY_CLIENT(1350, true, true),
-  /**
-   * Заявка готова к проведению выплаты
-   */
-  PREPARED_FOR_OUTGOING_PAYMENT(1400, true, true),
-  /**
-   * Заявка готова к проведению авто-выплаты
-   */
-  READY_FOR_AUTO_DISBURSEMENT(1405, true, true),
-  /**
-   * Заявка в процессе авто-выплаты
-   */
-  AUTO_PAYOUT_IN_PROGRESS(1410, true, true),
-  /**
-   * Ошибка авто-выплаты
-   */
-  AUTO_PAYOUT_ERROR(1415, true, true),
-  /**
-   * Заявка готова к проведению выплаты вручную
-   */
-  OUTGOING_PAYMENT_IN_PROGRESS(1420, true, true),
-  /**
-   * Ошибка выплаты по заявке
-   */
-  OUTGOING_PAYMENT_ERROR(1440, true, true),
-  /**
-   * Выплата по заявке отменена
-   */
-  OUTGOING_PAYMENT_CANCELED(1460, false, true),
-  /**
-   * Заявка выплачена
-   */
-  OUTGOING_PAYMENT_SUCCEED(1480, false, true);
-
-
-  public static List<CreditApplicationStatus> aliveStatuses = Stream.of(values())
-      .filter(CreditApplicationStatus::isAlive).collect(Collectors.toList());
+  INITIAL(1000, true, true),
+  DEDUPLICATION2_CHECK_PASSED(1010, true, true),
+  FIRST_STEP_COMPLETED(1100, true, true),
+  SECOND_STEP_COMPLETED(1110, true, true),
+  THIRD_STEP_COMPLETED(1120, true, true),
+  FOURTH_STEP_COMPLETED(1130, true, true),
+  APPLICATION_SUBMITTED(2000, true, true),
+  DEDUPLICATION3_CHECK_PASSED(2100, true, true),
+  CREDIT_HISTORY_AVAILABILITY_CHECKED(2110, true, true),
+  BASIC_CHECKS_PASSED(2120, true, true),
+  FIRST_SCORE_CALCULATION_PASSED(2130, true, true),
+  SEON_DATA_COLLECTED(2140, true, true),
+  SECOND_SCORE_CALCULATION_PASSED(2150, true, true),
+  WAITING_FOR_EXPERIAN_CHECK(2160, true, true),
+  EXPERIAN_CHECK_PASSED(2170, true, true),
+  EXPERIAN_CHECK_FAILED(2171, true, true),
+  CREDIT_BUREAU_DATA_COLLECTED(2180, true, true),
+  THIRD_SCORE_CALCULATION_PASSED(2190, true, true),
+  VERIFICATION_IN_PROGRESS(3000, true, true),
+  VERIFICATION_PASSED(3010, true, true),
+  APPROVED(4000, true, true),
+  REJECTED(4100, false, false),
+  REJECTED_BY_CLIENT(4200, false, false),
+  TERMS_CONSENT_RECEIVED(4500, true, true),
+  LOAN_EXPLANATIONS_VIEWED(4510, true, true),
+  AGREEMENT_CONSENT_RECEIVED(4520, true, true),
+  SIGNATURE_RECEIVED(4530, true, true),
+  WAITING_FOR_DD_ACTIVATION(4540, true, true),
+  CONTRACT_SIGNED(5000, true, true),
+  READY_FOR_PAYOUT(5010, true, true),
+  PAYOUT_IN_PROGRESS(5020, true, true),
+  PAYOUT_CANCELLED(5030, false, true),
+  PAYOUT_ERROR(5040, true, true),
+  OUTGOING_PAYMENT_SUCCEED(6000, false, true),
+  AGREEMENTS_STAMPED(7000, false, true);
 
   public static final List<CreditApplicationStatus> editableStatuses = Stream.of(values())
-          .filter(CreditApplicationStatus::isEditable).collect(Collectors.toList());
-
-  private int code;
-  private boolean alive;
-  private boolean editable;
+      .filter(CreditApplicationStatus::isEditable).collect(Collectors.toList());
+  public static final List<CreditApplicationStatus> aliveStatuses = Stream.of(values())
+      .filter(CreditApplicationStatus::isAlive).collect(Collectors.toList());
+  private final int code;
+  private final boolean alive;
+  private final boolean editable;
 
   public static CreditApplicationStatus valueOf(int code) {
     for (CreditApplicationStatus status : values()) {

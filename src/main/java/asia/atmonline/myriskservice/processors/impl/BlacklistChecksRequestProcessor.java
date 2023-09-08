@@ -34,6 +34,8 @@ public class BlacklistChecksRequestProcessor extends BaseRequestProcessor {
   @Override
   public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
     RiskResponseRiskJpaEntity response = blacklistChecksService.process(request);
+    response.setRequestId(request.getId());
+    response.setPhone(request.getPhone());
     defaultProducer.send(convertToPayload(response), blacklistChecksResponseQueue);
     return response;
   }

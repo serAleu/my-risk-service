@@ -48,7 +48,7 @@ public class CooldownChecksService implements BaseRiskChecksService {
             rule.getContext(creditApplicationList, creditList, numOf2DApplications, numOf5wApplications, numOf9mApplications));
         if (response != null && REJECT.equals(response.getDecision())) {
           if (response.getRejectionReason() != null) {
-            rule.saveToBlacklists(borrowerId, response.getRejectionReason());
+            rule.saveToBlacklists(request.getApplicationId(), borrowerId, response.getRejectionReason());
           }
           return response;
         }

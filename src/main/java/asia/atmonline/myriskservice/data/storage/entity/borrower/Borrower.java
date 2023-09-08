@@ -21,7 +21,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 @Entity
-@Table(name = "borrower")
+@Table(name = "borrower", schema = "my-back")
 @Getter
 @Setter
 public class Borrower extends UserAccount {
@@ -45,11 +45,11 @@ public class Borrower extends UserAccount {
 //  private ContactPersonData relative;
 
   @JoinColumn(name = "ad_state_id")
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.EAGER)
   private AddressStateDictionary residenceState;
 
   @JoinColumn(name = "ad_city_id")
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.EAGER)
   private AddressCityDictionary residenceCity;
 
   @Column(name = "residence_house_street")

@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "borrower_external_data")
+@Table(name = "borrower_external_data", schema = "my-back")
 public class BorrowerExternalData extends BaseStorageEntity {
 
   @Column(name = "requested_at")

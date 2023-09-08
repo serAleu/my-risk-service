@@ -18,11 +18,11 @@ import lombok.Setter;
 public class EmploymentData implements Serializable {
 
   @JoinColumn(name = "ed_occupation_type_id")
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.EAGER)
   private OccupationTypeDictionary occupationType;
 
   @JoinColumn(name = "ed_working_industry_id")
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.EAGER)
   private WorkingIndustryDictionary workingIndustry;
 
 //  @JoinColumn(name = "ed_working_time_id")

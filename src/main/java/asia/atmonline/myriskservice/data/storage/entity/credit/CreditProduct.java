@@ -15,7 +15,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "credit_product")
+@Table(name = "credit_product", schema = "my-back")
 public class CreditProduct extends BaseStorageEntity {
 
   @Column(name = "active")

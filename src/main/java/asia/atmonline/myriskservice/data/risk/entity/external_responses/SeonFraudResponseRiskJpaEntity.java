@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @Setter
@@ -33,6 +35,7 @@ public class SeonFraudResponseRiskJpaEntity extends BaseRiskJpaEntity {
   @Column(name = "phone", nullable = false)
   private String phone;
   @Column(name = "response", nullable = false)
+  @JdbcTypeCode(SqlTypes.JSON)
   private String response;
   @Column(name = "success")
   private Boolean success;
@@ -43,6 +46,7 @@ public class SeonFraudResponseRiskJpaEntity extends BaseRiskJpaEntity {
   @Column(name = "device_fingerprint_request")
   private Boolean deviceFingerprintRequest;
   @Column(name = "original_response")
+  @JdbcTypeCode(SqlTypes.JSON)
   private String originalResponse;
   @Column(name = "created_at")
   private LocalDateTime createdAt;
