@@ -118,3 +118,12 @@ CREATE TABLE IF NOT EXISTS blacklist_rule (
   status varchar(255),
   created_by bigint
 );
+
+DROP TABLE IF EXISTS client_bl_level;
+CREATE TABLE IF NOT EXISTS client_bl_level (
+  id serial PRIMARY KEY,
+  phone varchar(255),
+  bl_level int NOT NULL,
+  borrower_id bigint NOT NULL,
+  created_at  timestamp DEFAULT CURRENT_TIMESTAMP
+);

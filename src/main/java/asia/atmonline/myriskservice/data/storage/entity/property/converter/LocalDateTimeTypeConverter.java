@@ -1,13 +1,9 @@
 package asia.atmonline.myriskservice.data.storage.entity.property.converter;
 
-import com.hes.cc.data.backoffice.property.PropertyTypeConverter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-/**
- * @author Ivan Litvinov
- */
 public class LocalDateTimeTypeConverter implements PropertyTypeConverter {
 
   public final static DateTimeFormatter DEFAULT_DTF = DateTimeFormatter.ISO_LOCAL_DATE_TIME;

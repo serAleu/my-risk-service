@@ -34,6 +34,7 @@ public class RiskDatabaseConfiguration {
   }
 
   @Bean("riskEntityManager")
+  @Primary
   public LocalContainerEntityManagerFactoryBean riskEntityManager(@Qualifier("postgresDatasource") DataSource dataSource) {
     LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
     em.setDataSource(dataSource);

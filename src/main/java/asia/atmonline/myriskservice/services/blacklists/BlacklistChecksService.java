@@ -2,14 +2,19 @@ package asia.atmonline.myriskservice.services.blacklists;
 
 import static asia.atmonline.myriskservice.enums.risk.BlacklistSource.SYSTEM;
 
-import asia.atmonline.myriskservice.data.risk.entity.blacklists.calculations.ClientBlLevelRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.BlacklistBaseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.BlacklistRule;
+import asia.atmonline.myriskservice.data.risk.entity.blacklists.calculations.ClientBlLevelRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.impl.BlacklistBankAccountRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.impl.BlacklistPassportNumberRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.impl.BlacklistPhoneRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.repositories.blacklists.BlacklistBankAccountRiskJpaRepository;
+import asia.atmonline.myriskservice.data.risk.repositories.blacklists.BlacklistPassportNumberRiskJpaRepository;
+import asia.atmonline.myriskservice.data.risk.repositories.blacklists.BlacklistPhoneRiskJpaRepository;
+import asia.atmonline.myriskservice.data.risk.repositories.blacklists.BlacklistRuleRiskJpaRepository;
+import asia.atmonline.myriskservice.data.risk.repositories.blacklists.calculations.ClientBlLevelRiskJpaRepository;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.credit.CreditJpaRepository;
@@ -40,11 +45,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BlacklistChecksService implements BaseRiskChecksService {
 
   private final BlacklistPhoneRule blacklistPhoneRule;
-  private final asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistPhoneRiskJpaRepository blacklistPhoneJpaRepository;
-  private final asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistBankAccountRiskJpaRepository blacklistBankAccountJpaRepository;
-  private final asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistPassportNumberRiskJpaRepository blacklistPassportNumberJpaRepository;
-  private final asia.atmonline.myriskservice.data.repositories.impl.blacklists.BlacklistRuleRiskJpaRepository blacklistRuleJpaRepository;
-  private final asia.atmonline.myriskservice.data.repositories.impl.blacklists.calculations.ClientBlLevelRiskJpaRepository clientBlLevelJpaRepository;
+  private final BlacklistPhoneRiskJpaRepository blacklistPhoneJpaRepository;
+  private final BlacklistBankAccountRiskJpaRepository blacklistBankAccountJpaRepository;
+  private final BlacklistPassportNumberRiskJpaRepository blacklistPassportNumberJpaRepository;
+  private final BlacklistRuleRiskJpaRepository blacklistRuleJpaRepository;
+  private final ClientBlLevelRiskJpaRepository clientBlLevelJpaRepository;
   private final CreditJpaRepository creditJpaRepository;
   private final BorrowerJpaRepository borrowerJpaRepository;
 

@@ -71,7 +71,7 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
   @Transactional
   public SeonFraudResponseRiskJpaEntity getFraudData(CreditApplication application) {
     boolean seonEmailEnabled =
-        seonPropertyManager.getSeonFraudEmailEnable() && StringUtils.isNoneBlank(application.getBorrower().getPersonalData().getPdEmail());
+        seonPropertyManager.getSeonFraudEmailEnable() && StringUtils.isNoneBlank(application.getBorrower().getPersonalData().getEmail());
 
     Config config = Config.builder().deviceFingerPrinting(seonPropertyManager.getSeonFraudFingerprintEnable())
         .emailApi(seonEmailEnabled)
@@ -81,7 +81,7 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
         .ip(new ConfigDetail().setInclude("flags,history,id").setVersion("v" + seonPropertyManager.getSeonFraudIpApiVersion())).build();
 
     FraudRequest fraudRequest = FraudRequest.builder().config(config)
-        .email(application.getBorrower().getPersonalData().getPdEmail())
+        .email(application.getBorrower().getPersonalData().getEmail())
         .userCreated(application.getBorrower().getCreatedAt().atZone(ZoneId.systemDefault()).toEpochSecond())
         .ip(application.getIpAddress())
         .phoneNumber(formatPhone(application.getBorrower().getPersonalData().getMobilePhone()))
@@ -136,7 +136,7 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
         BooleanUtils.isTrue(seonFraudOldResponseJpaEntity.getEmailRequest()),
         BooleanUtils.isTrue(seonFraudOldResponseJpaEntity.getDeviceFingerprintRequest())};
     boolean[] currentSettings = new boolean[]{seonPropertyManager.getSeonFraudPhoneEnable(),
-        seonPropertyManager.getSeonFraudEmailEnable() && StringUtils.isNoneBlank(application.getBorrower().getPersonalData().getPdEmail()),
+        seonPropertyManager.getSeonFraudEmailEnable() && StringUtils.isNoneBlank(application.getBorrower().getPersonalData().getEmail()),
         seonPropertyManager.getSeonFraudFingerprintEnable()};
     for (int index = 0; index < lastSettings.length; index++) {
       if (!lastSettings[index] && currentSettings[index]) {

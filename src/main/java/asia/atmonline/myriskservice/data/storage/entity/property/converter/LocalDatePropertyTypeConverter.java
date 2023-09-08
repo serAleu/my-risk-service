@@ -1,6 +1,5 @@
 package asia.atmonline.myriskservice.data.storage.entity.property.converter;
 
-import com.hes.cc.data.backoffice.property.PropertyTypeConverter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import org.apache.commons.lang3.StringUtils;

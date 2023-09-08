@@ -8,8 +8,6 @@ import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
-import asia.atmonline.myriskservice.enums.borrower.OccupationType;
-import asia.atmonline.myriskservice.enums.borrower.WorkingIndustry;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import java.util.List;
@@ -26,7 +24,9 @@ public class BasicIndustryRule extends BaseBasicRule<BasicIndustryContext> {
   public RiskResponseRiskJpaEntity execute(BasicIndustryContext context) {
     RiskResponseRiskJpaEntity response = super.execute(context);
     context.getDictionaryWorkingIndustries().forEach(dictionaryWorkingIndustry -> {
-      if(!dictionaryWorkingIndustry.getActive() && dictionaryWorkingIndustry.getNameEn().equalsIgnoreCase(context.getWorkingIndustry().name())) {
+      if (!dictionaryWorkingIndustry.getActive()
+          && (dictionaryWorkingIndustry.getNameEn().equalsIgnoreCase(context.getClientWorkingIndustry().getNameEn())
+          || dictionaryWorkingIndustry.getNameMy().equalsIgnoreCase(context.getClientWorkingIndustry().getNameMy()))) {
         if (context.isFinalChecks) {
           response.setRejectionReason(INDUSTRY_F);
         } else {
@@ -39,9 +39,11 @@ public class BasicIndustryRule extends BaseBasicRule<BasicIndustryContext> {
   }
 
   @Override
-  public BasicIndustryContext getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
+  public BasicIndustryContext getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities,
+      List<OccupationTypeDictionary> occupationTypeDictionaries,
       List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
-      WorkingIndustry workingIndustry, OccupationType occupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData) {
-    return new BasicIndustryContext(isFinalChecks, workingIndustry, dictionaryWorkingIndustries);
+      WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome,
+      AddressCityDictionary registrationsAddressData) {
+    return new BasicIndustryContext(isFinalChecks, clientWorkingIndustry, dictionaryWorkingIndustries);
   }
 }

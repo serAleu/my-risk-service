@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.data.repositories.impl.blacklists.calculations;
+package asia.atmonline.myriskservice.data.risk.repositories.blacklists.calculations;
 
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.calculations.ClientBlLevelRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.repositories.BaseRiskJpaRepository;

@@ -9,12 +9,12 @@ import asia.atmonline.myriskservice.data.risk.repositories.RiskResponseJpaReposi
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
+import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryAddressCityJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryOccupationTypeJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryWorkingIndustryJpaRepository;
-import asia.atmonline.myriskservice.enums.borrower.OccupationType;
-import asia.atmonline.myriskservice.enums.borrower.WorkingIndustry;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicContext;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
 import asia.atmonline.myriskservice.services.BaseRiskChecksService;
@@ -58,14 +58,14 @@ public class BasicChecksService implements BaseRiskChecksService {
     if (creditApplication.isPresent() && creditApplication.get().getBorrower() != null) {
       Borrower borrower = creditApplication.get().getBorrower();
       Integer age = Period.between(borrower.getPersonalData().getBirthDate(), LocalDate.now()).getYears();
-      WorkingIndustry workingIndustry = borrower.getEmploymentData().getWorkingIndustry();
-      OccupationType occupationType = borrower.getEmploymentData().getOccupationType();
+      WorkingIndustryDictionary clientWorkingIndustry = borrower.getEmploymentData().getWorkingIndustry();
+      OccupationTypeDictionary clientOccupationType = borrower.getEmploymentData().getOccupationType();
       Long income = borrower.getEmploymentData().getIncome().longValue();
       AddressCityDictionary registrationsAddressData = borrower.getResidenceCity();
       for (BaseBasicRule rule : rules) {
         response = rule.execute(rule.getContext(isFinalCheck, dictionaryAddressCityJpaRepository.findAll(), dictionaryOccupationTypeJpaRepository.findAll(),
-            dictionaryWorkingIndustryJpaRepository.findAll(), age, rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, workingIndustry,
-            occupationType, income, rulesBasicPermittedIncome, registrationsAddressData));
+            dictionaryWorkingIndustryJpaRepository.findAll(), age, rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, clientWorkingIndustry,
+            clientOccupationType, income, rulesBasicPermittedIncome, registrationsAddressData));
         if (response != null && REJECT.equals(response.getDecision())) {
           if (response.getRejectionReason() != null) {
             rule.saveToBlacklists(borrower.getId(), response.getRejectionReason());
