@@ -9,6 +9,7 @@ spring:
       on-profile: ${PROFILE:preprod}
   jpa:
     open-in-view: ${SPRING_JPA_OPEN_IN_VIEW:false}
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   main:
     allow-bean-definition-overriding: ${SPRING_ALLOW_BEAN_OVERRIDING:true}
   cloud:
@@ -165,9 +166,3 @@ seon-fraud:
         enable: ${DEFAULT_SEON_PHONE_STOP_FACTOR_ENABLE:false}
     fingerprint:
       enable: ${DEFAULT_SEON_FINGERPRINT_ENABLE:true}
-
-hibernate:
-  dialect: org.hibernate.dialect.PostgreSQLDialect
-  hbm2ddl:
-    auto: validate
-  showSql: false
