@@ -110,7 +110,7 @@ score:
   cache:
     reload-time-minutes: 10
   ds:
-    jdbcDriver: jdbc:postgresql
+    jdbcDriver: org.postgresql.Driver
     url: ${DB_SCORE_URL:lotus-preprod.ctoxc08s0evf.ap-southeast-1.rds.amazonaws.com}
     port: ${DB_SCORE_PORT:5432}
     database: ${DB_SCORE_DATABASE:lotus}

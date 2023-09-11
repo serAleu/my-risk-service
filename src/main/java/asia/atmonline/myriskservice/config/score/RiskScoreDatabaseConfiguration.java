@@ -1,12 +1,12 @@
 package asia.atmonline.myriskservice.config.score;
 
 import javax.sql.DataSource;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 public class RiskScoreDatabaseConfiguration {
@@ -24,12 +24,22 @@ public class RiskScoreDatabaseConfiguration {
   @Value("${score.ds.password}")
   private String scoreDsPassword;
 
+//  @Bean(name = "dbMy")
+//  public PGSimpleDataSource dataSourceMyReplica() {
+//    PGSimpleDataSource ds = new PGSimpleDataSource();
+//    ds.setURL(
+//        createUrlString(scoreDsJdbcDriver, scoreDsUrl, scoreDsPort, scoreDsDatabase));
+//    ds.setUser(scoreDsUsername);
+//    ds.setPassword(scoreDsPassword);
+//    return ds;
+//  }
+
   @Bean(name = "dbMy")
-  public PGSimpleDataSource dataSourceMyReplica() {
-    PGSimpleDataSource ds = new PGSimpleDataSource();
-    ds.setURL(
-        createUrlString(scoreDsJdbcDriver, scoreDsUrl, scoreDsPort, scoreDsDatabase));
-    ds.setUser(scoreDsUsername);
+  public DataSource dataSourceMyReplica() {
+    DriverManagerDataSource ds = new DriverManagerDataSource();
+    ds.setDriverClassName(scoreDsJdbcDriver);
+    ds.setUrl(createUrlString(scoreDsJdbcDriver, scoreDsUrl, scoreDsPort, scoreDsDatabase));
+    ds.setUsername(scoreDsUsername);
     ds.setPassword(scoreDsPassword);
     return ds;
   }
