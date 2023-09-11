@@ -2,16 +2,13 @@ package asia.atmonline.myriskservice.config.score;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import java.util.Properties;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 @Slf4j
@@ -31,14 +28,13 @@ public class RiskScoreDatabaseConfiguration {
   private String scoreDsPassword;
 
   @Bean(name = "dbMy")
-  public PGSimpleDataSource dataSourceMyReplica() {
-    PGSimpleDataSource ds = new PGSimpleDataSource();
-    String jdbcUrl = createUrlString(scoreDsUrl, scoreDsPort, scoreDsDatabase);
-    log.info("---------- {}", jdbcUrl);
-    ds.setURL(jdbcUrl);
-    ds.setUser(scoreDsUsername);
-    ds.setPassword(scoreDsPassword);
-    return ds;
+  public HikariDataSource dataSourceMyReplica() {
+    HikariConfig config = new HikariConfig();
+    config.setDriverClassName(scoreDsJdbcDriver);
+    config.setJdbcUrl(createUrlString(scoreDsUrl, scoreDsPort, scoreDsDatabase));
+    config.setUsername(scoreDsUsername);
+    config.setPassword(scoreDsPassword);
+    return new HikariDataSource(config);
   }
 
   @Bean(name = "namedParameterJdbcTemplateMy")
