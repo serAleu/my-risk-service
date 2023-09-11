@@ -165,3 +165,9 @@ seon-fraud:
         enable: ${DEFAULT_SEON_PHONE_STOP_FACTOR_ENABLE:false}
     fingerprint:
       enable: ${DEFAULT_SEON_FINGERPRINT_ENABLE:true}
+
+hibernate:
+  dialect: org.hibernate.dialect.PostgreSQLDialect
+  hbm2ddl:
+    auto: validate
+  showSql: false
