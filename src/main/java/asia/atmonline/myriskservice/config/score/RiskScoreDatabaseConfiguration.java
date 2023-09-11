@@ -35,7 +35,7 @@ public class RiskScoreDatabaseConfiguration {
 //  }
 
   @Bean(name = "dbMy")
-  public DataSource dataSourceMyReplica() {
+  public DriverManagerDataSource dataSourceMyReplica() {
     DriverManagerDataSource ds = new DriverManagerDataSource();
     ds.setDriverClassName(scoreDsJdbcDriver);
     ds.setUrl(createUrlString(scoreDsJdbcDriver, scoreDsUrl, scoreDsPort, scoreDsDatabase));
