@@ -1,6 +1,10 @@
 package asia.atmonline.myriskservice.config.score;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import java.util.Properties;
 import javax.sql.DataSource;
+import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,22 +28,12 @@ public class RiskScoreDatabaseConfiguration {
   @Value("${score.ds.password}")
   private String scoreDsPassword;
 
-//  @Bean(name = "dbMy")
-//  public PGSimpleDataSource dataSourceMyReplica() {
-//    PGSimpleDataSource ds = new PGSimpleDataSource();
-//    ds.setURL(
-//        createUrlString(scoreDsJdbcDriver, scoreDsUrl, scoreDsPort, scoreDsDatabase));
-//    ds.setUser(scoreDsUsername);
-//    ds.setPassword(scoreDsPassword);
-//    return ds;
-//  }
-
   @Bean(name = "dbMy")
-  public DriverManagerDataSource dataSourceMyReplica() {
-    DriverManagerDataSource ds = new DriverManagerDataSource();
-    ds.setDriverClassName(scoreDsJdbcDriver);
-    ds.setUrl(createUrlString(scoreDsJdbcDriver, scoreDsUrl, scoreDsPort, scoreDsDatabase));
-    ds.setUsername(scoreDsUsername);
+  public PGSimpleDataSource dataSourceMyReplica() {
+    PGSimpleDataSource ds = new PGSimpleDataSource();
+    ds.setURL(
+        createUrlString(scoreDsUrl, scoreDsPort, scoreDsDatabase));
+    ds.setUser(scoreDsUsername);
     ds.setPassword(scoreDsPassword);
     return ds;
   }
@@ -49,7 +43,7 @@ public class RiskScoreDatabaseConfiguration {
     return new NamedParameterJdbcTemplate(ds);
   }
 
-  private String createUrlString(String jdbcDriver, String url, String port, String database) {
-    return jdbcDriver + "://" + url + ":" + port + "/" + database;
+  private String createUrlString(String url, String port, String database) {
+    return "jdbc:postgresql://" + url + ":" + port + "/" + database;
   }
 }
