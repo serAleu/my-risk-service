@@ -4,8 +4,8 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.ACTIVE_APP;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
-import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;
+import asia.atmonline.myriskservice.enums.application.CreditApplicationStatus;
 import asia.atmonline.myriskservice.rules.cooldown.BaseCooldownRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import java.util.List;
@@ -21,8 +21,8 @@ public class CooldownActiveAppRule extends BaseCooldownRule<CooldownActiveAppCon
   @Override
   public RiskResponseRiskJpaEntity execute(CooldownActiveAppContext context) {
     RiskResponseRiskJpaEntity response = super.execute(context);
-    context.getCreditApplicationList().forEach(application -> {
-      if(application.getStatus() != null && application.getStatus().isAlive()) {
+    context.getCreditApplicationStatuses().forEach(status -> {
+      if(status != null && status.isAlive()) {
         response.setDecision(REJECT);
         response.setRejectionReason(ACTIVE_APP);
       }
@@ -31,8 +31,8 @@ public class CooldownActiveAppRule extends BaseCooldownRule<CooldownActiveAppCon
   }
 
   @Override
-  public CooldownActiveAppContext getContext(List<CreditApplication> creditApplicationList, List<Credit> creditList, Integer numOf2DApplications,
+  public CooldownActiveAppContext getContext(List<CreditApplicationStatus> creditApplicationStatuses, List<Credit> creditList, Integer numOf2DApplications,
       Integer numOf5wApplications, Integer numOf9mApplications) {
-    return new CooldownActiveAppContext(creditApplicationList);
+    return new CooldownActiveAppContext(creditApplicationStatuses);
   }
 }

@@ -4,8 +4,8 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.APPLIM_5W;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
-import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;
+import asia.atmonline.myriskservice.enums.application.CreditApplicationStatus;
 import asia.atmonline.myriskservice.rules.cooldown.BaseCooldownRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import java.util.List;
@@ -29,7 +29,7 @@ public class CooldownApplim5wRule extends BaseCooldownRule<CooldownApplim5wConte
   }
 
   @Override
-  public CooldownApplim5wContext getContext(List<CreditApplication> creditApplicationList, List<Credit> creditList, Integer numOf2DApplications,
+  public CooldownApplim5wContext getContext(List<CreditApplicationStatus> creditApplicationStatuses, List<Credit> creditList, Integer numOf2DApplications,
       Integer numOf5wApplications, Integer numOf9mApplications) {
     return new CooldownApplim5wContext(numOf5wApplications);
   }

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,7 +21,8 @@ public interface CreditApplicationJpaRepository extends BaseStorageJpaRepository
       " where borrower.id in (?1) and status = ?2")
   Integer countByApplicationRejectedAndBorrowerIdIn(Set<Long> borrowerIds, CreditApplicationStatus status);
 
-  List<CreditApplication> findByBorrowerId(Long borrowerId);
+  @Query(value = "select status from \"my-back\".credit_application where borrower_id = :borrowerId", nativeQuery = true)
+  List<Long> findAllCreditApplicationStatusesByBorrowerId(@Param("borrowerId") Long borrowerId);
 
   Integer countByBorrowerIdInAndStatusIn(Set<Long> borrowerIds, List<CreditApplicationStatus> statuses);
 

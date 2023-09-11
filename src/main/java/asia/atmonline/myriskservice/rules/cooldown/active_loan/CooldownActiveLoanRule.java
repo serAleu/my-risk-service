@@ -4,8 +4,8 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.ACTIVE_LOAN;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
-import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;
+import asia.atmonline.myriskservice.enums.application.CreditApplicationStatus;
 import asia.atmonline.myriskservice.rules.cooldown.BaseCooldownRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import java.util.List;
@@ -31,7 +31,7 @@ public class CooldownActiveLoanRule extends BaseCooldownRule<CooldownActiveLoanC
   }
 
   @Override
-  public CooldownActiveLoanContext getContext(List<CreditApplication> creditApplicationList, List<Credit> creditList, Integer numOf2DApplications,
+  public CooldownActiveLoanContext getContext(List<CreditApplicationStatus> creditApplicationStatuses, List<Credit> creditList, Integer numOf2DApplications,
       Integer numOf5wApplications, Integer numOf9mApplications) {
     return new CooldownActiveLoanContext(creditList);
   }
