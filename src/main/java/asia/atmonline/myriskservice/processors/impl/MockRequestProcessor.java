@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.processors.impl;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.APPROVE;
 
 import asia.atmonline.myriskservice.consumer.payload.ResponsePayload;
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.enums.risk.CheckType;
 import asia.atmonline.myriskservice.mapper.PayloadMapper;
 import asia.atmonline.myriskservice.processors.BaseRequestProcessor;
@@ -22,12 +22,12 @@ public class MockRequestProcessor extends BaseRequestProcessor {
   private final PayloadMapper payloadMapper;
 
   @Override
-  public boolean isSuitable(RiskRequestRiskJpaEntity request) {
+  public boolean isSuitable(RiskRequestJpaEntity request) {
     return true;
   }
 
   @Override
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
     ResponsePayload response = ResponsePayload.builder()
         .checkType(request.getCheckType())
         .decision(APPROVE)

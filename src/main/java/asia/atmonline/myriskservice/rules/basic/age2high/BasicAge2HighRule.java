@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.AGE2HIGH;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.AGE2HIGH_F;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
@@ -21,8 +21,8 @@ public class BasicAge2HighRule extends BaseBasicRule<BasicAge2HighContext> {
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(BasicAge2HighContext context) {
-    RiskResponseRiskJpaEntity response = super.execute(context);
+  public RiskResponseJpaEntity execute(BasicAge2HighContext context) {
+    RiskResponseJpaEntity response = super.execute(context);
     if (context.getPermittedHighAge() < context.getAge()) {
       if (context.isFinalChecks) {
         response.setRejectionReason(AGE2HIGH_F);

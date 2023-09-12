@@ -2,8 +2,8 @@ package asia.atmonline.myriskservice.services.cooldown;
 
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
@@ -33,12 +33,12 @@ public class CooldownChecksService implements BaseRiskChecksService {
 
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
-    RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
     Long borrowerId = creditApplicationJpaRepository.findBorrowerIdById(request.getApplicationId());
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
     if (borrower.isPresent()) {
-      List<CreditApplicationStatus> creditApplicationStatuses = getClientCreditApplicationStatuses(borrowerId);
+      List<CreditApplicationStatus> creditApplicationStatuses = getClientCreditApplicationStatuses(borrowerId, request.getApplicationId());
       List<Credit> creditList = creditJpaRepository.findByBorrowerId(borrowerId);
       Integer numOf2DApplications = creditApplicationJpaRepository.countByBorrowerIdAndRequestedAtBetween(borrowerId,
           getLocalDateTimeInPastFromHours(CooldownApplim2dContext.HOURS_TO_CHECK_NUM), LocalDateTime.now());
@@ -60,8 +60,8 @@ public class CooldownChecksService implements BaseRiskChecksService {
     return response;
   }
 
-  private List<CreditApplicationStatus> getClientCreditApplicationStatuses(Long borrowerId) {
-    return creditApplicationJpaRepository.findAllCreditApplicationStatusesByBorrowerId(borrowerId).stream()
+  private List<CreditApplicationStatus> getClientCreditApplicationStatuses(Long borrowerId, Long applicationId) {
+    return creditApplicationJpaRepository.findAllCreditApplicationStatusesByBorrowerIdAndApplicationId(borrowerId, applicationId).stream()
         .map(status -> CreditApplicationStatus.valueOf(status.intValue()))
         .toList();
   }

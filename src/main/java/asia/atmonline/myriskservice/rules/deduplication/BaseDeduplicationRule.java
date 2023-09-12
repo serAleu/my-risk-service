@@ -2,7 +2,7 @@ package asia.atmonline.myriskservice.rules.deduplication;
 
 import static asia.atmonline.myriskservice.enums.risk.CheckType.DEDUP;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.rules.BaseRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 
@@ -13,7 +13,7 @@ public abstract class BaseDeduplicationRule<P extends BaseDeduplicationContext> 
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(P context) {
+  public RiskResponseJpaEntity execute(P context) {
     return getApprovedResponse(context.getRiskResponseJpaEntity().getApplicationId(), DEDUP, context.getRiskResponseJpaEntity());
   }
 

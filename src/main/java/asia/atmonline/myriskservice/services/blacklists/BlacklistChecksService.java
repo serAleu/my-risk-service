@@ -2,8 +2,8 @@ package asia.atmonline.myriskservice.services.blacklists;
 
 import static asia.atmonline.myriskservice.enums.risk.BlacklistSource.SYSTEM;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.BlacklistBaseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.BlacklistRule;
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.calculations.ClientBlLevelRiskJpaEntity;
@@ -55,8 +55,8 @@ public class BlacklistChecksService implements BaseRiskChecksService {
   private final BorrowerJpaRepository borrowerJpaRepository;
 
   @Override
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
-    RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
     response.setRequestId(request.getId());
     String phoneNum = request.getPhone();
     Long numberOfNotFinishedCredits = 0L;

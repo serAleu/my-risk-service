@@ -2,7 +2,7 @@ package asia.atmonline.myriskservice.rules.basic;
 
 import static asia.atmonline.myriskservice.enums.risk.CheckType.BASIC;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
@@ -17,7 +17,7 @@ public abstract class BaseBasicRule<P extends BaseBasicContext> extends BaseRule
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(P context) {
+  public RiskResponseJpaEntity execute(P context) {
     return getApprovedResponse(context.getRiskResponseJpaEntity().getApplicationId(), BASIC, context.getRiskResponseJpaEntity());
   }
 

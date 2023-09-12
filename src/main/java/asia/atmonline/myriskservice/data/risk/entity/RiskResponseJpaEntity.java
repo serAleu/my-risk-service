@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "risk_response")
 @SequenceGenerator(name = "sequence-generator", sequenceName = "risk_response_id_seq", allocationSize = 1)
-public class RiskResponseRiskJpaEntity extends BaseRiskJpaEntity {
+public class RiskResponseJpaEntity extends BaseRiskJpaEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "final_decision", nullable = false)

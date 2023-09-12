@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.INCOME2LOW;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.INCOME2LOW_F;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
@@ -21,8 +21,8 @@ public class BasicIncome2LowRule extends BaseBasicRule<BasicIncome2LowContext> {
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(BasicIncome2LowContext context) {
-    RiskResponseRiskJpaEntity response = super.execute(context);
+  public RiskResponseJpaEntity execute(BasicIncome2LowContext context) {
+    RiskResponseJpaEntity response = super.execute(context);
     if(context.getPermittedIncome() > context.getIncome()) {
       if (context.isFinalChecks) {
         response.setRejectionReason(INCOME2LOW_F);

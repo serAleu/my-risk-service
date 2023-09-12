@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.data.score;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.repositories.external_responses.ScoreResponseJpaRepository;
 import asia.atmonline.myriskservice.data.score.repositories.RepositoryScoreMy;
@@ -19,7 +19,7 @@ public class DataScoreService {
   private final ScoreResponseJpaRepository scoreResponseJpaRepository;
   private final ObjectMapper mapper;
 
-  public ScoreResponseRiskJpaEntity getScoreModelResponse(RiskRequestRiskJpaEntity request, String scoreModel, ProductCode code) {
+  public ScoreResponseRiskJpaEntity getScoreModelResponse(RiskRequestJpaEntity request, String scoreModel, ProductCode code) {
     try {
       String scoreModelResponse = repositoryScoreMy.executeScoreSqlQuery(scoreModel, request, code);
       ScoreResponseRiskJpaEntity scoreResponseJpaEntity = mapper.readValue(scoreModelResponse, ScoreResponseRiskJpaEntity.class);

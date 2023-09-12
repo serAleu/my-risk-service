@@ -3,7 +3,7 @@ package asia.atmonline.myriskservice.rules.score.call2err;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SCORECALL2ERR;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.score.BaseScoreContext;
 import asia.atmonline.myriskservice.rules.score.BaseScoreRule;
@@ -19,8 +19,8 @@ public class ScoreCall2ErrRule extends BaseScoreRule<ScoreCall2ErrContext> {
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(ScoreCall2ErrContext context) {
-    RiskResponseRiskJpaEntity response = super.execute(context);
+  public RiskResponseJpaEntity execute(ScoreCall2ErrContext context) {
+    RiskResponseJpaEntity response = super.execute(context);
     if (context.getScoreNodeId() == 2 && (context.getDecision() == null ||
         !BaseScoreContext.DECISION_POSSIBLE_VALUES_LIST.contains(context.getDecision()))) {
       response.setDecision(REJECT);

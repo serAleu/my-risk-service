@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.BL_ACCOUNT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.BL_ACCOUNT_F;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.rules.deduplication.BaseDeduplicationRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import org.springframework.stereotype.Component;
@@ -17,8 +17,8 @@ public class DeduplicationBlAccountRule extends BaseDeduplicationRule<Deduplicat
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(DeduplicationBlAccountContext context) {
-    RiskResponseRiskJpaEntity response = super.execute(context);
+  public RiskResponseJpaEntity execute(DeduplicationBlAccountContext context) {
+    RiskResponseJpaEntity response = super.execute(context);
     if(context.isBankAccountMatchedWithBlAccount()) {
       if (context.isFinalChecks) {
         response.setRejectionReason(BL_ACCOUNT_F);

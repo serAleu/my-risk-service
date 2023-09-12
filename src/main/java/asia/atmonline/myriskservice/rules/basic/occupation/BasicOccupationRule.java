@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.OCCUPATION;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.OCCUPATION_F;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
@@ -21,8 +21,8 @@ public class BasicOccupationRule extends BaseBasicRule<BasicOccupationContext> {
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(BasicOccupationContext context) {
-    RiskResponseRiskJpaEntity response = super.execute(context);
+  public RiskResponseJpaEntity execute(BasicOccupationContext context) {
+    RiskResponseJpaEntity response = super.execute(context);
     context.getOccupationTypeDictionaries().forEach(dictionaryOccupationType -> {
       if (!dictionaryOccupationType.getActive()
           && (dictionaryOccupationType.getNameEn().equalsIgnoreCase(context.getClientOccupationType().getNameEn())

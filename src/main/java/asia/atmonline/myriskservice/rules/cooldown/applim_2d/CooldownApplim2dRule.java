@@ -3,7 +3,7 @@ package asia.atmonline.myriskservice.rules.cooldown.applim_2d;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.APPLIM_2D;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;
 import asia.atmonline.myriskservice.enums.application.CreditApplicationStatus;
 import asia.atmonline.myriskservice.rules.cooldown.BaseCooldownRule;
@@ -19,8 +19,8 @@ public class CooldownApplim2dRule extends BaseCooldownRule<CooldownApplim2dConte
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(CooldownApplim2dContext context) {
-    RiskResponseRiskJpaEntity response = super.execute(context);
+  public RiskResponseJpaEntity execute(CooldownApplim2dContext context) {
+    RiskResponseJpaEntity response = super.execute(context);
     if(context.getNumOf2dApplications() > CooldownApplim2dContext.APPLICATIONS_LIMIT_NUM) {
       response.setDecision(REJECT);
       response.setRejectionReason(APPLIM_2D);

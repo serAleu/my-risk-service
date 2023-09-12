@@ -3,7 +3,7 @@ package asia.atmonline.myriskservice.rules.score.call1;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SCORECALL1;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.score.BaseScoreRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
@@ -18,8 +18,8 @@ public class ScoreCall1Rule extends BaseScoreRule<ScoreCall1Context> {
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(ScoreCall1Context context) {
-    RiskResponseRiskJpaEntity response = super.execute(context);
+  public RiskResponseJpaEntity execute(ScoreCall1Context context) {
+    RiskResponseJpaEntity response = super.execute(context);
     if(context.getScoreNodeId() == 1 && 0 == context.getDecision()) {
       response.setDecision(REJECT);
       response.setRejectionReason(SCORECALL1);

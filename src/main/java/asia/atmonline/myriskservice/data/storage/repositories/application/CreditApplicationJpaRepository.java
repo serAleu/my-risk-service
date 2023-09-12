@@ -21,8 +21,9 @@ public interface CreditApplicationJpaRepository extends BaseStorageJpaRepository
       " where borrower.id in (?1) and status = ?2")
   Integer countByApplicationRejectedAndBorrowerIdIn(Set<Long> borrowerIds, CreditApplicationStatus status);
 
-  @Query(value = "select status from \"my-back\".credit_application where borrower_id = :borrowerId", nativeQuery = true)
-  List<Long> findAllCreditApplicationStatusesByBorrowerId(@Param("borrowerId") Long borrowerId);
+  @Query(value = "select status from \"my-back\".credit_application where borrower_id = :borrowerId and id != :applicationId", nativeQuery = true)
+  List<Long> findAllCreditApplicationStatusesByBorrowerIdAndApplicationId(@Param("borrowerId") Long borrowerId,
+      @Param("applicationId") Long applicationId);
 
   Integer countByBorrowerIdInAndStatusIn(Set<Long> borrowerIds, List<CreditApplicationStatus> statuses);
 

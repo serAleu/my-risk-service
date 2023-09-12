@@ -3,7 +3,7 @@ package asia.atmonline.myriskservice.rules.cooldown.active_loan;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.ACTIVE_LOAN;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.credit.Credit;
 import asia.atmonline.myriskservice.enums.application.CreditApplicationStatus;
 import asia.atmonline.myriskservice.rules.cooldown.BaseCooldownRule;
@@ -19,8 +19,8 @@ public class CooldownActiveLoanRule extends BaseCooldownRule<CooldownActiveLoanC
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(CooldownActiveLoanContext context) {
-    RiskResponseRiskJpaEntity response = super.execute(context);
+  public RiskResponseJpaEntity execute(CooldownActiveLoanContext context) {
+    RiskResponseJpaEntity response = super.execute(context);
     context.getCreditList().forEach(credit -> {
       if(credit.getStatus() != null && !credit.getStatus().isEnding()) {
         response.setDecision(REJECT);

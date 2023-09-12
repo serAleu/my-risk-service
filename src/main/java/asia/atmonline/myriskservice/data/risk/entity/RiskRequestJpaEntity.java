@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Entity
 @Table(name = "risk_request")
 @SequenceGenerator(name = "sequence-generator", sequenceName = "risk_request_id_seq", allocationSize = 1)
-public class RiskRequestRiskJpaEntity extends BaseRiskJpaEntity {
+public class RiskRequestJpaEntity extends BaseRiskJpaEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "check_type", nullable = false)

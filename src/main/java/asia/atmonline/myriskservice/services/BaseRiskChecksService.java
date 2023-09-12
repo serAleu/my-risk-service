@@ -1,9 +1,9 @@
 package asia.atmonline.myriskservice.services;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 
 public interface BaseRiskChecksService {
 
-  RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request);
+  RiskResponseJpaEntity process(RiskRequestJpaEntity request);
 }

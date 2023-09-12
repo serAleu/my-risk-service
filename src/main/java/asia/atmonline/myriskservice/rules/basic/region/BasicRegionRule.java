@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.REGION;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.REGION_F;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
@@ -22,8 +22,8 @@ public class BasicRegionRule extends BaseBasicRule<BasicRegionContext> {
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(BasicRegionContext context) {
-    RiskResponseRiskJpaEntity response = super.execute(context);
+  public RiskResponseJpaEntity execute(BasicRegionContext context) {
+    RiskResponseJpaEntity response = super.execute(context);
     context.getDictionaryAddressCities().forEach(dictionaryAddressCity -> {
       if (!dictionaryAddressCity.isProhibited() && (
           Objects.equals(context.getClientAddressCity().getState().getId(), dictionaryAddressCity.getState().getId())

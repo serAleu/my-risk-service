@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.rules;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public abstract class BaseRuleContext {
 
-  private RiskResponseRiskJpaEntity riskResponseJpaEntity;
+  private RiskResponseJpaEntity riskResponseJpaEntity;
 
 }

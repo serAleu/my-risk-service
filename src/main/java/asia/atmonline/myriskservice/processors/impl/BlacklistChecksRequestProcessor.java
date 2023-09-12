@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.processors.impl;
 import static asia.atmonline.myriskservice.enums.risk.CheckType.BL;
 
 import asia.atmonline.myriskservice.consumer.payload.ResponsePayload;
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.mapper.PayloadMapper;
 import asia.atmonline.myriskservice.processors.BaseRequestProcessor;
 import asia.atmonline.myriskservice.producers.DefaultProducer;
@@ -27,20 +27,20 @@ public class BlacklistChecksRequestProcessor extends BaseRequestProcessor {
   private String blacklistChecksResponseQueue;
 
   @Override
-  public boolean isSuitable(RiskRequestRiskJpaEntity request) {
+  public boolean isSuitable(RiskRequestJpaEntity request) {
     return request != null && BL.equals(request.getCheckType()) && request.getPhone() != null;
   }
 
   @Override
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
-    RiskResponseRiskJpaEntity response = blacklistChecksService.process(request);
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+    RiskResponseJpaEntity response = blacklistChecksService.process(request);
     response.setRequestId(request.getId());
     response.setPhone(request.getPhone());
     defaultProducer.send(convertToPayload(response), blacklistChecksResponseQueue);
     return response;
   }
 
-  private ResponsePayload convertToPayload(RiskResponseRiskJpaEntity response) {
+  private ResponsePayload convertToPayload(RiskResponseJpaEntity response) {
     return payloadMapper.entityToPayload(response);
   }
 }

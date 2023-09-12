@@ -4,8 +4,8 @@ import static asia.atmonline.myriskservice.enums.application.CreditApplicationSt
 import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.OUTGOING_PAYMENT_SUCCEED;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerAdditionalIdNumberJpaRepository;
@@ -39,13 +39,13 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
 
   @Override
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
     return process(request, false);
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request, boolean isFinalCheck) {
-    RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request, boolean isFinalCheck) {
+    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
     Long borrowerId = creditApplicationJpaRepository.findBorrowerIdById(request.getApplicationId());
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
     if (borrower.isPresent()) {

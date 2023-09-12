@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.INDUSTRY;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.INDUSTRY_F;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
@@ -21,8 +21,8 @@ public class BasicIndustryRule extends BaseBasicRule<BasicIndustryContext> {
   }
 
   @Override
-  public RiskResponseRiskJpaEntity execute(BasicIndustryContext context) {
-    RiskResponseRiskJpaEntity response = super.execute(context);
+  public RiskResponseJpaEntity execute(BasicIndustryContext context) {
+    RiskResponseJpaEntity response = super.execute(context);
     context.getDictionaryWorkingIndustries().forEach(dictionaryWorkingIndustry -> {
       if (!dictionaryWorkingIndustry.getActive()
           && (dictionaryWorkingIndustry.getNameEn().equalsIgnoreCase(context.getClientWorkingIndustry().getNameEn())

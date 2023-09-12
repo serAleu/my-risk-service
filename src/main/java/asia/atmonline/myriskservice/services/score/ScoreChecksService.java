@@ -2,8 +2,8 @@ package asia.atmonline.myriskservice.services.score;
 
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.score.DataScoreService;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
@@ -45,8 +45,8 @@ public class ScoreChecksService implements BaseRiskChecksService {
 
   @Override
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
-    RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
     ScoreResponseRiskJpaEntity scoreResponseJpaEntity = new ScoreResponseRiskJpaEntity().setCreditApplicationId(request.getApplicationId());
     Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getApplicationId());
     if(application.isPresent()) {
@@ -70,7 +70,7 @@ public class ScoreChecksService implements BaseRiskChecksService {
     return response;
   }
 
-  private Map<String, Long> getScoreLimitAndDecisionRestrictions(RiskRequestRiskJpaEntity request) {
+  private Map<String, Long> getScoreLimitAndDecisionRestrictions(RiskRequestJpaEntity request) {
     Map<String, Long> map = new HashMap<>();
     if(3 == request.getScoreNodeId()) {
 //      Optional<SystemProperty> termMaxProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathTermMax);

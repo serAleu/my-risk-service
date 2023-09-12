@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.rules.seon.phone;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.external_responses.SeonFraudResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.BaseRuleContext;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class SeonPhoneRuleContext extends BaseRuleContext {
 
   public SeonPhoneRuleContext(Long applicationId, SeonFraudResponseRiskJpaEntity responseJpaEntity, Boolean isNewSeonData,
       Boolean isSeonFraudPhoneStopFactorEnable) {
-    super(new RiskResponseRiskJpaEntity());
+    super(new RiskResponseJpaEntity());
     this.responseJpaEntity = responseJpaEntity;
     this.applicationId = applicationId;
     this.isNewSeonData = isNewSeonData;

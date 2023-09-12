@@ -2,8 +2,8 @@ package asia.atmonline.myriskservice.services.basic;
 
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
@@ -43,13 +43,13 @@ public class BasicChecksService implements BaseRiskChecksService {
   private Long rulesBasicPermittedIncome;
 
   @Override
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
     return process(request, false);
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request, boolean isFinalCheck) {
-    RiskResponseRiskJpaEntity response = new RiskResponseRiskJpaEntity();
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request, boolean isFinalCheck) {
+    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
     Long borrowerId = creditApplicationJpaRepository.findBorrowerIdById(request.getApplicationId());
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
     if (borrower.isPresent()) {

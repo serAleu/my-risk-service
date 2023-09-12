@@ -3,8 +3,8 @@ package asia.atmonline.myriskservice.processors.impl;
 import static asia.atmonline.myriskservice.enums.risk.CheckType.COOLDOWN;
 
 import asia.atmonline.myriskservice.consumer.payload.ResponsePayload;
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.mapper.PayloadMapper;
 import asia.atmonline.myriskservice.processors.BaseRequestProcessor;
 import asia.atmonline.myriskservice.producers.DefaultProducer;
@@ -27,20 +27,20 @@ public class CooldownChecksRequestProcessor extends BaseRequestProcessor {
   private String cooldownChecksResponseQueue;
 
   @Override
-  public boolean isSuitable(RiskRequestRiskJpaEntity request) {
+  public boolean isSuitable(RiskRequestJpaEntity request) {
     return request != null && COOLDOWN.equals(request.getCheckType()) && request.getApplicationId() != null;
   }
 
   @Override
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
-    RiskResponseRiskJpaEntity response = cooldownChecksService.process(request);
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+    RiskResponseJpaEntity response = cooldownChecksService.process(request);
     response.setRequestId(request.getId());
     response.setApplicationId(request.getApplicationId());
     defaultProducer.send(convertToPayload(response), cooldownChecksResponseQueue);
     return response;
   }
 
-  private ResponsePayload convertToPayload(RiskResponseRiskJpaEntity response) {
+  private ResponsePayload convertToPayload(RiskResponseJpaEntity response) {
     return payloadMapper.entityToPayload(response);
   }
 }

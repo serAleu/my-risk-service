@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.rules.score;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.rules.BaseRuleContext;
 import java.util.List;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public abstract class BaseScoreContext extends BaseRuleContext {
   private final Integer scoreNodeId;
 
   public BaseScoreContext(Integer decision, Integer scoreNodeId) {
-    super(new RiskResponseRiskJpaEntity());
+    super(new RiskResponseJpaEntity());
     this.decision = decision;
     this.scoreNodeId = scoreNodeId;
   }

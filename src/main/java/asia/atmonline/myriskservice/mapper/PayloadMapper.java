@@ -2,8 +2,8 @@ package asia.atmonline.myriskservice.mapper;
 
 import asia.atmonline.myriskservice.consumer.payload.RequestPayload;
 import asia.atmonline.myriskservice.consumer.payload.ResponsePayload;
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
@@ -14,12 +14,12 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface PayloadMapper {
 
-  RiskRequestRiskJpaEntity payloadToEntity(RequestPayload payload);
+  RiskRequestJpaEntity payloadToEntity(RequestPayload payload);
 
-  RiskResponseRiskJpaEntity payloadToEntity(ResponsePayload payload);
+  RiskResponseJpaEntity payloadToEntity(ResponsePayload payload);
 
-  RequestPayload entityToPayload(RiskRequestRiskJpaEntity payload);
+  RequestPayload entityToPayload(RiskRequestJpaEntity payload);
 
-  ResponsePayload entityToPayload(RiskResponseRiskJpaEntity payload);
+  ResponsePayload entityToPayload(RiskResponseJpaEntity payload);
 
 }

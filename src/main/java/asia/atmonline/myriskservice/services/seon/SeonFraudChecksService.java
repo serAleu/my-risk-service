@@ -1,11 +1,14 @@
 package asia.atmonline.myriskservice.services.seon;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskRequestRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseRiskJpaEntity;
+import static asia.atmonline.myriskservice.enums.risk.FinalDecision.APPROVE;
+
+import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.external_responses.SeonFraudResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.repositories.external_responses.SeonFraudResponseJpaRepository;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
+import asia.atmonline.myriskservice.enums.risk.CheckType;
 import asia.atmonline.myriskservice.rules.seon.phone.SeonPhoneRule;
 import asia.atmonline.myriskservice.rules.seon.phone.SeonPhoneRuleContext;
 import asia.atmonline.myriskservice.services.BaseRiskChecksService;
@@ -45,27 +48,36 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
   private final SeonPropertyManager seonPropertyManager;
 
   @Override
-  public RiskResponseRiskJpaEntity process(RiskRequestRiskJpaEntity request) {
-    Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getApplicationId());
-    if (application.isPresent() && application.get().getBorrower() != null) {
-      boolean isNewSeonData = false;
-      Optional<SeonFraudResponseRiskJpaEntity> seonFraudOldResponseJpaEntityOptional = seonFraudResponseJpaRepository
-          .findTop1ByBorrowerIdAndCreatedAtGreaterThanAndSuccessOrderByCreatedAtDesc(application.get().getBorrower().getId(),
-              LocalDateTime.now().minus(seonPropertyManager.getSeonFraudRequestLimit(), ChronoUnit.DAYS), true);
-      SeonFraudResponseRiskJpaEntity currentResponse;
-      if (seonFraudOldResponseJpaEntityOptional.isEmpty() || isNeedToGetNewSeonInfo(application.get(), seonFraudOldResponseJpaEntityOptional.get())) {
-        currentResponse = getFraudData(application.get());
-        isNewSeonData = true;
-      } else {
-        currentResponse = seonFraudOldResponseJpaEntityOptional.get();
+  public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+    try {
+      Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getApplicationId());
+      if (application.isPresent() && application.get().getBorrower() != null) {
+        boolean isNewSeonData = false;
+        Optional<SeonFraudResponseRiskJpaEntity> seonFraudOldResponseJpaEntityOptional = seonFraudResponseJpaRepository
+            .findTop1ByBorrowerIdAndCreatedAtGreaterThanAndSuccessOrderByCreatedAtDesc(application.get().getBorrower().getId(),
+                LocalDateTime.now().minus(seonPropertyManager.getSeonFraudRequestLimit(), ChronoUnit.DAYS), true);
+        SeonFraudResponseRiskJpaEntity currentResponse;
+        if (seonFraudOldResponseJpaEntityOptional.isEmpty() || isNeedToGetNewSeonInfo(application.get(),
+            seonFraudOldResponseJpaEntityOptional.get())) {
+          currentResponse = getFraudData(application.get());
+          isNewSeonData = true;
+        } else {
+          currentResponse = seonFraudOldResponseJpaEntityOptional.get();
+        }
+        if (currentResponse != null) {
+          seonFraudResponseJpaRepository.save(currentResponse);
+        }
+        return seonPhoneRule.execute(new SeonPhoneRuleContext(application.get().getId(), currentResponse, isNewSeonData,
+            seonPropertyManager.getSeonFraudPhoneStopFactorEnable()));
       }
-      if (currentResponse != null) {
-        seonFraudResponseJpaRepository.save(currentResponse);
-      }
-      return seonPhoneRule.execute(new SeonPhoneRuleContext(application.get().getId(), currentResponse, isNewSeonData,
-          seonPropertyManager.getSeonFraudPhoneStopFactorEnable()));
+      return new RiskResponseJpaEntity();
+    } catch (Exception e) {
+      RiskResponseJpaEntity riskResponseJpa = new RiskResponseJpaEntity();
+      riskResponseJpa.setApplicationId(request.getApplicationId());
+      riskResponseJpa.setCheckType(CheckType.SEON);
+      riskResponseJpa.setDecision(APPROVE);
+      return riskResponseJpa;
     }
-    return new RiskResponseRiskJpaEntity();
   }
 
   @Transactional
