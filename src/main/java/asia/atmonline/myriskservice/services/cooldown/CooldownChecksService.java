@@ -35,6 +35,8 @@ public class CooldownChecksService implements BaseRiskChecksService {
   @SuppressWarnings({"unchecked", "rawtypes"})
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
     RiskResponseJpaEntity response = new RiskResponseJpaEntity();
+    response.setRequestId(request.getId());
+    response.setApplicationId(request.getApplicationId());
     Long borrowerId = creditApplicationJpaRepository.findBorrowerIdById(request.getApplicationId());
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
     if (borrower.isPresent()) {

@@ -11,20 +11,21 @@ import asia.atmonline.myriskservice.producers.DefaultProducer;
 import asia.atmonline.myriskservice.services.seon.SeonFraudChecksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!mock")
 @RequiredArgsConstructor
 public class SeonChecksRequestProcessor extends BaseRequestProcessor {
 
   private final DefaultProducer defaultProducer;
   private final SeonFraudChecksService seonFraudChecksService;
   private final PayloadMapper payloadMapper;
+  private static final String SEON_MOCK_WAS_USED_MESSAGE = "SEON MOCK WAS USED";
 
   @Value("${aws.sqs.seon-fraud.producer.queue-name}")
   private String seonFraudChecksResponseQueue;
+  @Value("${using-mocks.seon}")
+  private Boolean usingMocksSeon;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {
@@ -33,9 +34,12 @@ public class SeonChecksRequestProcessor extends BaseRequestProcessor {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = seonFraudChecksService.process(request);
-    response.setRequestId(request.getId());
-    response.setApplicationId(request.getApplicationId());
+    RiskResponseJpaEntity response;
+    if(usingMocksSeon) {
+      response = getMockApprovedResponse(request, SEON_MOCK_WAS_USED_MESSAGE);
+    } else {
+      response = seonFraudChecksService.process(request);
+    }
     defaultProducer.send(convertToPayload(response), seonFraudChecksResponseQueue);
     return response;
   }

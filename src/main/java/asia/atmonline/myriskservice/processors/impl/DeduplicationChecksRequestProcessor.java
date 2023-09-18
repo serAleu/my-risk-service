@@ -11,20 +11,21 @@ import asia.atmonline.myriskservice.producers.DefaultProducer;
 import asia.atmonline.myriskservice.services.dedup.DeduplicationChecksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!mock")
 @RequiredArgsConstructor
 public class DeduplicationChecksRequestProcessor extends BaseRequestProcessor {
 
   private final DefaultProducer defaultProducer;
   private final DeduplicationChecksService deduplicationChecksService;
   private final PayloadMapper payloadMapper;
+  private static final String BUREAU_MOCK_WAS_USED_MESSAGE = "BUREAU MOCK WAS USED";
 
   @Value("${aws.sqs.dedup.producer.queue-name}")
   private String dedupChecksResponseQueue;
+  @Value("${using-mocks.deduplication}")
+  private Boolean usingMocksDeduplication;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {
@@ -33,9 +34,12 @@ public class DeduplicationChecksRequestProcessor extends BaseRequestProcessor {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = deduplicationChecksService.process(request);
-    response.setRequestId(request.getId());
-    response.setApplicationId(request.getApplicationId());
+    RiskResponseJpaEntity response;
+    if(usingMocksDeduplication) {
+      response = getMockApprovedResponse(request, BUREAU_MOCK_WAS_USED_MESSAGE);
+    } else {
+      response = deduplicationChecksService.process(request);
+    }
     defaultProducer.send(convertToPayload(response), dedupChecksResponseQueue);
     return response;
   }

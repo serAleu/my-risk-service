@@ -1,9 +1,11 @@
 package asia.atmonline.myriskservice.data.storage.entity.application;
 
 import asia.atmonline.myriskservice.data.storage.entity.BaseCreditEntity;
-import asia.atmonline.myriskservice.enums.application.CreditApplicationStatus;
+import asia.atmonline.myriskservice.data.storage.entity.borrower.CpaUtmData;
+import asia.atmonline.myriskservice.data.storage.entity.borrower.UtmParametersData;
 import asia.atmonline.myriskservice.enums.borrower.LoanPurpose;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,17 +18,23 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import javax.xml.bind.annotation.XmlElement;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.type.SqlTypes;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "credit_application", schema = "my-back")
+@BatchSize(size = BaseCreditEntity.DEFAULT_BATCH_SIZE)
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class CreditApplication extends BaseCreditEntity {
 
   @Column(name = "requested_at", nullable = false)
@@ -38,52 +46,53 @@ public class CreditApplication extends BaseCreditEntity {
   @Column(name = "approved_term")
   private Integer approvedTerm;
 
-  @Column(name = "requested_amount", precision = 19, nullable = false)
+  @Column(name = "requested_amount")
   private BigDecimal requestedAmount;
 
-  @Column(name = "approved_amount", precision = 19)
+  @Column(name = "approved_amount")
   private BigDecimal approvedAmount;
 
-  @Column(name = "available_limit", precision = 19)
+  @Column(name = "available_limit")
   private BigDecimal availableLimit;
 
   @Column(name = "purpose")
   @Enumerated(EnumType.STRING)
   private LoanPurpose purpose;
 
+  @NotAudited
   @Column(name = "ip_address")
   private String ipAddress;
 
-  @Column(name = "status", nullable = false)
-  private CreditApplicationStatus status;
-
-//  @JoinColumn(name = "operator_id")
-//  @ManyToOne(fetch = FetchType.EAGER)
-//  private BackOfficeUserAccount operator;
-
-//  @JoinColumn(name = "office_id")
-//  @ManyToOne(fetch = FetchType.LAZY)
-//  private Office office;
-
-//  @ManyToOne(fetch = FetchType.EAGER)
-//  @JoinColumn(name = "underwriter_id")
-//  private BackOfficeUserAccount underwriter;
-
+//  @Column(name = "status")
 //  @Enumerated(EnumType.STRING)
-//  @Column(name = "outgoing_payment_provider")
-//  private PaymentProvider outgoingPaymentProvider;
+//  private CreditApplicationStatus status;
 
-//  @OneToOne(fetch = FetchType.LAZY)
-//  @JoinColumn(name = "outgoing_transaction_id")
-//  private PaymentTransaction outgoingTransaction;
+  @Column(name = "status")
+  private String status;
 
-//  @Embedded
-//  @NotAudited
-//  private UtmParametersData utmParametersData;
+  @Column(name = "operator_id")
+  private Long operator;
 
-//  @Embedded
-//  @NotAudited
-//  private CpaUtmData cpaUtmData;
+  @Column(name = "office_id")
+  private Long office;
+
+  @Column(name = "underwriter_id")
+  private Long underwriter;
+
+  @Column(name = "outgoing_payment_provider")
+  private String outgoingPaymentProvider;
+
+  @NotAudited
+  @Column(name = "outgoing_transaction_id")
+  private Long outgoingTransaction;
+
+  @Embedded
+  @NotAudited
+  private UtmParametersData utmParametersData;
+
+  @Embedded
+  @NotAudited
+  private CpaUtmData cpaUtmData;
 
   @Column(name = "underwriter_decision_made_at")
   private LocalDateTime underwriterDecisionMadeAt;
@@ -94,46 +103,58 @@ public class CreditApplication extends BaseCreditEntity {
   @Column(name = "contract_signed_at")
   private LocalDateTime contractSignedAt;
 
+  @NotAudited
   @Column(name = "trial")
   private boolean trial = false;
 
+  @NotAudited
   @Column(name = "notification_sent")
   private boolean notificationSent = false;
 
+  @NotAudited
   @Column(name = "lender_signed")
   private Boolean signedByLeander;
 
-//  @OneToOne(fetch = FetchType.LAZY)
-//  @JoinColumn(name = "device_info_id")
-//  @JsonIgnore
-//  private DeviceInfo deviceInfo;
+  @NotAudited
+  @Column(name = "device_info_id")
+  private Long deviceInfo;
 
-//  @Column(name = "decision_log", columnDefinition = "jsonb default '{}'")
-//  private Map<String, Map<String, Object>> decisionData;
+  @NotAudited
+  @Column(name = "decision_log", columnDefinition = "jsonb default '{}'")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private Map<String, Map<String, Object>> decisionData;
 
-//  @Column(name = "rejection_reason", columnDefinition = "jsonb default '{}'")
-//  @Type(type = "JsonDataUserRejectionReason")
-//  private RejectionReason rejectionReason;
+  @NotAudited
+  @Column(name = "rejection_reason", columnDefinition = "jsonb default '{}'")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private RejectionReason rejectionReason;
 
-  @Column(name = "kyc_checked", columnDefinition = "boolean default false")
+  @NotAudited
+  @Column(name = "kyc_checked")
   private boolean kycChecked = false;
 
-  @Column(name = "email_verified", columnDefinition = "boolean default false")
+  @NotAudited
+  @Column(name = "email_verified")
   private boolean emailVerified = false;
 
+  @NotAudited
   @Column(name = "rejection_reason_code")
   private String rejectionReasonCode;
 
-//  @Column(name = "dms_report", columnDefinition = "jsonb default '{}'")
-//  private Map<String, Object> dmsReport;
+  @NotAudited
+  @Column(name = "dms_report", columnDefinition = "jsonb default '{}'")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private Map<String, Object> dmsReport;
 
-//  @Enumerated(EnumType.STRING)
-//  @Column(name = "cpa_request_status")
-//  private CpaRequestStatus cpaRequestStatus;
+  @NotAudited
+  @Column(name = "cpa_request_status")
+  private String cpaRequestStatus;
 
-  @Column(name = "repaid_loan_amount", nullable = false, updatable = false, columnDefinition = "bigint default 0")
-  private long repaidLoanAmount;
+  @NotAudited
+  @Column(name = "repaid_loan_amount")
+  private Long repaidLoanAmount;
 
+  @NotAudited
   @Column(name = "domain")
   private String domain;
 
@@ -146,31 +167,39 @@ public class CreditApplication extends BaseCreditEntity {
   @Column(name = "max_loan_limit")
   private BigDecimal maxLoanLimit;
 
-  @Column(name = "borrower_data_changed", columnDefinition = "bool default false")
-  private boolean borrowerDataChanged;
+  @NotAudited
+  @Column(name = "borrower_data_changed")
+  private Boolean borrowerDataChanged;
 
-  @Column(name = "pv_dms_check_successful", columnDefinition = "bool default false")
-  private boolean pvDmsCheckSuccessful;
+  @NotAudited
+  @Column(name = "pv_dms_check_successful")
+  private Boolean pvDmsCheckSuccessful;
 
-//  @Enumerated(EnumType.STRING)
-//  @Column(name = "strategy_type")
-//  private Score1StrategyType strategyType;
+  @NotAudited
+  @Column(name = "strategy_type")
+  private String strategyType;
 
-  @Column(name = "score1", scale = 17)
+  @NotAudited
+  @Column(name = "score1")
   private BigDecimal score1;
 
+  @NotAudited
   @Column(name = "score2")
   private String score2;
 
+  @NotAudited
   @Column(name = "score2_script_version")
   private String score2ScriptVersion;
 
+  @NotAudited
   @Column(name = "score3")
   private String score3;
 
+  @NotAudited
   @Column(name = "score3_script_version")
   private String score3ScriptVersion;
 
+  @NotAudited
   @Column(name = "script_log", columnDefinition = "jsonb default '[]'")
   @JdbcTypeCode(SqlTypes.JSON)
   private List<String> scriptLog = new ArrayList<>();
@@ -178,28 +207,34 @@ public class CreditApplication extends BaseCreditEntity {
   @Transient
   private Long contractId;
 
+  @NotAudited
   @Column(name = "auto_disbursement_passed")
   private boolean autoDisbursementPassed = false;
 
-//  @Enumerated(EnumType.STRING)
-//  @Column(name = "dms_strategy_type")
-//  private DmsStrategyType dmsStrategyType;
+  @NotAudited
+  @Column(name = "dms_strategy_type")
+  private String dmsStrategyType;
 
+  @NotAudited
   @Column(name = "juicyscore_response_id")
   private Long juicyScoreResponseId;
 
+  @NotAudited
   @Column(name = "seon_phone_response_id")
   private Long seonPhoneResponseId;
 
+//  @NotAudited
 //  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //  @JoinColumn(name = "application_id")
 //  @OrderBy("id DESC")
 //  private List<CreditApplicationFollowUp> followUps;
-
+//
+//  @NotAudited
 //  @OneToMany(fetch = FetchType.LAZY)
 //  @JoinColumn(name = "application_id", updatable = false, insertable = false)
 //  private Set<CreditApplicationFollowUpView> followUpsView;
 
+  @NotAudited
   @Column(name = "express_processing")
   private boolean expressProcessing;
 
@@ -209,41 +244,51 @@ public class CreditApplication extends BaseCreditEntity {
   @Transient
   private LocalDateTime followUpReminderTime;
 
+  @NotAudited
   @Column(name = "score_results")
   private Integer scoreResult;
 
+  @NotAudited
   @Column(name = "reference_number")
   private String referenceNumber;
 
+  @NotAudited
   @Column(name = "score_model_id")
   private String scoreModelId;
 
+  @NotAudited
   @Column(name = "score_script_version")
   private String scoreScriptVersion;
 
-  @XmlElement(required = true)
-  @Column(name = "dms_approved_max_amount", precision = 19)
+  @Column(name = "dms_approved_max_amount")
   private BigDecimal dmsApprovedMaxAmount;
 
+  @NotAudited
   @Column(name = "pilot")
   private String pilot;
 
+  @NotAudited
   @Column(name = "external_score")
   private Integer externalScore;
 
+  @NotAudited
   @Column(name = "scoring_service_response")
   private String scoringServiceResponse;
 
+  @NotAudited
   @Column(name = "scoring_service_error")
   private String scoringServiceError;
 
+  @NotAudited
   @Column(name = "scoring_service_responses", columnDefinition = "jsonb default '[]'")
   @JdbcTypeCode(SqlTypes.JSON)
   private List<Object> scoringServiceResponses;
 
-  @Column(name = "external_score_requested_at", nullable = false)
+  @NotAudited
+  @Column(name = "external_score_requested_at")
   private LocalDateTime externalScoreRequestedAt;
 
+  @NotAudited
   @Column(name = "score_model_version")
   private String scoreModelVersion;
 

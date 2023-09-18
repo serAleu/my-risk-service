@@ -11,20 +11,21 @@ import asia.atmonline.myriskservice.producers.DefaultProducer;
 import asia.atmonline.myriskservice.services.score.ScoreChecksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!mock")
 @RequiredArgsConstructor
 public class ScoreChecksRequestProcessor extends BaseRequestProcessor {
 
   private final DefaultProducer defaultProducer;
   private final ScoreChecksService scoreChecksService;
   private final PayloadMapper payloadMapper;
+  private static final String SCORE_MOCK_WAS_USED_MESSAGE = "BUREAU MOCK WAS USED";
 
   @Value("${aws.sqs.score.producer.queue-name}")
   private String scoreChecksResponseQueue;
+  @Value("${using-mocks.score}")
+  private Boolean usingMocksScore;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {
@@ -33,9 +34,12 @@ public class ScoreChecksRequestProcessor extends BaseRequestProcessor {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = scoreChecksService.process(request);
-    response.setRequestId(request.getId());
-    response.setApplicationId(request.getApplicationId());
+    RiskResponseJpaEntity response;
+    if(usingMocksScore) {
+      response = getMockApprovedResponse(request, SCORE_MOCK_WAS_USED_MESSAGE);
+    } else {
+      response = scoreChecksService.process(request);
+    }
     defaultProducer.send(convertToPayload(response), scoreChecksResponseQueue);
     return response;
   }

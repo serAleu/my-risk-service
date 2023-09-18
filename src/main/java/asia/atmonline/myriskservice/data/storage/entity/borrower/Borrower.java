@@ -3,6 +3,7 @@ package asia.atmonline.myriskservice.data.storage.entity.borrower;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressCityDictionary;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressStateDictionary;
 import asia.atmonline.myriskservice.enums.application.ApplicationsStep;
+import asia.atmonline.myriskservice.enums.borrower.ExtraAttributes;
 import asia.atmonline.myriskservice.enums.borrower.LoanPurpose;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -15,10 +16,15 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import java.time.LocalDateTime;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "borrower", schema = "my-back")
@@ -68,6 +74,11 @@ public class Borrower extends UserAccount {
   @Column(name = "juicy_score_session_id")
   private String juicyScoreSessionId;
 
+  @Column(name = "extra_attributes")
+  @JdbcTypeCode(SqlTypes.JSON)
+  @NotAudited
+  private Map<ExtraAttributes, String> attributes;
+
   @Column(name = "last_application_step")
   @Enumerated(EnumType.STRING)
   private ApplicationsStep lastApplicationStep = ApplicationsStep.STEP_0;
@@ -82,6 +93,13 @@ public class Borrower extends UserAccount {
     } else {
       return "";
     }
+  }
+
+  public Map<ExtraAttributes, String> getAttributes() {
+    if (this.attributes == null) {
+      this.attributes = new EnumMap<>(ExtraAttributes.class);
+    }
+    return this.attributes;
   }
 
   public PersonalData getPersonalData() {

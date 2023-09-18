@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS risk_response (
   credit_application_id bigint,
   borrower_id bigint,
   final_decision varchar(30),
+  message varchar(200),
   rejection_reason_code varchar(30),
   check_type varchar(30),
   phone_num varchar(100)

@@ -15,6 +15,8 @@ public class BureauChecksService implements BaseRiskChecksService {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+//    response.setRequestId(request.getId());
+//    response.setApplicationId(request.getApplicationId());
 
 //    первый запрос в экспириан проверяем есть ли в бюро информация о заемщике
 

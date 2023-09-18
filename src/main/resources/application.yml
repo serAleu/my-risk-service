@@ -27,6 +27,16 @@ spring:
   activemq:
     broker-url:
 
+using-mocks:
+  basic: true
+  blacklists: true
+  bureau: true
+  cooldown: true
+  deduplication: true
+  final: true
+  score: true
+  seon: false
+
 rules:
   basic:
     age-2-low: 21

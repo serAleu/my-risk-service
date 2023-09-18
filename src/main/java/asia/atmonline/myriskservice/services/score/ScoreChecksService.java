@@ -47,6 +47,8 @@ public class ScoreChecksService implements BaseRiskChecksService {
   @SuppressWarnings({"unchecked", "rawtypes"})
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
     RiskResponseJpaEntity response = new RiskResponseJpaEntity();
+    response.setRequestId(request.getId());
+    response.setApplicationId(request.getApplicationId());
     ScoreResponseRiskJpaEntity scoreResponseJpaEntity = new ScoreResponseRiskJpaEntity().setCreditApplicationId(request.getApplicationId());
     Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getApplicationId());
     if(application.isPresent()) {

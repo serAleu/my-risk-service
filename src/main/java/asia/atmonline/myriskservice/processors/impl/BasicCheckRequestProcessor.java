@@ -11,20 +11,21 @@ import asia.atmonline.myriskservice.producers.DefaultProducer;
 import asia.atmonline.myriskservice.services.basic.BasicChecksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!mock")
 @RequiredArgsConstructor
 public class BasicCheckRequestProcessor extends BaseRequestProcessor {
 
   private final DefaultProducer defaultProducer;
   private final BasicChecksService basicChecksService;
   private final PayloadMapper payloadMapper;
+  private static final String BASIC_MOCK_WAS_USED_MESSAGE = "BASIC MOCK WAS USED";
 
   @Value("${aws.sqs.basic.producer.queue-name}")
   private String basicChecksResponseQueue;
+  @Value("${using-mocks.basic}")
+  private Boolean usingMocksBasic;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {
@@ -33,9 +34,12 @@ public class BasicCheckRequestProcessor extends BaseRequestProcessor {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = basicChecksService.process(request);
-    response.setRequestId(request.getId());
-    response.setApplicationId(request.getApplicationId());
+    RiskResponseJpaEntity response;
+    if(usingMocksBasic) {
+      response = getMockApprovedResponse(request, BASIC_MOCK_WAS_USED_MESSAGE);
+    } else {
+      response = basicChecksService.process(request);
+    }
     defaultProducer.send(convertToPayload(response), basicChecksResponseQueue);
     return response;
   }

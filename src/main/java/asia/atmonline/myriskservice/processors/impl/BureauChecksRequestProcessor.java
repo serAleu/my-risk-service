@@ -22,9 +22,12 @@ public class BureauChecksRequestProcessor extends BaseRequestProcessor {
   private final DefaultProducer defaultProducer;
   private final BureauChecksService bureauChecksService;
   private final PayloadMapper payloadMapper;
+  private static final String BUREAU_MOCK_WAS_USED_MESSAGE = "BUREAU MOCK WAS USED";
 
   @Value("${aws.sqs.bureau.producer.queue-name}")
   private String bureauChecksResponseQueue;
+  @Value("${using-mocks.bureau}")
+  private Boolean usingMocksBureau;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {
@@ -33,9 +36,12 @@ public class BureauChecksRequestProcessor extends BaseRequestProcessor {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = bureauChecksService.process(request);
-    response.setRequestId(request.getId());
-    response.setApplicationId(request.getApplicationId());
+    RiskResponseJpaEntity response;
+    if(usingMocksBureau) {
+      response = getMockApprovedResponse(request, BUREAU_MOCK_WAS_USED_MESSAGE);
+    } else {
+      response = bureauChecksService.process(request);
+    }
     defaultProducer.send(convertToPayload(response), bureauChecksResponseQueue);
     return response;
   }

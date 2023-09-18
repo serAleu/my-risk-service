@@ -29,6 +29,7 @@
 		<aws-java-sdk.version>2.20.132</aws-java-sdk.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 		<jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
+		<hibernate-core.version>6.1.7.Final</hibernate-core.version>
 	</properties>
 
 	<dependencyManagement>
@@ -54,8 +55,12 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>6.1.7.Final</version>
-			<type>pom</type>
+			<version>${hibernate-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-envers</artifactId>
+			<version>${hibernate-core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>

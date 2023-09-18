@@ -42,21 +42,9 @@ public class RiskResponseJpaEntity extends BaseRiskJpaEntity {
 
   @Column(name = "risk_request_id")
   private Long requestId;
-//
-//  @JsonProperty("additional_fields")
-//  @Column(name = "additional_fields")
-//  @ElementCollection
-//  private Map<String, String> additionalFields = new HashMap<>();
 
-
-
-//  @JsonAnySetter
-//  public void setAdditionalField(String fieldName, String fieldValue) {
-//    if(additionalFields == null) {
-//      additionalFields = new HashMap<>();
-//    }
-//    additionalFields.put(fieldName, fieldValue);
-//  }
+  @Column(name = "message")
+  private String message;
 
   @Override
   public String repositoryName() {

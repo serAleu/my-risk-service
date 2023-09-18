@@ -50,6 +50,8 @@ public class BasicChecksService implements BaseRiskChecksService {
   @SuppressWarnings({"unchecked", "rawtypes"})
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request, boolean isFinalCheck) {
     RiskResponseJpaEntity response = new RiskResponseJpaEntity();
+    response.setRequestId(request.getId());
+    response.setApplicationId(request.getApplicationId());
     Long borrowerId = creditApplicationJpaRepository.findBorrowerIdById(request.getApplicationId());
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
     if (borrower.isPresent()) {

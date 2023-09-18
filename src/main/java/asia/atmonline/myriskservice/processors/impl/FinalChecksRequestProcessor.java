@@ -11,20 +11,21 @@ import asia.atmonline.myriskservice.producers.DefaultProducer;
 import asia.atmonline.myriskservice.services.fin.FinalChecksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!mock")
 @RequiredArgsConstructor
 public class FinalChecksRequestProcessor extends BaseRequestProcessor {
 
   private final DefaultProducer defaultProducer;
   private final FinalChecksService finalChecksService;
   private final PayloadMapper payloadMapper;
+  private static final String FINAL_MOCK_WAS_USED_MESSAGE = "FINAL MOCK WAS USED";
 
   @Value("${aws.sqs.final.producer.queue-name}")
   private String finalChecksResponseQueue;
+  @Value("${using-mocks.final}")
+  private Boolean usingMocksFinal;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {
@@ -33,9 +34,12 @@ public class FinalChecksRequestProcessor extends BaseRequestProcessor {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = finalChecksService.process(request);
-    response.setRequestId(request.getId());
-    response.setApplicationId(request.getApplicationId());
+    RiskResponseJpaEntity response;
+    if(usingMocksFinal) {
+      response = getMockApprovedResponse(request, FINAL_MOCK_WAS_USED_MESSAGE);
+    } else {
+      response = finalChecksService.process(request);
+    }
     defaultProducer.send(convertToPayload(response), finalChecksResponseQueue);
     return response;
   }

@@ -58,6 +58,7 @@ public class BlacklistChecksService implements BaseRiskChecksService {
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
     RiskResponseJpaEntity response = new RiskResponseJpaEntity();
     response.setRequestId(request.getId());
+    response.setApplicationId(request.getApplicationId());
     String phoneNum = request.getPhone();
     Long numberOfNotFinishedCredits = 0L;
     Long numberOfFinishedCredits = 0L;

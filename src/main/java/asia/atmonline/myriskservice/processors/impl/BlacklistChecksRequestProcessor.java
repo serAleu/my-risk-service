@@ -11,20 +11,22 @@ import asia.atmonline.myriskservice.producers.DefaultProducer;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!mock")
 @RequiredArgsConstructor
 public class BlacklistChecksRequestProcessor extends BaseRequestProcessor {
 
   private final DefaultProducer defaultProducer;
   private final BlacklistChecksService blacklistChecksService;
   private final PayloadMapper payloadMapper;
+  private static final String BLACKLIST_MOCK_WAS_USED_MESSAGE = "BLACKLIST MOCK WAS USED";
+
 
   @Value("${aws.sqs.blacklists.producer.queue-name}")
   private String blacklistChecksResponseQueue;
+  @Value("${using-mocks.blacklists}")
+  private Boolean usingMocksBlacklists;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {
@@ -33,9 +35,12 @@ public class BlacklistChecksRequestProcessor extends BaseRequestProcessor {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = blacklistChecksService.process(request);
-    response.setRequestId(request.getId());
-    response.setPhone(request.getPhone());
+    RiskResponseJpaEntity response;
+    if(usingMocksBlacklists) {
+      return getMockApprovedResponse(request, BLACKLIST_MOCK_WAS_USED_MESSAGE);
+    } else {
+      response = blacklistChecksService.process(request);
+    }
     defaultProducer.send(convertToPayload(response), blacklistChecksResponseQueue);
     return response;
   }

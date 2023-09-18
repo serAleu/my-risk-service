@@ -8,6 +8,7 @@ import asia.atmonline.myriskservice.data.risk.entity.external_responses.SeonFrau
 import asia.atmonline.myriskservice.data.risk.repositories.external_responses.SeonFraudResponseJpaRepository;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
+import asia.atmonline.myriskservice.enums.borrower.ExtraAttributes;
 import asia.atmonline.myriskservice.enums.risk.CheckType;
 import asia.atmonline.myriskservice.rules.seon.phone.SeonPhoneRule;
 import asia.atmonline.myriskservice.rules.seon.phone.SeonPhoneRuleContext;
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +51,8 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+//    response.setRequestId(request.getId());
+//    response.setApplicationId(request.getApplicationId());
     try {
       Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getApplicationId());
       if (application.isPresent() && application.get().getBorrower() != null) {
@@ -92,15 +96,17 @@ public class SeonFraudChecksService implements BaseRiskChecksService {
         .phone(new ConfigDetail().setInclude("flags,history,id").setVersion("v" + seonPropertyManager.getSeonFraudPhoneApiVersion()))
         .ip(new ConfigDetail().setInclude("flags,history,id").setVersion("v" + seonPropertyManager.getSeonFraudIpApiVersion())).build();
 
+    Map<ExtraAttributes, String> attributes = application.getBorrower().getAttributes();
+
     FraudRequest fraudRequest = FraudRequest.builder().config(config)
         .email(application.getBorrower().getPersonalData().getEmail())
         .userCreated(application.getBorrower().getCreatedAt().atZone(ZoneId.systemDefault()).toEpochSecond())
         .ip(application.getIpAddress())
         .phoneNumber(formatPhone(application.getBorrower().getPersonalData().getMobilePhone()))
-//        .session(application.getBorrower().getAttributes().get(SEON_SESSION))
-//        .sessionId(application.getBorrower().getAttributes().get(SEON_SESSION_ID))
-        .session("TEST")
-        .sessionId("TEST")
+//        .session(attributes.get(ExtraAttributes.SEON_SESSION))
+//        .sessionId(attributes.get(ExtraAttributes.SEON_SESSION_ID))
+        .session("SESSION")
+        .sessionId("SESSION_ID")
         .userfullname(application.getBorrower().getEmploymentData().getEmployerName())
         .userDob(application.getBorrower().getPersonalData().getBirthDate())
         .userId(application.getBorrower().getId()).userCountry("MY")

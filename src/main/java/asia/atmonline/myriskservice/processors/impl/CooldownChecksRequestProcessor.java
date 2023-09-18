@@ -11,20 +11,21 @@ import asia.atmonline.myriskservice.producers.DefaultProducer;
 import asia.atmonline.myriskservice.services.cooldown.CooldownChecksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!mock")
 @RequiredArgsConstructor
 public class CooldownChecksRequestProcessor extends BaseRequestProcessor {
 
   private final DefaultProducer defaultProducer;
   private final CooldownChecksService cooldownChecksService;
   private final PayloadMapper payloadMapper;
+  private static final String COOLDOWN_MOCK_WAS_USED = "COOLDOWN MOCK WAS USED";
 
   @Value("${aws.sqs.cooldown.producer.queue-name}")
   private String cooldownChecksResponseQueue;
+  @Value("${using-mocks.cooldown}")
+  private Boolean usingMocksCooldown;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {
@@ -33,9 +34,12 @@ public class CooldownChecksRequestProcessor extends BaseRequestProcessor {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = cooldownChecksService.process(request);
-    response.setRequestId(request.getId());
-    response.setApplicationId(request.getApplicationId());
+    RiskResponseJpaEntity response;
+    if(usingMocksCooldown) {
+      response = getMockApprovedResponse(request, COOLDOWN_MOCK_WAS_USED);
+    } else {
+      response = cooldownChecksService.process(request);
+    }
     defaultProducer.send(convertToPayload(response), cooldownChecksResponseQueue);
     return response;
   }
