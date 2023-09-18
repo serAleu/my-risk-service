@@ -20,7 +20,7 @@ public class DeduplicationChecksRequestProcessor extends BaseRequestProcessor {
   private final DefaultProducer defaultProducer;
   private final DeduplicationChecksService deduplicationChecksService;
   private final PayloadMapper payloadMapper;
-  private static final String BUREAU_MOCK_WAS_USED_MESSAGE = "BUREAU MOCK WAS USED";
+  private static final String DEDUPLICATION_MOCK_WAS_USED_MESSAGE = "DEDUPLICATION MOCK WAS USED";
 
   @Value("${aws.sqs.dedup.producer.queue-name}")
   private String dedupChecksResponseQueue;
@@ -36,7 +36,7 @@ public class DeduplicationChecksRequestProcessor extends BaseRequestProcessor {
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
     RiskResponseJpaEntity response;
     if(usingMocksDeduplication) {
-      response = getMockApprovedResponse(request, BUREAU_MOCK_WAS_USED_MESSAGE);
+      response = getMockApprovedResponse(request, DEDUPLICATION_MOCK_WAS_USED_MESSAGE);
     } else {
       response = deduplicationChecksService.process(request);
     }

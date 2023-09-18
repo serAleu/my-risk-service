@@ -20,7 +20,7 @@ public class ScoreChecksRequestProcessor extends BaseRequestProcessor {
   private final DefaultProducer defaultProducer;
   private final ScoreChecksService scoreChecksService;
   private final PayloadMapper payloadMapper;
-  private static final String SCORE_MOCK_WAS_USED_MESSAGE = "BUREAU MOCK WAS USED";
+  private static final String SCORE_MOCK_WAS_USED_MESSAGE = "SCORE MOCK WAS USED";
 
   @Value("${aws.sqs.score.producer.queue-name}")
   private String scoreChecksResponseQueue;

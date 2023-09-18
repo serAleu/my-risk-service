@@ -22,7 +22,6 @@ public class BlacklistChecksRequestProcessor extends BaseRequestProcessor {
   private final PayloadMapper payloadMapper;
   private static final String BLACKLIST_MOCK_WAS_USED_MESSAGE = "BLACKLIST MOCK WAS USED";
 
-
   @Value("${aws.sqs.blacklists.producer.queue-name}")
   private String blacklistChecksResponseQueue;
   @Value("${using-mocks.blacklists}")
