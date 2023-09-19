@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.processors.impl;
 
-import static asia.atmonline.myriskservice.enums.risk.CheckType.SCORE;
+import static asia.atmonline.myriskservice.enums.risk.CheckType.CREDIT_HISTORY_AVAILABILITY;
 
 import asia.atmonline.myriskservice.consumer.payload.ResponsePayload;
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
@@ -8,39 +8,38 @@ import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.mapper.PayloadMapper;
 import asia.atmonline.myriskservice.processors.BaseRequestProcessor;
 import asia.atmonline.myriskservice.producers.DefaultProducer;
-import asia.atmonline.myriskservice.services.score.ScoreChecksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ScoreChecksRequestProcessor extends BaseRequestProcessor {
+public class CreditHistoryChecksRequestProcessor extends BaseRequestProcessor {
 
   private final DefaultProducer defaultProducer;
-  private final ScoreChecksService scoreChecksService;
+  //  private final CreditHistoryChecksService creditHistoryChecksService;
   private final PayloadMapper payloadMapper;
-  private static final String SCORE_MOCK_WAS_USED_MESSAGE = "SCORE MOCK WAS USED";
+  private static final String CREDIT_HISTORY_MOCK_WAS_USED_MESSAGE = "CREDIT HISTORY MOCK WAS USED";
 
-  @Value("${aws.sqs.score.producer.queue-name}")
-  private String scoreChecksResponseQueue;
-  @Value("${using-mocks.score}")
-  private Boolean usingMocksScore;
+  @Value("${aws.sqs.credit-history.producer.queue-name}")
+  private String creditHistoryChecksResponseQueue;
+  @Value("${using-mocks.credit-history}")
+  private Boolean usingMocksExperian;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {
-    return request != null && SCORE.equals(request.getCheckType()) && request.getApplicationId() != null;
+    return request != null && CREDIT_HISTORY_AVAILABILITY.equals(request.getCheckType()) && request.getApplicationId() != null;
   }
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response;
-    if(usingMocksScore) {
-      response = getMockApprovedResponse(request, SCORE_MOCK_WAS_USED_MESSAGE);
-    } else {
-      response = scoreChecksService.process(request);
-    }
-    defaultProducer.send(convertToPayload(response), scoreChecksResponseQueue);
+    RiskResponseJpaEntity response = getMockApprovedResponse(request, CREDIT_HISTORY_MOCK_WAS_USED_MESSAGE);
+//    if(usingMocksExperian) {
+//      response = getMockApprovedResponse(request, EXPERIAN_MOCK_WAS_USED_MESSAGE);
+//    } else {
+//      response = experianChecksService.process(request);
+//    }
+    defaultProducer.send(convertToPayload(response), creditHistoryChecksResponseQueue);
     return response;
   }
 

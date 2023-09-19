@@ -35,6 +35,8 @@ using-mocks:
   final: ${USING_MOCKS_FINAL:true}
   score: ${USING_MOCKS_SCORE:true}
   seon: ${USING_MOCKS_SEON:true}
+  experian: true
+  credit-history: true
 
 rules:
   basic:
@@ -107,6 +109,12 @@ aws:
     final:
       producer:
         queue-name: ${FINAL_RESPONSE_RISK_QUEUE:my-risk-final-response-preprod}
+    experian:
+      producer:
+        queue-name: ${EXPERIAN_RESPONSE_RISK_QUEUE:my-risk-experian-response-preprod}
+    credit-history:
+      producer:
+        queue-name: ${CREDIT_HISTORY_RESPONSE_RISK_QUEUE:my-risk-credit-history-response-preprod}
 
 score:
   paths-to-properties:
