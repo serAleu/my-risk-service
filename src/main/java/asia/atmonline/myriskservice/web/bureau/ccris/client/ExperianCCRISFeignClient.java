@@ -8,7 +8,7 @@ public interface ExperianCCRISFeignClient {
 
   @RequestLine("POST /report")
   @Headers({
-      "Content-Type: " + MediaType.APPLICATION_XML_VALUE,
+      "Content-Type: " + MediaType.APPLICATION_JSON_VALUE,
       "Authorization: {authorization}"
   })
   String getCCRISInfo(String request);

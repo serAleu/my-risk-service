@@ -1,8 +1,7 @@
 package asia.atmonline.myriskservice.web.bureau.ccris.dto.confirm_entity.response;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +11,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ExperianCCRISEntityResponse {
 
-  @XmlAttribute(name = "token1")
+  @JsonProperty("token1")
   private String token1;
-  @XmlAttribute(name = "token2")
+  @JsonProperty("token2")
   private String token2;
-
 }

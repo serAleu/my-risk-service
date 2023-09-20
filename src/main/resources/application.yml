@@ -146,6 +146,10 @@ experian:
   base-url: ${EXPERIAN_BASE_URL:https://b2buat.experian.com.my/index.php/b2bgateway}
   ccris:
     url: ${EXPERIAN_CCRIS_SEARCH_URL:xxx}
+    group-code: ${EXPERIAN_CCRIS_GROUP_CODE:11}
+    product-type: ${EXPERIAN_CCRIS_PRODUCT_TYPE:CCRIS_SEARCH}
+  review:
+    product-type: ${EXPERIAN_CCRIS_PRODUCT_TYPE:IRISS}
   retrieve-report:
     url: ${EXPERIAN_RETRIEVE_REPORT_URL:xxx}
 

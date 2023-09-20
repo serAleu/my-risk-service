@@ -30,10 +30,10 @@ public class BasicChecksService implements BaseRiskChecksService {
 
   private final List<? extends BaseBasicRule<? extends BaseBasicContext>> rules;
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
+  private final BorrowerJpaRepository borrowerJpaRepository;
   private final DictionaryAddressCityJpaRepository dictionaryAddressCityJpaRepository;
   private final DictionaryWorkingIndustryJpaRepository dictionaryWorkingIndustryJpaRepository;
   private final DictionaryOccupationTypeJpaRepository dictionaryOccupationTypeJpaRepository;
-  private final BorrowerJpaRepository borrowerJpaRepository;
 
   @Value("${rules.basic.age-2-low}")
   private Integer rulesBasicPermittedAge2Low;

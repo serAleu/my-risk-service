@@ -1,25 +1,24 @@
 package asia.atmonline.myriskservice.web.bureau.retrieve_report.dto.request;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Accessors(chain = true)
 @AllArgsConstructor
-@XmlRootElement(name = "request")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class ExperianRetrieveReportRequest {
 
-  @XmlAttribute(name = "token1")
-  private String token1;
-  @XmlAttribute(name = "token2")
-  private String token2;
+  private ExperianRetrieveReportRequestBody request;
 
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+  }
 }
