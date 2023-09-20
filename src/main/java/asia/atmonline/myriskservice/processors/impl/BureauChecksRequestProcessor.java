@@ -11,11 +11,9 @@ import asia.atmonline.myriskservice.producers.DefaultProducer;
 import asia.atmonline.myriskservice.services.bureau.BureauChecksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!mock")
 @RequiredArgsConstructor
 public class BureauChecksRequestProcessor extends BaseRequestProcessor {
 
