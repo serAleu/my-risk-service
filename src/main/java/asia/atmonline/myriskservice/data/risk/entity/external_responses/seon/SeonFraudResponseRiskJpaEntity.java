@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.data.risk.entity.external_responses;
+package asia.atmonline.myriskservice.data.risk.entity.external_responses.seon;
 
 import asia.atmonline.myriskservice.data.risk.entity.BaseRiskJpaEntity;
 import asia.atmonline.myriskservice.web.seon.dto.FraudResponse;

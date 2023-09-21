@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class ExperianCCRISEntityRequestBody {
 
   private String ProductType;
-  private Integer CRefId;
+  private Long CRefId;
   private String EntityKey;
   private String MobileNo;
   private String EmailAddress;

@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SCORECALL3ERR;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.score.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.score.BaseScoreContext;
 import asia.atmonline.myriskservice.rules.score.BaseScoreRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;

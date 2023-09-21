@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ExperianCCRISEntityResponse {
+public class ExperianCCRISConfirmEntityResponse {
 
   @JsonProperty("token1")
   private String token1;

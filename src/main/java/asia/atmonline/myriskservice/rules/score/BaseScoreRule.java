@@ -3,7 +3,7 @@ package asia.atmonline.myriskservice.rules.score;
 import static asia.atmonline.myriskservice.enums.risk.CheckType.SCORE;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.score.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.BaseRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import java.util.Map;

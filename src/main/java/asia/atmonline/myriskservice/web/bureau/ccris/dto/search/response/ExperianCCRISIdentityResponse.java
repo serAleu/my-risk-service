@@ -20,7 +20,7 @@ import lombok.Setter;
 public class ExperianCCRISIdentityResponse {
 
   @JsonProperty("CRefId")
-  private Integer cRefId;
+  private Long cRefId;
 
   @JsonProperty("EntityKey")
   private String entityKey;

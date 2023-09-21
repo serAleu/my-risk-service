@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.score.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.score.DataScoreService;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.property.impl.SystemProperty;

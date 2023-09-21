@@ -1,6 +1,6 @@
-package asia.atmonline.myriskservice.data.risk.repositories.external_responses;
+package asia.atmonline.myriskservice.data.risk.repositories.external_responses.seon;
 
-import asia.atmonline.myriskservice.data.risk.entity.external_responses.SeonFraudResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.seon.SeonFraudResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.repositories.BaseRiskJpaRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;

@@ -1,8 +1,8 @@
 package asia.atmonline.myriskservice.data.score;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.repositories.external_responses.ScoreResponseJpaRepository;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.score.ScoreResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.repositories.external_responses.score.ScoreResponseJpaRepository;
 import asia.atmonline.myriskservice.data.score.repositories.RepositoryScoreMy;
 import asia.atmonline.myriskservice.enums.application.ProductCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
