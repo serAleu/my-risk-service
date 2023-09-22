@@ -83,6 +83,9 @@ public class CreditBureauInfoDetails extends BaseRiskJpaEntity {
   @Column(name = "sub_account_collateral_type_code")
   private Integer subAccountCollateralTypeCode;
 
+  @Column(name = "credit_position")
+  private Integer creditPosition;
+
   @Override
   public String repositoryName() {
     return "creditBureauInfoDetailsJpaRepository";

@@ -152,6 +152,15 @@ experian:
     product-type: ${EXPERIAN_CCRIS_PRODUCT_TYPE:IRISS}
   retrieve-report:
     url: ${EXPERIAN_RETRIEVE_REPORT_URL:xxx}
+    timeout-before-request: 60000
+  feign:
+    options:
+      connect-timeout-millis: ${CONNECT_TIMEOUT_MILLIS:300}
+      read-timeout-millis: ${READ_TIMEOUT_MILLIS:3000}
+    retryer:
+      period: ${RETRYER_PERIOD:100}
+      duration: ${RETRYER_DURATION:1}
+      max-attempts: ${RETRYER_MAX_ATTEMPTS:1}
 
 seon-fraud:
   #  !PROD! license-key: ${SEON_LICENSE_KEY:6fb041e6-86ac-433e-93f6-ab128c72bceb}

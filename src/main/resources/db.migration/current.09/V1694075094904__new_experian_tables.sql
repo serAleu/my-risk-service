@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS credit_bureau_info (
   ccris_report_error_code varchar(50),
   ccris_report_response_dttm timestamp,
   ccris_report_response_json text,
-  score int,
+  "score" int,
   score_grade varchar(50)
 );
 
@@ -39,13 +39,13 @@ CREATE TABLE IF NOT EXISTS credit_bureau_info_details (
   "date" timestamp,
   capacity varchar(50),
   lender_type varchar(50),
-  limit int,
+  "limit" int,
   legal_status varchar(50),
   legal_status_date timestamp,
   master_collateral_type varchar(50),
   financial_group_resident_status varchar(50),
   master_collateral_type_code varchar(50),
-  status varchar(50),
+  "status" varchar(50),
   restructure_reschedule_date timestamp,
   facility varchar(50),
   total_outstanding_balance numeric(19,2),

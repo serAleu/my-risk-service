@@ -3,6 +3,7 @@ package asia.atmonline.myriskservice.services.bureau;
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.external_responses.experian.CreditBureauInfo;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.experian.CreditBureauInfoDetails;
 import asia.atmonline.myriskservice.data.risk.repositories.external_responses.experian.CreditBureauInfoDetailsJpaRepository;
 import asia.atmonline.myriskservice.data.risk.repositories.external_responses.experian.CreditBureauInfoJpaRepository;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
@@ -10,18 +11,17 @@ import asia.atmonline.myriskservice.data.storage.repositories.application.Credit
 import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerJpaRepository;
 import asia.atmonline.myriskservice.enums.risk.ExperianCallStatus;
 import asia.atmonline.myriskservice.services.BaseRiskChecksService;
-import asia.atmonline.myriskservice.web.bureau.ccris.client.ExperianCCRISFeignClient;
-import asia.atmonline.myriskservice.web.bureau.ccris.dto.confirm_entity.request.ExperianCCRISEntityRequest;
-import asia.atmonline.myriskservice.web.bureau.ccris.dto.confirm_entity.request.ExperianCCRISEntityRequestBody;
-import asia.atmonline.myriskservice.web.bureau.ccris.dto.confirm_entity.response.ExperianCCRISConfirmEntityResponse;
-import asia.atmonline.myriskservice.web.bureau.ccris.dto.search.request.ExperianCCRISSearchRequest;
-import asia.atmonline.myriskservice.web.bureau.ccris.dto.search.request.ExperianCCRISSearchRequestBody;
-import asia.atmonline.myriskservice.web.bureau.ccris.dto.search.response.ExperianCCRISIdentityResponse;
-import asia.atmonline.myriskservice.web.bureau.ccris.dto.search.response.ExperianCCRISSearchResponse;
-import asia.atmonline.myriskservice.web.bureau.retrieve_report.client.ExperianRetrieveReportFeignClient;
-import asia.atmonline.myriskservice.web.bureau.retrieve_report.dto.request.ExperianRetrieveReportRequest;
-import asia.atmonline.myriskservice.web.bureau.retrieve_report.dto.request.ExperianRetrieveReportRequestBody;
-import asia.atmonline.myriskservice.web.bureau.retrieve_report.dto.response.ExperianRetrieveReportResponse;
+import asia.atmonline.myriskservice.web.bureau.experian.client.ExperianCCRISFeignClient;
+import asia.atmonline.myriskservice.web.bureau.experian.dto.confirm_entity.request.ExperianCCRISEntityRequest;
+import asia.atmonline.myriskservice.web.bureau.experian.dto.confirm_entity.request.ExperianCCRISEntityRequestBody;
+import asia.atmonline.myriskservice.web.bureau.experian.dto.confirm_entity.response.ExperianCCRISConfirmEntityResponse;
+import asia.atmonline.myriskservice.web.bureau.experian.dto.search.request.ExperianCCRISSearchRequest;
+import asia.atmonline.myriskservice.web.bureau.experian.dto.search.request.ExperianCCRISSearchRequestBody;
+import asia.atmonline.myriskservice.web.bureau.experian.dto.search.response.ExperianCCRISIdentityResponse;
+import asia.atmonline.myriskservice.web.bureau.experian.dto.search.response.ExperianCCRISSearchResponse;
+import asia.atmonline.myriskservice.web.bureau.experian.dto.retrieve_report.request.ExperianRetrieveReportRequest;
+import asia.atmonline.myriskservice.web.bureau.experian.dto.retrieve_report.request.ExperianRetrieveReportRequestBody;
+import asia.atmonline.myriskservice.web.bureau.experian.dto.retrieve_report.response.ExperianRetrieveReportResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -36,7 +36,6 @@ import org.springframework.stereotype.Service;
 public class BureauChecksService implements BaseRiskChecksService {
 
   private final ExperianCCRISFeignClient ccrisFeignClient;
-  private final ExperianRetrieveReportFeignClient retrieveReportFeignClient;
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
   private final BorrowerJpaRepository borrowerJpaRepository;
   private final CreditBureauInfoJpaRepository creditBureauInfoJpaRepository;
@@ -49,6 +48,8 @@ public class BureauChecksService implements BaseRiskChecksService {
   private String experianCCRISProductType;
   @Value("${experian.review.product-type}")
   private String experianReviewProductType;
+  @Value("${experian.retrieve-report.timeout-before-request}")
+  private Long experianRetrieveReportTimeoutBeforeRequest;
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
@@ -59,9 +60,6 @@ public class BureauChecksService implements BaseRiskChecksService {
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
     if (borrower.isPresent()) {
       try {
-
-        //    первый запрос в экспириан проверяем есть ли в бюро информация о заемщике
-
         ExperianCCRISSearchRequest searchRequest = getExperianCCRISSearchRequest(borrower.get());
         CreditBureauInfo initCreditBureauInfo = getInitCreditBureauInfo(request, searchRequest);
         initCreditBureauInfo = creditBureauInfoJpaRepository.save(initCreditBureauInfo);
@@ -71,47 +69,59 @@ public class BureauChecksService implements BaseRiskChecksService {
           return response;
         }
         LocalDateTime responseFromCcrisInfoDttm = LocalDateTime.now();
-
         ExperianCCRISSearchResponse experianCCRISSearchResponse = mapper.readValue(ccrisSearchResponseString, ExperianCCRISSearchResponse.class);
-
         if(!experianCCRISSearchResponse.getCCrisIdentities().isEmpty()) {
           creditBureauInfoJpaRepository.deleteById(initCreditBureauInfo.getId());
         }
-
         experianCCRISSearchResponse.getCCrisIdentities().forEach(identityResponse -> {
-
           CreditBureauInfo info = getSearchInfo(request, searchRequest, requestToCcrisInfoDttm, ccrisSearchResponseString, responseFromCcrisInfoDttm, identityResponse);
-
           info = creditBureauInfoJpaRepository.save(info);
-
-          //    второй запрос в экспириан запускаем формирование отчета, в ответ получаю токены для запроса сформированного отчета
-
           ExperianCCRISEntityRequest confirmEntityRequest = getExperianCCRISEntityRequest(borrower.get(), identityResponse);
           LocalDateTime confirmRequestDttm = LocalDateTime.now();
           String confirmEntityResponseString = ccrisFeignClient.getCCRISInfo(confirmEntityRequest.toString());
           try {
             ExperianCCRISConfirmEntityResponse experianCCRISConfirmEntityResponse = mapper.readValue(confirmEntityResponseString, ExperianCCRISConfirmEntityResponse.class);
-
             setConfirmEntityData(info, confirmEntityRequest, confirmRequestDttm, confirmEntityResponseString, experianCCRISConfirmEntityResponse);
-
             info = creditBureauInfoJpaRepository.save(info);
-
-            //    третий запрос в экспириан передаем полученные во 2ом запросе токены для получения сформированного отчета
-
             ExperianRetrieveReportRequest reportRequest = getExperianReportRequest(experianCCRISConfirmEntityResponse);
-
-            ExperianRetrieveReportResponse reportResponse = retrieveReportFeignClient.getExperianReport(reportRequest);
-          } catch (JsonProcessingException e) {
+            Thread.sleep(experianRetrieveReportTimeoutBeforeRequest);
+            ExperianRetrieveReportResponse reportResponse = ccrisFeignClient.getExperianReport(reportRequest);
+            creditBureauInfoDetailsJpaRepository.save(getCreditBureauInfoDetails(reportResponse, info));
+          } catch (Exception e) {
 
           }
-
         });
-
       } catch (JsonProcessingException e) {
 
       }
     }
     return response;
+  }
+
+  private CreditBureauInfoDetails getCreditBureauInfoDetails(ExperianRetrieveReportResponse reportResponse, CreditBureauInfo info) {
+    return new CreditBureauInfoDetails()
+        .setCcrisResponseId(info.getId())
+        .setMasterId(1L)
+        .setDate(LocalDateTime.now())
+        .setCapacity("2")
+        .setLenderType(3L)
+        .setLimit(10000L)
+        .setLegalStatus("legalStatus")
+        .setLegalStatusDate(LocalDateTime.now())
+        .setMasterCollateralType("collateralType")
+        .setFinancialGroupResidentStatus("finStatus")
+        .setMasterCollateralTypeCode("masterCollateralTypeCode")
+        .setStatus("status")
+        .setRestructureRescheduleDate(LocalDateTime.now())
+        .setFacility("facility")
+        .setTotalOutstandingBalance(1000.0)
+        .setTotalOutstandingBalanceBnm(1000.0)
+        .setBalanceUpdatedDate(LocalDateTime.now())
+        .setInstallmentAmount(10000L)
+        .setPrincipleRepaymentTerm(10)
+        .setSubAccountCollateralType("subAccountType")
+        .setSubAccountCollateralTypeCode(32)
+        .setCreditPosition(9);
   }
 
   private ExperianRetrieveReportRequest getExperianReportRequest(ExperianCCRISConfirmEntityResponse experianCCRISConfirmEntityResponse) {

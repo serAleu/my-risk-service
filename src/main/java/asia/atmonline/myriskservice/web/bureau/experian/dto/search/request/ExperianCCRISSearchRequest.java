@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.web.bureau.ccris.dto.confirm_entity.request;
+package asia.atmonline.myriskservice.web.bureau.experian.dto.search.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +13,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @NoArgsConstructor
 @Accessors(chain = true)
 @AllArgsConstructor
-public class ExperianCCRISEntityRequest {
+public class ExperianCCRISSearchRequest {
 
-  private ExperianCCRISEntityRequestBody request;
+  private ExperianCCRISSearchRequestBody request;
 
   @Override
   public String toString() {

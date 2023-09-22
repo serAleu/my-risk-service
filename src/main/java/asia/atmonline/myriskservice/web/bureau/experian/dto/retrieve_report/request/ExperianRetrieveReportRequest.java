@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.web.bureau.ccris.dto.search.request;
+package asia.atmonline.myriskservice.web.bureau.experian.dto.retrieve_report.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +13,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @NoArgsConstructor
 @Accessors(chain = true)
 @AllArgsConstructor
-public class ExperianCCRISSearchRequest {
+public class ExperianRetrieveReportRequest {
 
-  private ExperianCCRISSearchRequestBody request;
+  private ExperianRetrieveReportRequestBody request;
 
   @Override
   public String toString() {

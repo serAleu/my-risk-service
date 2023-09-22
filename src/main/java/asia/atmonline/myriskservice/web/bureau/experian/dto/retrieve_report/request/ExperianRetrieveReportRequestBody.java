@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.web.bureau.retrieve_report.dto.request;
+package asia.atmonline.myriskservice.web.bureau.experian.dto.retrieve_report.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

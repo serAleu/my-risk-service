@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.web.bureau.ccris.dto.search.response;
+package asia.atmonline.myriskservice.web.bureau.experian.dto.search.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

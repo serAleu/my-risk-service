@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.web.bureau.ccris.dto.search.request;
+package asia.atmonline.myriskservice.web.bureau.experian.dto.search.request;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;

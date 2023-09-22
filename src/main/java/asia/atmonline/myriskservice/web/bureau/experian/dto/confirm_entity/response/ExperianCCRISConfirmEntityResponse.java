@@ -1,4 +1,4 @@
-package asia.atmonline.myriskservice.web.bureau.ccris.dto.confirm_entity.response;
+package asia.atmonline.myriskservice.web.bureau.experian.dto.confirm_entity.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
