@@ -33,7 +33,7 @@ using-mocks:
   cooldown: ${USING_MOCKS_COOLDOWN:false}
   deduplication: ${USING_MOCKS_DEDUP:false}
   final: ${USING_MOCKS_FINAL:false}
-  score: ${USING_MOCKS_SCORE:true}
+  score: ${USING_MOCKS_SCORE:false}
   seon: ${USING_MOCKS_SEON:true}
 
 rules:

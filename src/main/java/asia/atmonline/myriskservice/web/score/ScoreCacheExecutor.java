@@ -3,7 +3,9 @@ package asia.atmonline.myriskservice.web.score;
 import asia.atmonline.myriskservice.enums.application.ProductCode;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ScoreCacheExecutor {
 
   @Value("${score.cache.reload-time-minutes}")
@@ -20,7 +22,8 @@ public class ScoreCacheExecutor {
   public static Boolean isCachedModelLastUpdDtmAfterReloadTimeMinutes(ProductCode productCode) {
     LocalDateTime now = LocalDateTime.now();
     boolean needed = false;
-    if (ilScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
+//    if (ilScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
+    if (ilScoreModelUpdDt == null || now.minusMinutes(10L)
         .isAfter(ilScoreModelUpdDt)) {
       ilScoreModelUpdDt = now;
       needed = true;
