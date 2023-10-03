@@ -23,8 +23,8 @@ public class ExperianChecksRequestProcessor extends BaseRequestProcessor {
 
   @Value("${aws.sqs.experian.producer.queue-name}")
   private String experianChecksResponseQueue;
-  @Value("${using-mocks.experian}")
-  private Boolean usingMocksExperian;
+//  @Value("${using-mocks.experian}")
+//  private Boolean usingMocksExperian;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {

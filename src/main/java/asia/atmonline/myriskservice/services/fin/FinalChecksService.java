@@ -1,5 +1,6 @@
 package asia.atmonline.myriskservice.services.fin;
 
+import static asia.atmonline.myriskservice.enums.risk.CheckType.FINAL;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
@@ -20,10 +21,10 @@ public class FinalChecksService implements BaseRiskChecksService {
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
     RiskResponseJpaEntity response = basicChecksService.process(request, true);
-    if(REJECT.equals(response.getDecision())) {
-      return response;
+    if(!REJECT.equals(response.getDecision())) {
+      response = deduplicationChecksService.process(request, true);
     }
-    response = deduplicationChecksService.process(request, true);
+    response.setCheckType(FINAL);
     return response;
   }
 }

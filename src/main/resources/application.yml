@@ -29,14 +29,12 @@ spring:
 using-mocks:
   basic: ${USING_MOCKS_BASIC:false}
   blacklists: ${USING_MOCKS_BL:false}
-  bureau: ${USING_MOCKS_BUREAU:false}
-  cooldown: ${USING_MOCKS_COOLDOWN:true}
-  deduplication: ${USING_MOCKS_DEDUP:true}
-  final: ${USING_MOCKS_FINAL:true}
+  bureau: ${USING_MOCKS_BUREAU:true}
+  cooldown: ${USING_MOCKS_COOLDOWN:false}
+  deduplication: ${USING_MOCKS_DEDUP:false}
+  final: ${USING_MOCKS_FINAL:false}
   score: ${USING_MOCKS_SCORE:true}
   seon: ${USING_MOCKS_SEON:true}
-  experian: true
-  credit-history: true
 
 rules:
   basic:
