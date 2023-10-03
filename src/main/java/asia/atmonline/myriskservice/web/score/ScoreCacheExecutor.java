@@ -20,32 +20,37 @@ public class ScoreCacheExecutor {
   public static Boolean isCachedModelLastUpdDtmAfterReloadTimeMinutes(ProductCode productCode) {
     LocalDateTime now = LocalDateTime.now();
     boolean needed = false;
-    switch (productCode) {
-      case IL:
-        if (ilScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
-            .isAfter(ilScoreModelUpdDt)) {
-          ilScoreModelUpdDt = now;
-          needed = true;
-        }
-      case RS1:
-        if (rs1ScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
-            .isAfter(rs1ScoreModelUpdDt)) {
-          rs1ScoreModelUpdDt = now;
-          needed = true;
-        }
-      case RS2:
-        if (rs2ScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
-            .isAfter(rs2ScoreModelUpdDt)) {
-          rs2ScoreModelUpdDt = now;
-          needed = true;
-        }
-      case RS3, RS4, RS5, RS6, RS7:
-        if (rs3PlusScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
-            .isAfter(rs3PlusScoreModelUpdDt)) {
-          rs3PlusScoreModelUpdDt = now;
-          needed = true;
-        }
+    if (ilScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
+        .isAfter(ilScoreModelUpdDt)) {
+      ilScoreModelUpdDt = now;
+      needed = true;
     }
+//    switch (productCode) {
+//      case IL:
+//        if (ilScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
+//            .isAfter(ilScoreModelUpdDt)) {
+//          ilScoreModelUpdDt = now;
+//          needed = true;
+//        }
+//      case RS1:
+//        if (rs1ScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
+//            .isAfter(rs1ScoreModelUpdDt)) {
+//          rs1ScoreModelUpdDt = now;
+//          needed = true;
+//        }
+//      case RS2:
+//        if (rs2ScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
+//            .isAfter(rs2ScoreModelUpdDt)) {
+//          rs2ScoreModelUpdDt = now;
+//          needed = true;
+//        }
+//      case RS3, RS4, RS5, RS6, RS7:
+//        if (rs3PlusScoreModelUpdDt == null || now.minusMinutes(reloadTimeMinutes)
+//            .isAfter(rs3PlusScoreModelUpdDt)) {
+//          rs3PlusScoreModelUpdDt = now;
+//          needed = true;
+//        }
+//    }
     return needed;
   }
 }

@@ -27,9 +27,9 @@ spring:
     broker-url:
 
 using-mocks:
-  basic: ${USING_MOCKS_BASIC:true}
-  blacklists: ${USING_MOCKS_BL:true}
-  bureau: ${USING_MOCKS_BUREAU:true}
+  basic: ${USING_MOCKS_BASIC:false}
+  blacklists: ${USING_MOCKS_BL:false}
+  bureau: ${USING_MOCKS_BUREAU:false}
   cooldown: ${USING_MOCKS_COOLDOWN:true}
   deduplication: ${USING_MOCKS_DEDUP:true}
   final: ${USING_MOCKS_FINAL:true}
@@ -136,7 +136,7 @@ score:
   bitbucket:
     url:
       base: ${BITBUCKET_URL:https://api.bitbucket.org/2.0/repositories/my/external-score-files/src/master/projects/}
-      il: ${BITBUCKET_PATH_TO_IL:my_scoreservice_preprod/il/app.sql}
+      il: ${BITBUCKET_PATH_TO_IL:malaysia_scoreservice_preprod/il/app.sql}
       rs1: ${BITBUCKET_PATH_TO_RS1:my_scoreservice_preprod/rs1/app.sql}
       rs2: ${BITBUCKET_PATH_TO_RS2:my_scoreservice_preprod/rs2/app.sql}
       rs3: ${BITBUCKET_PATH_TO_RS3:my_scoreservice_preprod/rs3/app.sql}
@@ -145,13 +145,11 @@ score:
 experian:
   base-url: ${EXPERIAN_BASE_URL:https://b2buat.experian.com.my/index.php/b2bgateway}
   ccris:
-    url: ${EXPERIAN_CCRIS_SEARCH_URL:xxx}
     group-code: ${EXPERIAN_CCRIS_GROUP_CODE:11}
     product-type: ${EXPERIAN_CCRIS_PRODUCT_TYPE:CCRIS_SEARCH}
   review:
     product-type: ${EXPERIAN_CCRIS_PRODUCT_TYPE:IRISS}
   retrieve-report:
-    url: ${EXPERIAN_RETRIEVE_REPORT_URL:xxx}
     timeout-before-request: 60000
   feign:
     options:

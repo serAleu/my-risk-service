@@ -57,7 +57,7 @@ public class CreditBureauInfo extends BaseRiskJpaEntity {
   @Column(name = "ccris_confirm_request_dttm")
   private LocalDateTime ccrisConfirmRequestDttm;
 
-  @Column(name = "ccrisConfirmRequestJson")
+  @Column(name = "ccris_confirm_request_json")
   private String ccrisConfirmRequestJson;
 
   @Column(name = "ccris_confirm_response_status")

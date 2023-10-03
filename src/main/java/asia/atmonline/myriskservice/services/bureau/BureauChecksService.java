@@ -27,12 +27,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BureauChecksService implements BaseRiskChecksService {
 
   private final ExperianCCRISFeignClient ccrisFeignClient;
@@ -65,14 +68,11 @@ public class BureauChecksService implements BaseRiskChecksService {
         initCreditBureauInfo = creditBureauInfoJpaRepository.save(initCreditBureauInfo);
         LocalDateTime requestToCcrisInfoDttm = LocalDateTime.now();
         String ccrisSearchResponseString = getExperianSearchInfo(searchRequest, initCreditBureauInfo);
-        if(StringUtils.isBlank(ccrisSearchResponseString)) {
+        if (StringUtils.isBlank(ccrisSearchResponseString)) {
           return response;
         }
         LocalDateTime responseFromCcrisInfoDttm = LocalDateTime.now();
-        ExperianCCRISSearchResponse experianCCRISSearchResponse = mapper.readValue(ccrisSearchResponseString, ExperianCCRISSearchResponse.class);
-        if(!experianCCRISSearchResponse.getCCrisIdentities().isEmpty()) {
-          creditBureauInfoJpaRepository.deleteById(initCreditBureauInfo.getId());
-        }
+        ExperianCCRISSearchResponse experianCCRISSearchResponse = getExperianCCRISSearchResponse(initCreditBureauInfo, ccrisSearchResponseString);
         experianCCRISSearchResponse.getCCrisIdentities().forEach(identityResponse -> {
           CreditBureauInfo info = getSearchInfo(request, searchRequest, requestToCcrisInfoDttm, ccrisSearchResponseString, responseFromCcrisInfoDttm, identityResponse);
           info = creditBureauInfoJpaRepository.save(info);
@@ -80,7 +80,8 @@ public class BureauChecksService implements BaseRiskChecksService {
           LocalDateTime confirmRequestDttm = LocalDateTime.now();
           String confirmEntityResponseString = ccrisFeignClient.getCCRISInfo(confirmEntityRequest.toString());
           try {
-            ExperianCCRISConfirmEntityResponse experianCCRISConfirmEntityResponse = mapper.readValue(confirmEntityResponseString, ExperianCCRISConfirmEntityResponse.class);
+            ExperianCCRISConfirmEntityResponse experianCCRISConfirmEntityResponse = mapper.readValue(confirmEntityResponseString,
+                ExperianCCRISConfirmEntityResponse.class);
             setConfirmEntityData(info, confirmEntityRequest, confirmRequestDttm, confirmEntityResponseString, experianCCRISConfirmEntityResponse);
             info = creditBureauInfoJpaRepository.save(info);
             ExperianRetrieveReportRequest reportRequest = getExperianReportRequest(experianCCRISConfirmEntityResponse);
@@ -88,14 +89,24 @@ public class BureauChecksService implements BaseRiskChecksService {
             ExperianRetrieveReportResponse reportResponse = ccrisFeignClient.getExperianReport(reportRequest);
             creditBureauInfoDetailsJpaRepository.save(getCreditBureauInfoDetails(reportResponse, info));
           } catch (Exception e) {
-
+            log.error("Exception while getting experience report. application_id = " + request.getApplicationId() + " " + e.getMessage());
           }
         });
       } catch (JsonProcessingException e) {
-
+        log.error("Exception while generating Experian JSON object. application_id = " + request.getApplicationId() + " " + e.getMessage());
       }
     }
     return response;
+  }
+
+  @NotNull
+  private ExperianCCRISSearchResponse getExperianCCRISSearchResponse(CreditBureauInfo initCreditBureauInfo, String ccrisSearchResponseString)
+      throws JsonProcessingException {
+    ExperianCCRISSearchResponse experianCCRISSearchResponse = mapper.readValue(ccrisSearchResponseString, ExperianCCRISSearchResponse.class);
+    if (!experianCCRISSearchResponse.getCCrisIdentities().isEmpty()) {
+      creditBureauInfoJpaRepository.deleteById(initCreditBureauInfo.getId());
+    }
+    return experianCCRISSearchResponse;
   }
 
   private CreditBureauInfoDetails getCreditBureauInfoDetails(ExperianRetrieveReportResponse reportResponse, CreditBureauInfo info) {
