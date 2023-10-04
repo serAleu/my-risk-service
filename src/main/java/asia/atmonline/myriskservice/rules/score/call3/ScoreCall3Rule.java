@@ -29,6 +29,6 @@ public class ScoreCall3Rule extends BaseScoreRule<ScoreCall3Context> {
 
   @Override
   public ScoreCall3Context getContext(ScoreResponseRiskJpaEntity response, Map<String, Long> score3RestrictionsMap) {
-    return new ScoreCall3Context(response.getDecision(), response.getScoreNodeId());
+    return new ScoreCall3Context(response.getDecision(), response.getNode_id());
   }
 }

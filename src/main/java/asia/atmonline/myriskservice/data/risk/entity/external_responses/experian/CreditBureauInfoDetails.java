@@ -5,7 +5,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -24,25 +23,25 @@ public class CreditBureauInfoDetails extends BaseRiskJpaEntity {
   private Long ccrisResponseId;
 
   @Column(name = "master_id")
-  private Long masterId;
+  private String masterId;
 
   @Column(name = "date")
-  private LocalDateTime date;
+  private String date;
 
   @Column(name = "capacity")
   private String capacity;
 
   @Column(name = "lender_type")
-  private Long lenderType;
+  private String lenderType;
 
-  @Column(name = "limit")
-  private Long limit;
+  @Column(name = "credit_limit")
+  private Long creditLimit;
 
   @Column(name = "legal_status")
   private String legalStatus;
 
   @Column(name = "legal_status_date")
-  private LocalDateTime legalStatusDate;
+  private String legalStatusDate;
 
   @Column(name = "master_collateral_type")
   private String masterCollateralType;
@@ -57,31 +56,31 @@ public class CreditBureauInfoDetails extends BaseRiskJpaEntity {
   private String status;
 
   @Column(name = "restructure_reschedule_date")
-  private LocalDateTime restructureRescheduleDate;
+  private String restructureRescheduleDate;
 
   @Column(name = "facility")
   private String facility;
 
   @Column(name = "total_outstanding_balance")
-  private Double totalOutstandingBalance;
+  private String totalOutstandingBalance;
 
   @Column(name = "total_outstanding_balance_bnm")
-  private Double totalOutstandingBalanceBnm;
+  private String totalOutstandingBalanceBnm;
 
   @Column(name = "balance_updated_date")
-  private LocalDateTime balanceUpdatedDate;
+  private String balanceUpdatedDate;
 
   @Column(name = "installment_amount")
-  private Long installmentAmount;
+  private String installmentAmount;
 
   @Column(name = "principle_repayment_term")
-  private Integer principleRepaymentTerm;
+  private String principleRepaymentTerm;
 
   @Column(name = "sub_account_collateral_type")
   private String subAccountCollateralType;
 
   @Column(name = "sub_account_collateral_type_code")
-  private Integer subAccountCollateralTypeCode;
+  private String subAccountCollateralTypeCode;
 
   @Column(name = "credit_position")
   private Integer creditPosition;

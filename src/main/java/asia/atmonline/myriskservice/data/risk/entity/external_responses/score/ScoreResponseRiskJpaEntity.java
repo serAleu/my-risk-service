@@ -1,6 +1,7 @@
 package asia.atmonline.myriskservice.data.risk.entity.external_responses.score;
 
 import asia.atmonline.myriskservice.data.risk.entity.BaseRiskJpaEntity;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.SequenceGenerator;
@@ -17,12 +18,13 @@ import lombok.experimental.Accessors;
 @Entity
 @Table(name = "score_checks_response")
 @SequenceGenerator(name = "sequence-generator", sequenceName = "score_checks_response_id_seq", allocationSize = 1)
+@JsonRootName("scoring")
 public class ScoreResponseRiskJpaEntity extends BaseRiskJpaEntity {
 
   @Column(name = "credit_application_id", nullable = false)
-  private Long creditApplicationId;
+  private Long application_id;
   @Column(name = "score_node_id", nullable = false)
-  private Integer scoreNodeId;
+  private Integer node_id;
   @Column(name = "decision", nullable = false)
   private Integer decision;
   @Column(name = "limit")
@@ -31,18 +33,18 @@ public class ScoreResponseRiskJpaEntity extends BaseRiskJpaEntity {
   private Long term;
   @Column(name = "grade")
   private String grade;
-  @Column(name = "score")
+  @Column(name = "scoring")
   private Integer score;
   @Column(name = "probability")
   private Double probability;
   @Column(name = "model_id", nullable = false)
-  private String modelId;
+  private String model_id;
   @Column(name = "model_version", nullable = false)
-  private String modelVersion;
+  private String model_version;
   @Column(name = "status")
   private Integer status;
-  @Column(name = "predictors")
-  private String predictors;
+//  @Column(name = "predictors")
+//  private String predictors;
 
   @Override
   public String repositoryName() {

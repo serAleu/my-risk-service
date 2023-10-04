@@ -34,8 +34,6 @@ public class BitbucketClient {
   private String bitbucketUrlRs2Model;
   @Value("${score.bitbucket.url.rs3}")
   private String bitbucketUrlRs3PlusModel;
-  @Value("${score.bitbucket.token}")
-  private String bitbucketBasicToken;
 
   public String getBitbucketIlModel() {
     return requestToBitbucket(bitbucketUrlPath + bitbucketUrlIlModel, ScoreCacheExecutor.ilScoreModel);

@@ -49,7 +49,7 @@ public class ScoreChecksService implements BaseRiskChecksService {
     RiskResponseJpaEntity response = new RiskResponseJpaEntity();
     response.setRequestId(request.getId());
     response.setApplicationId(request.getApplicationId());
-    ScoreResponseRiskJpaEntity scoreResponseJpaEntity = new ScoreResponseRiskJpaEntity().setCreditApplicationId(request.getApplicationId());
+    ScoreResponseRiskJpaEntity scoreResponseJpaEntity = new ScoreResponseRiskJpaEntity().setApplication_id(request.getApplicationId());
     Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getApplicationId());
     if(application.isPresent()) {
       ProductCode code = ProductCode.getProductByCode(application.get().getCreditProductId());
