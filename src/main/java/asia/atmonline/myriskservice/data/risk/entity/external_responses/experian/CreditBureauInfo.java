@@ -99,7 +99,7 @@ public class CreditBureauInfo extends BaseRiskJpaEntity {
   private String ccrisReportResponseJson;
 
   @Column(name = "score")
-  private Long score;
+  private String score;
 
   @Column(name = "score_grade")
   private String scoreGrade;

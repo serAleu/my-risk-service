@@ -1,6 +1,7 @@
 package asia.atmonline.myriskservice.services.bureau;
 
 import static asia.atmonline.myriskservice.enums.risk.CheckType.BUREAU;
+import static asia.atmonline.myriskservice.enums.risk.ExperianCallStatus.ERROR;
 import static asia.atmonline.myriskservice.enums.risk.ExperianCallStatus.SUCCESS;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.APPROVE;
 
@@ -62,55 +63,88 @@ public class BureauChecksService implements BaseRiskChecksService {
   @Value("${experian.retrieve-report.timeout-before-request}")
   private Long experianRetrieveReportTimeoutBeforeRequest;
 
+  public static final String ENQUIRY_PURPOSE = "NEW APPLICATION";
+  public static final String CONSENT_GRANTED = "Y";
+  public static final String EXPERIAN_REQUESTED_COUNTRY = "MY";
+  public static final Long EXPERIAN_BUREAU_ID = 1L;
+
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
+    RiskResponseJpaEntity response = getApprovedRiskResponseJpaEntity(request);
+    Long borrowerId = creditApplicationJpaRepository.findBorrowerIdById(request.getApplicationId());
+    Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
+    if (borrower.isPresent() && borrower.get().getName() != null && borrower.get().getBorrowerNIC() != null
+        && borrower.get().getPersonalData() != null && borrower.get().getPersonalData().getBirthDate() != null) {
+      ExperianCCRISSearchRequest searchRequest = getExperianCCRISSearchRequest(borrower.get());
+      CreditBureauInfo initCreditBureauInfo = getInitCreditBureauInfo(request, searchRequest);
+      initCreditBureauInfo = creditBureauInfoJpaRepository.save(initCreditBureauInfo);
+      LocalDateTime requestToCcrisInfoDttm = LocalDateTime.now();
+      String ccrisSearchResponseStr = getExperianSearchInfo(searchRequest, initCreditBureauInfo);
+      if (StringUtils.isBlank(ccrisSearchResponseStr)) {
+        return response;
+      }
+      LocalDateTime responseFromCcrisInfoDttm = LocalDateTime.now();
+      ExperianCCRISSearchResponse experianCCRISSearchResponse = getExperianCCRISSearchResponse(request.getApplicationId(), initCreditBureauInfo,
+          ccrisSearchResponseStr);
+      experianCCRISSearchResponse.getCCrisIdentities().forEach(identityResponse -> {
+        CreditBureauInfo info = getSearchInfo(request, searchRequest, requestToCcrisInfoDttm, ccrisSearchResponseStr, responseFromCcrisInfoDttm,
+            identityResponse);
+        info = creditBureauInfoJpaRepository.save(info);
+        ExperianCCRISEntityRequest confirmEntityRequest = getExperianCCRISEntityRequest(borrower.get(), identityResponse);
+        ExperianCCRISConfirmEntityResponse experianCCRISConfirmEntityResponse = getExperianCCRISConfirmEntityResponse(request.getApplicationId(),
+            info, confirmEntityRequest);
+        info = creditBureauInfoJpaRepository.save(info);
+        if (SUCCESS.equals(info.getCcrisConfirmResponseStatus())) {
+          ExperianRetrieveReportRequest reportRequest = getExperianReportRequest(experianCCRISConfirmEntityResponse);
+          ExperianRetrieveReportResponse reportResponse = getAndSaveExperianReport(request.getApplicationId(), reportRequest.toString(), info,
+              reportRequest);
+          saveExperianScoreAndCreditBureauInfoDetails(reportResponse, info);
+        }
+      });
+    }
+    return response;
+  }
+
+  private ExperianCCRISConfirmEntityResponse getExperianCCRISConfirmEntityResponse(Long applicationId, CreditBureauInfo info,
+      ExperianCCRISEntityRequest confirmEntityRequest) {
+    ExperianCCRISConfirmEntityResponse experianCCRISConfirmEntityResponse = new ExperianCCRISConfirmEntityResponse();
+    LocalDateTime confirmRequestDttm = LocalDateTime.now();
+    String confirmEntityResponseString = "";
+    try {
+      confirmEntityResponseString = ccrisFeignClient.getCCRISInfo(confirmEntityRequest.toString());
+      experianCCRISConfirmEntityResponse = mapper.readValue(confirmEntityResponseString, ExperianCCRISConfirmEntityResponse.class);
+    } catch (Exception e) {
+      log.error("Exception while getting experience report. application_id = " + applicationId + " " + e.getMessage());
+    }
+    setConfirmEntityData(info, confirmEntityRequest, confirmRequestDttm, confirmEntityResponseString, experianCCRISConfirmEntityResponse);
+    return experianCCRISConfirmEntityResponse;
+  }
+
+  private ExperianRetrieveReportResponse getAndSaveExperianReport(Long applicationId, String request, CreditBureauInfo info,
+      ExperianRetrieveReportRequest reportRequest) {
+    ExperianRetrieveReportResponse reportResponse = new ExperianRetrieveReportResponse();
+    String reportResponseString = "";
+    LocalDateTime reportRequestDtm = LocalDateTime.now();
+    try {
+      Thread.sleep(experianRetrieveReportTimeoutBeforeRequest);
+      reportRequestDtm = LocalDateTime.now();
+      reportResponseString = ccrisFeignClient.getExperianReport(request);
+      reportResponse = mapper.readValue(reportResponseString, ExperianRetrieveReportResponse.class);
+    } catch (Exception e) {
+      info.setCcrisReportResponseStatus(ERROR);
+      log.error("Exception while getting experience report. application_id = " + applicationId + " " + e.getMessage());
+    }
+    saveReportInfo(info, reportRequest, reportRequestDtm, reportResponseString);
+    return reportResponse;
+  }
+
+  @NotNull
+  private RiskResponseJpaEntity getApprovedRiskResponseJpaEntity(RiskRequestJpaEntity request) {
     RiskResponseJpaEntity response = new RiskResponseJpaEntity();
     response.setRequestId(request.getId());
     response.setApplicationId(request.getApplicationId());
     response.setCheckType(BUREAU);
     response.setDecision(APPROVE);
-    Long borrowerId = creditApplicationJpaRepository.findBorrowerIdById(request.getApplicationId());
-    Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
-    if (borrower.isPresent()) {
-      try {
-        ExperianCCRISSearchRequest searchRequest = getExperianCCRISSearchRequest(borrower.get());
-        CreditBureauInfo initCreditBureauInfo = getInitCreditBureauInfo(request, searchRequest);
-        initCreditBureauInfo = creditBureauInfoJpaRepository.save(initCreditBureauInfo);
-        LocalDateTime requestToCcrisInfoDttm = LocalDateTime.now();
-        String ccrisSearchResponseString = getExperianSearchInfo(searchRequest, initCreditBureauInfo);
-        if (StringUtils.isBlank(ccrisSearchResponseString)) {
-          return response;
-        }
-        LocalDateTime responseFromCcrisInfoDttm = LocalDateTime.now();
-        ExperianCCRISSearchResponse experianCCRISSearchResponse = getExperianCCRISSearchResponse(initCreditBureauInfo, ccrisSearchResponseString);
-        experianCCRISSearchResponse.getCCrisIdentities().forEach(identityResponse -> {
-          CreditBureauInfo info = getSearchInfo(request, searchRequest, requestToCcrisInfoDttm, ccrisSearchResponseString, responseFromCcrisInfoDttm,
-              identityResponse);
-          info = creditBureauInfoJpaRepository.save(info);
-          ExperianCCRISEntityRequest confirmEntityRequest = getExperianCCRISEntityRequest(borrower.get(), identityResponse);
-          LocalDateTime confirmRequestDttm = LocalDateTime.now();
-          String confirmEntityResponseString = ccrisFeignClient.getCCRISInfo(confirmEntityRequest.toString());
-//          добавить условие, что если респонс без токенов, то значит в бюро нет информации
-          try {
-            ExperianCCRISConfirmEntityResponse experianCCRISConfirmEntityResponse = mapper.readValue(confirmEntityResponseString,
-                ExperianCCRISConfirmEntityResponse.class);
-            setConfirmEntityData(info, confirmEntityRequest, confirmRequestDttm, confirmEntityResponseString, experianCCRISConfirmEntityResponse);
-            info = creditBureauInfoJpaRepository.save(info);
-            ExperianRetrieveReportRequest reportRequest = getExperianReportRequest(experianCCRISConfirmEntityResponse);
-//            Thread.sleep(experianRetrieveReportTimeoutBeforeRequest);
-            LocalDateTime reportRequestDtm = LocalDateTime.now();
-            String reportResponseString = ccrisFeignClient.getExperianReport(reportRequest.toString());
-            saveReportInfo(info, reportRequest, reportRequestDtm, reportResponseString);
-            ExperianRetrieveReportResponse reportResponse = mapper.readValue(reportResponseString, ExperianRetrieveReportResponse.class);
-            saveCreditBureauInfoDetails(reportResponse, info);
-          } catch (Exception e) {
-            log.error("Exception while getting experience report. application_id = " + request.getApplicationId() + " " + e.getMessage());
-          }
-        });
-      } catch (JsonProcessingException e) {
-        log.error("Exception while generating Experian JSON object. application_id = " + request.getApplicationId() + " " + e.getMessage());
-      }
-    }
     return response;
   }
 
@@ -118,50 +152,63 @@ public class BureauChecksService implements BaseRiskChecksService {
       String reportResponseString) {
     info.setCcrisReportRequestDttm(reportRequestDtm)
         .setCcrisReportRequestJson(reportRequest.toString())
-        .setCcrisReportResponseStatus(SUCCESS)
+        .setCcrisReportResponseStatus(ERROR.equals(info.getCcrisReportResponseStatus()) ? ERROR : SUCCESS)
         .setCcrisReportResponseJson(reportResponseString)
         .setCcrisReportResponseDttm(LocalDateTime.now());
     creditBureauInfoJpaRepository.save(info);
   }
 
   @NotNull
-  private ExperianCCRISSearchResponse getExperianCCRISSearchResponse(CreditBureauInfo initCreditBureauInfo, String ccrisSearchResponseString)
-      throws JsonProcessingException {
-    ExperianCCRISSearchResponse experianCCRISSearchResponse = mapper.readValue(ccrisSearchResponseString, ExperianCCRISSearchResponse.class);
-    if (!experianCCRISSearchResponse.getCCrisIdentities().isEmpty()) {
-      creditBureauInfoJpaRepository.deleteById(initCreditBureauInfo.getId());
+  private ExperianCCRISSearchResponse getExperianCCRISSearchResponse(Long applicationId, CreditBureauInfo initCreditBureauInfo,
+      String ccrisSearchResponseString) {
+    try {
+      ExperianCCRISSearchResponse experianCCRISSearchResponse = mapper.readValue(ccrisSearchResponseString, ExperianCCRISSearchResponse.class);
+      if (!experianCCRISSearchResponse.getCCrisIdentities().isEmpty()) {
+        creditBureauInfoJpaRepository.deleteById(initCreditBureauInfo.getId());
+      }
+      return experianCCRISSearchResponse;
+    } catch (JsonProcessingException e) {
+      log.error("Exception while generating Experian JSON object. application_id = " + applicationId + " " + e.getMessage());
+      return new ExperianCCRISSearchResponse();
     }
-    return experianCCRISSearchResponse;
   }
 
-  private void saveCreditBureauInfoDetails(ExperianRetrieveReportResponse reportResponse, CreditBureauInfo info) {
-    reportResponse.getBankingInfo().getCcrisBankingDetails().getOutstandingCredit()
-        .forEach(outstandingCredit -> outstandingCredit.getMaster().forEach(master -> {
-          CreditBureauInfoDetails creditBureauInfoDetails = new CreditBureauInfoDetails()
-              .setCcrisResponseId(info.getId())
-              .setMasterId(master.getMasterId())
-              .setDate(master.getDate())
-              .setCapacity(master.getCapacity())
-              .setLenderType(master.getLenderType())
-              .setCreditLimit(Long.parseLong(master.getLimit()))
-              .setLegalStatus(master.getLegalStatus())
-              .setLegalStatusDate(master.getLegalStatusDate())
-              .setMasterCollateralType(master.getCollateralType())
-              .setFinancialGroupResidentStatus(master.getFinancialGroupResidentStatus())
-              .setMasterCollateralTypeCode(master.getCollateralTypeCode())
-              .setStatus(getConcatStatuses(outstandingCredit.getSubAccount()))
-              .setRestructureRescheduleDate(getConcatRestructureRescheduleDates(outstandingCredit.getSubAccount()))
-              .setFacility(getConcatFacilities(outstandingCredit.getSubAccount()))
-              .setTotalOutstandingBalance(getConcatTotalOutstandingBalances(outstandingCredit.getSubAccount()))
-              .setTotalOutstandingBalanceBnm(getConcatTotalOutstandingBalancesBnm(outstandingCredit.getSubAccount()))
-              .setBalanceUpdatedDate(getConcatTotalBalanceUpdatedDates(outstandingCredit.getSubAccount()))
-              .setInstallmentAmount(getConcatInstallmentAmounts(outstandingCredit.getSubAccount()))
-              .setPrincipleRepaymentTerm(getConcatPrincipleRepaymentTerms(outstandingCredit.getSubAccount()))
-              .setSubAccountCollateralType(getConcatSubAccountCollateralTypes(outstandingCredit.getSubAccount()))
-              .setSubAccountCollateralTypeCode(getConcatSubAccountCollateralTypeCodes(outstandingCredit.getSubAccount()))
-              .setCreditPosition(LocalDate.now().getMonth().getValue());
-          creditBureauInfoDetailsJpaRepository.save(creditBureauInfoDetails);
-        }));
+  private void saveExperianScoreAndCreditBureauInfoDetails(ExperianRetrieveReportResponse reportResponse, CreditBureauInfo info) {
+    if (reportResponse.getSummary() != null && reportResponse.getSummary().getIScore() != null) {
+      info.setScore(reportResponse.getSummary().getIScore().getIScore())
+          .setScoreGrade(reportResponse.getSummary().getIScore().getRiskGrade());
+    }
+    creditBureauInfoJpaRepository.save(info);
+    if (reportResponse.getBankingInfo() != null && reportResponse.getBankingInfo().getCcrisBankingDetails() != null
+        && reportResponse.getBankingInfo().getCcrisBankingDetails().getOutstandingCredit() != null) {
+      reportResponse.getBankingInfo().getCcrisBankingDetails().getOutstandingCredit()
+          .forEach(outstandingCredit -> outstandingCredit.getMaster().forEach(master -> {
+            CreditBureauInfoDetails creditBureauInfoDetails = new CreditBureauInfoDetails()
+                .setCcrisResponseId(info.getId())
+                .setMasterId(master.getMasterId())
+                .setDate(master.getDate())
+                .setCapacity(master.getCapacity())
+                .setLenderType(master.getLenderType())
+                .setCreditLimit(Long.parseLong(master.getLimit()))
+                .setLegalStatus(master.getLegalStatus())
+                .setLegalStatusDate(master.getLegalStatusDate())
+                .setMasterCollateralType(master.getCollateralType())
+                .setFinancialGroupResidentStatus(master.getFinancialGroupResidentStatus())
+                .setMasterCollateralTypeCode(master.getCollateralTypeCode())
+                .setStatus(getConcatStatuses(outstandingCredit.getSubAccount()))
+                .setRestructureRescheduleDate(getConcatRestructureRescheduleDates(outstandingCredit.getSubAccount()))
+                .setFacility(getConcatFacilities(outstandingCredit.getSubAccount()))
+                .setTotalOutstandingBalance(getConcatTotalOutstandingBalances(outstandingCredit.getSubAccount()))
+                .setTotalOutstandingBalanceBnm(getConcatTotalOutstandingBalancesBnm(outstandingCredit.getSubAccount()))
+                .setBalanceUpdatedDate(getConcatTotalBalanceUpdatedDates(outstandingCredit.getSubAccount()))
+                .setInstallmentAmount(getConcatInstallmentAmounts(outstandingCredit.getSubAccount()))
+                .setPrincipleRepaymentTerm(getConcatPrincipleRepaymentTerms(outstandingCredit.getSubAccount()))
+                .setSubAccountCollateralType(getConcatSubAccountCollateralTypes(outstandingCredit.getSubAccount()))
+                .setSubAccountCollateralTypeCode(getConcatSubAccountCollateralTypeCodes(outstandingCredit.getSubAccount()))
+                .setCreditPosition(LocalDate.now().getMonth().getValue());
+            creditBureauInfoDetailsJpaRepository.save(creditBureauInfoDetails);
+          }));
+    }
   }
 
   private String getConcatSubAccountCollateralTypeCodes(List<List<SubAccount>> subAccount) {
@@ -251,11 +298,11 @@ public class BureauChecksService implements BaseRiskChecksService {
     return new ExperianCCRISEntityRequest()
         .setRequest(new ExperianCCRISEntityRequestBody()
             .setCRefId(identityResponse.getCRefId())
-            .setConsentGranted("Y")
+            .setConsentGranted(CONSENT_GRANTED)
             .setEntityKey(identityResponse.getEntityKey())
             .setEmailAddress(borrower.getPersonalData().getEmail())
             .setMobileNo(borrower.getPersonalData().getMobilePhone())
-            .setEnquiryPurpose("NEW APPLICATION")
+            .setEnquiryPurpose(ENQUIRY_PURPOSE)
             .setProductType(experianReviewProductType)
             .setLastKnownAddress(""));
   }
@@ -264,16 +311,26 @@ public class BureauChecksService implements BaseRiskChecksService {
       String confirmEntityResponseString, ExperianCCRISConfirmEntityResponse experianCCRISConfirmEntityResponse) {
     info.setCcrisConfirmRequestDttm(confirmRequestDttm)
         .setCcrisConfirmRequestJson(confirmEntityRequest.toString())
-        .setCcrisConfirmResponseStatus(SUCCESS)
+        .setCcrisConfirmResponseStatus(
+            isCcrisConfirmResponseStatusSuccess(confirmEntityResponseString, experianCCRISConfirmEntityResponse) ? SUCCESS : ERROR)
         .setCcrisConfirmResponseDttm(LocalDateTime.now())
         .setCcrisConfirmResponseJson(confirmEntityResponseString)
-        .setCcrisConfirmToken1(experianCCRISConfirmEntityResponse.getToken1())
-        .setCcrisConfirmToken2(experianCCRISConfirmEntityResponse.getToken2());
+        .setCcrisConfirmToken1(experianCCRISConfirmEntityResponse.getToken1() != null ? experianCCRISConfirmEntityResponse.getToken1() : null)
+        .setCcrisConfirmToken2(experianCCRISConfirmEntityResponse.getToken2() != null ? experianCCRISConfirmEntityResponse.getToken2() : null);
+    if(ERROR.equals(info.getCcrisConfirmResponseStatus())) {
+      info.setCcrisConfirmErrorCode("NO INFO IN THE BUREAU");
+    }
+  }
+
+  private boolean isCcrisConfirmResponseStatusSuccess(String confirmEntityResponseString,
+      ExperianCCRISConfirmEntityResponse experianCCRISConfirmEntityResponse) {
+    return !StringUtils.isBlank(confirmEntityResponseString) && experianCCRISConfirmEntityResponse.getToken1() != null
+        && experianCCRISConfirmEntityResponse.getToken2() != null;
   }
 
   private CreditBureauInfo getInitCreditBureauInfo(RiskRequestJpaEntity request, ExperianCCRISSearchRequest searchRequest) {
     return new CreditBureauInfo()
-        .setBureauId(1L)
+        .setBureauId(EXPERIAN_BUREAU_ID)
         .setApplicationId(request.getApplicationId())
         .setCcrisSearchRequestJson(searchRequest.toString())
         .setCcrisSearchResponseStatus(ExperianCallStatus.UNKNOWN);
@@ -282,12 +339,10 @@ public class BureauChecksService implements BaseRiskChecksService {
   private ExperianCCRISSearchRequest getExperianCCRISSearchRequest(Borrower borrower) {
     return new ExperianCCRISSearchRequest()
         .setRequest(new ExperianCCRISSearchRequestBody()
-            .setCountry("MY")
-//            .setEntityName(borrower.getName())
-            .setEntityName("COURTS NAME IRISSU 1")
+            .setCountry(EXPERIAN_REQUESTED_COUNTRY)
+            .setEntityName(borrower.getName())
             .setDOB(borrower.getPersonalData().getBirthDate())
-//            .setEntityId(borrower.getBorrowerNIC())
-            .setEntityId("740424125653")
+            .setEntityId(borrower.getBorrowerNIC())
             .setEntityId2("")
             .setGroupCode(experianCCRISGroupCode)
             .setProductType(experianCCRISProductType));

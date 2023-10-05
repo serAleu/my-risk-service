@@ -151,7 +151,7 @@ experian:
   review:
     product-type: ${EXPERIAN_CCRIS_PRODUCT_TYPE:IRISS}
   retrieve-report:
-    timeout-before-request: 60000
+    timeout-before-request: ${EXPERIAN_TIMEOUT_BEFORE_REPORT_REQUEST:60000}
   feign:
     options:
       connect-timeout-millis: ${CONNECT_TIMEOUT_MILLIS:300}

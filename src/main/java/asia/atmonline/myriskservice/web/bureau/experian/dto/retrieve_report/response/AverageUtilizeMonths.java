@@ -23,7 +23,7 @@ public class AverageUtilizeMonths {
   @JsonProperty("cc")
   private String cc;
   @JsonProperty("others")
-  private Integer others;
+  private String others;
   @JsonIgnore
   private Map<String, Object> additionalProperties = new LinkedHashMap<>();
 

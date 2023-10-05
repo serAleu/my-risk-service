@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS credit_bureau_info (
   ccris_report_error_code varchar(50),
   ccris_report_response_dttm timestamp,
   ccris_report_response_json text,
-  "score" int,
+  "score" varchar(50),
   score_grade varchar(50)
 );
 
