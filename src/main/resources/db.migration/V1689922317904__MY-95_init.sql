@@ -22,14 +22,6 @@ CREATE TABLE IF NOT EXISTS risk_response (
   phone_num varchar(100)
 );
 
-DROP TABLE IF EXISTS score_response;
-CREATE TABLE IF NOT EXISTS score_response (
-  id serial PRIMARY KEY,
-  created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  credit_application_id bigint,
-  borrower_id bigint NOT NULL
-);
-
 DROP TABLE IF EXISTS seon_fraud_response;
 CREATE TABLE IF NOT EXISTS seon_fraud_response (
   id serial PRIMARY KEY,
@@ -52,7 +44,7 @@ CREATE TABLE IF NOT EXISTS score_checks_response (
   credit_application_id bigint,
   score_node_id int NOT NULL,
   decision int NOT NULL,
-  "limit" bigint,
+  score_limit bigint,
   term int,
   grade varchar(50),
   score bigint,

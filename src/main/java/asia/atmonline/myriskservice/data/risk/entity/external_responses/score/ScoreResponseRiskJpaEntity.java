@@ -27,8 +27,8 @@ public class ScoreResponseRiskJpaEntity extends BaseRiskJpaEntity {
   private Integer node_id;
   @Column(name = "decision", nullable = false)
   private Integer decision;
-  @Column(name = "limit")
-  private Long limit;
+  @Column(name = "score_limit")
+  private Long scoreLimit;
   @Column(name = "term")
   private Long term;
   @Column(name = "grade")

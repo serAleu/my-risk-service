@@ -23,8 +23,8 @@ public class DefaultConsumer {
   private final JpaEntityService entityService;
 
   @SneakyThrows
-//  @SqsListener("#{'${aws.sqs.request.queue}'.split(',')}")
-  @SqsListener("${aws.sqs.request.local}")
+  @SqsListener("#{'${aws.sqs.request.queue}'.split(',')}")
+//  @SqsListener("${aws.sqs.request.local}")
   public void listen(RequestPayload payload) {
     log.info(payload.toString());
     RiskRequestJpaEntity request = entityService.save(payloadMapper.payloadToEntity(payload));
