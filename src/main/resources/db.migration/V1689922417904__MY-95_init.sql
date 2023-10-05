@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS score_checks_response;
 CREATE TABLE IF NOT EXISTS score_checks_response (
   id serial PRIMARY KEY,
   created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-  credit_application_id bigint,
+  application_id bigint,
   score_node_id int NOT NULL,
   decision int NOT NULL,
   score_limit bigint,
@@ -49,10 +49,9 @@ CREATE TABLE IF NOT EXISTS score_checks_response (
   grade varchar(50),
   score bigint,
   probability bigserial,
-  model_id varchar(50) NOT NULL,
-  model_version varchar(50) NOT NULL,
-  status int,
-  predictors text
+  model_id varchar(200) NOT NULL,
+  model_version varchar(200) NOT NULL,
+  status int
 );
 
 DROP TABLE IF EXISTS blacklist_bank_account;

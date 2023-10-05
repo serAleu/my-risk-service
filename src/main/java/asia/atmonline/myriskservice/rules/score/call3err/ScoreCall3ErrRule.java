@@ -46,9 +46,9 @@ public class ScoreCall3ErrRule extends BaseScoreRule<ScoreCall3ErrContext> {
   }
 
   @Override
-  public ScoreCall3ErrContext getContext(ScoreResponseRiskJpaEntity response, Map<String, Long> score3RestrictionsMap) {
-    return new ScoreCall3ErrContext(response.getDecision(), response.getNode_id(), score3RestrictionsMap.get(scorePathTermMax),
+  public ScoreCall3ErrContext getContext(RiskResponseJpaEntity response, ScoreResponseRiskJpaEntity scoreResponse, Map<String, Long> score3RestrictionsMap) {
+    return new ScoreCall3ErrContext(response, scoreResponse.getDecision(), scoreResponse.getScore_node_id(), score3RestrictionsMap.get(scorePathTermMax),
         score3RestrictionsMap.get(scorePathAmountMax), score3RestrictionsMap.get(scorePathTermMin), score3RestrictionsMap.get(scorePathAmountMin),
-        response.getTerm(), response.getScoreLimit());
+        scoreResponse.getTerm(), scoreResponse.getScoreLimit());
   }
 }

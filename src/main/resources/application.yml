@@ -83,7 +83,7 @@ aws:
     back-off-time: ${SQS_BACK_OFF_TIME:60000}
     request:
       queue: ${REQUEST_QUEUES:my-risk-bl-request-preprod,my-risk-cooldown-request-preprod,my-risk-dedup-request-preprod,my-risk-basic-request-preprod,my-risk-score-request-preprod,my-risk-seon-fraud-request-preprod,my-risk-bureau-request-preprod,my-risk-final-request-preprod,my-risk-credit-history-request-preprod}
-      local: my-risk-experian-request-preprod
+      local: my-risk-credit-history-request-preprod
     blacklists:
       producer:
         queue-name: ${BL_RESPONSE_RISK_QUEUE:my-risk-bl-response-preprod}

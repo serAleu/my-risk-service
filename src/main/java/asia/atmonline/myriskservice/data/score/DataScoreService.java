@@ -25,6 +25,7 @@ public class DataScoreService {
     try {
       String scoreModelResponse = repositoryScoreMy.executeScoreSqlQuery(scoreModel, request, code);
       ScoreResponseRiskJpaEntity scoreResponseJpaEntity = rootMapper().readValue(scoreModelResponse, ScoreResponseRiskJpaEntity.class);
+      scoreResponseJpaEntity.setScore_node_id(1);
       return scoreResponseJpaRepository.save(scoreResponseJpaEntity);
     } catch (Exception e) {
       log.error("Error while score model executing. credit_application_id = " + request.getApplicationId() + " " + e.getMessage());

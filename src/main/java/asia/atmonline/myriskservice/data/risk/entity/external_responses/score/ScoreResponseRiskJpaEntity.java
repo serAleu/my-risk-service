@@ -21,10 +21,10 @@ import lombok.experimental.Accessors;
 @JsonRootName("scoring")
 public class ScoreResponseRiskJpaEntity extends BaseRiskJpaEntity {
 
-  @Column(name = "credit_application_id", nullable = false)
+  @Column(name = "application_id", nullable = false)
   private Long application_id;
   @Column(name = "score_node_id", nullable = false)
-  private Integer node_id;
+  private Integer score_node_id;
   @Column(name = "decision", nullable = false)
   private Integer decision;
   @Column(name = "score_limit")
@@ -33,7 +33,7 @@ public class ScoreResponseRiskJpaEntity extends BaseRiskJpaEntity {
   private Long term;
   @Column(name = "grade")
   private String grade;
-  @Column(name = "scoring")
+  @Column(name = "score")
   private Integer score;
   @Column(name = "probability")
   private Double probability;

@@ -30,7 +30,7 @@ public class ScoreCall1ErrRule extends BaseScoreRule<ScoreCall1ErrContext> {
   }
 
   @Override
-  public ScoreCall1ErrContext getContext(ScoreResponseRiskJpaEntity response, Map<String, Long> score3RestrictionsMap) {
-    return new ScoreCall1ErrContext(response.getDecision(), response.getNode_id());
+  public ScoreCall1ErrContext getContext(RiskResponseJpaEntity response, ScoreResponseRiskJpaEntity scoreResponse, Map<String, Long> score3RestrictionsMap) {
+    return new ScoreCall1ErrContext(response, scoreResponse.getDecision(), scoreResponse.getScore_node_id());
   }
 }
