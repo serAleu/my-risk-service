@@ -7,8 +7,8 @@ public abstract class BaseBasicContext extends BaseRuleContext {
 
   public final Boolean isFinalChecks;
 
-  public BaseBasicContext(Boolean isFinalChecks) {
-    super(new RiskResponseJpaEntity());
+  public BaseBasicContext(RiskResponseJpaEntity response, Boolean isFinalChecks) {
+    super(response);
     this.isFinalChecks = isFinalChecks;
   }
 }

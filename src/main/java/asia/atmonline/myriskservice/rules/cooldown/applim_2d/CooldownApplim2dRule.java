@@ -29,8 +29,8 @@ public class CooldownApplim2dRule extends BaseCooldownRule<CooldownApplim2dConte
   }
 
   @Override
-  public CooldownApplim2dContext getContext(List<CreditApplicationStatus> creditApplicationStatuses, List<Credit> creditList, Integer numOf2DApplications,
+  public CooldownApplim2dContext getContext(RiskResponseJpaEntity response, List<CreditApplicationStatus> creditApplicationStatuses, List<Credit> creditList, Integer numOf2DApplications,
       Integer numOf5wApplications, Integer numOf9mApplications) {
-    return new CooldownApplim2dContext(numOf2DApplications);
+    return new CooldownApplim2dContext(response, numOf2DApplications);
   }
 }

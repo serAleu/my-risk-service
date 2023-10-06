@@ -21,7 +21,7 @@ public abstract class BaseBasicRule<P extends BaseBasicContext> extends BaseRule
     return getApprovedResponse(context.getRiskResponseJpaEntity().getApplicationId(), BASIC, context.getRiskResponseJpaEntity());
   }
 
-  public abstract P getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
+  public abstract P getContext(RiskResponseJpaEntity response, boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
       List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
       WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData);
 }

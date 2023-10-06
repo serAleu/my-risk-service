@@ -31,8 +31,8 @@ public class CooldownActiveLoanRule extends BaseCooldownRule<CooldownActiveLoanC
   }
 
   @Override
-  public CooldownActiveLoanContext getContext(List<CreditApplicationStatus> creditApplicationStatuses, List<Credit> creditList, Integer numOf2DApplications,
+  public CooldownActiveLoanContext getContext(RiskResponseJpaEntity response, List<CreditApplicationStatus> creditApplicationStatuses, List<Credit> creditList, Integer numOf2DApplications,
       Integer numOf5wApplications, Integer numOf9mApplications) {
-    return new CooldownActiveLoanContext(creditList);
+    return new CooldownActiveLoanContext(response, creditList);
   }
 }

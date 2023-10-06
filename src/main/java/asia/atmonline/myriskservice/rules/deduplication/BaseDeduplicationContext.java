@@ -7,8 +7,8 @@ public abstract class BaseDeduplicationContext extends BaseRuleContext {
 
   public final Boolean isFinalChecks;
 
-  public BaseDeduplicationContext(Boolean isFinalChecks) {
-    super(new RiskResponseJpaEntity());
+  public BaseDeduplicationContext(RiskResponseJpaEntity response, Boolean isFinalChecks) {
+    super(response);
     this.isFinalChecks = isFinalChecks;
   }
 }

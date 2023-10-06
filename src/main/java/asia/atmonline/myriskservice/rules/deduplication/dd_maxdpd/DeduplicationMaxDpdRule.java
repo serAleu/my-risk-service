@@ -31,8 +31,8 @@ public class DeduplicationMaxDpdRule extends BaseDeduplicationRule<Deduplication
   }
 
   @Override
-  public DeduplicationMaxDpdContext getContext(boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
+  public DeduplicationMaxDpdContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
       int notFinishedCreditsCount, int maxDpdCount, boolean isBankAccountMatchedWithBlAccount, boolean isPassportNumMatchedWithBlPassportNum) {
-    return new DeduplicationMaxDpdContext(isFinalChecks, maxDpdCount);
+    return new DeduplicationMaxDpdContext(response, isFinalChecks, maxDpdCount);
   }
 }

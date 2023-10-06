@@ -2,6 +2,7 @@ package asia.atmonline.myriskservice.services.dedup;
 
 import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.INITIAL;
 import static asia.atmonline.myriskservice.enums.application.CreditApplicationStatus.OUTGOING_PAYMENT_SUCCEED;
+import static asia.atmonline.myriskservice.enums.risk.CheckType.DEDUP;
 import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,9 +47,7 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request, boolean isFinalCheck) {
-    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
-    response.setRequestId(request.getId());
-    response.setApplicationId(request.getApplicationId());
+    RiskResponseJpaEntity response = getRiskResponseJpaEntity(request);
     Long borrowerId = creditApplicationJpaRepository.findBorrowerIdById(request.getApplicationId());
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
     if (borrower.isPresent()) {
@@ -61,7 +61,7 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
       Integer approvedApplicationsCount = countApproved(borrowerIds);
       for (BaseDeduplicationRule rule : rules) {
         response = rule.execute(
-            rule.getContext(isFinalCheck, approvedApplicationsCount, rejectedApplicationsCount, countInProgress, notFinishedCreditsCount, maxDpdCount,
+            rule.getContext(response, isFinalCheck, approvedApplicationsCount, rejectedApplicationsCount, countInProgress, notFinishedCreditsCount, maxDpdCount,
                 isBankAccountMatchedWithBlAccount, isPassportNumMatchedWithBlIdNumber));
         if (response != null && REJECT.equals(response.getDecision())) {
           if (response.getRejectionReason() != null) {
@@ -71,6 +71,15 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
         }
       }
     }
+    return response;
+  }
+
+  @NotNull
+  private RiskResponseJpaEntity getRiskResponseJpaEntity(RiskRequestJpaEntity request) {
+    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
+    response.setRequestId(request.getId());
+    response.setApplicationId(request.getApplicationId());
+    response.setCheckType(DEDUP);
     return response;
   }
 
@@ -124,9 +133,12 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
   }
 
   private Set<Long> getBorrowerIdsByConfirmedEmail(Borrower borrower) {
-    Set<Long> borrowerIds = borrowerJpaRepository.findBorrowerIdsByPersonalDataPdEmail(List.of(borrower.getPersonalData().getEmail()));
-    if (!borrowerIds.isEmpty()) {
-      borrowerIds.remove(borrower.getId());
+    Set<Long> borrowerIds = new HashSet<>();
+    if(borrower.getPersonalData() != null && borrower.getPersonalData().getEmail() != null) {
+      borrowerIds = borrowerJpaRepository.findBorrowerIdsByPersonalDataPdEmail(List.of(borrower.getPersonalData().getEmail()));
+      if (!borrowerIds.isEmpty()) {
+        borrowerIds.remove(borrower.getId());
+      }
     }
     return borrowerIds;
   }

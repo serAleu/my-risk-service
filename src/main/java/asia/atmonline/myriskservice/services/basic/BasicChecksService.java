@@ -73,7 +73,7 @@ public class BasicChecksService implements BaseRiskChecksService {
       List<WorkingIndustryDictionary> workingIndustryDictionaries = dictionaryWorkingIndustryJpaRepository.findAll();
       for (BaseBasicRule rule : rules) {
         response = rule.execute(
-            rule.getContext(isFinalCheck, addressCityDictionaries, occupationTypeDictionaries, workingIndustryDictionaries, age,
+            rule.getContext(response, isFinalCheck, addressCityDictionaries, occupationTypeDictionaries, workingIndustryDictionaries, age,
                 rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, clientWorkingIndustry, clientOccupationType, income,
                 rulesBasicPermittedIncome, registrationsAddressData));
         if (response != null && REJECT.equals(response.getDecision())) {

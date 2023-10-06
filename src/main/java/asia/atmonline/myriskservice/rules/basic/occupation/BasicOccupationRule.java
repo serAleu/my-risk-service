@@ -39,11 +39,11 @@ public class BasicOccupationRule extends BaseBasicRule<BasicOccupationContext> {
   }
 
   @Override
-  public BasicOccupationContext getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities,
+  public BasicOccupationContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities,
       List<OccupationTypeDictionary> occupationTypeDictionaries,
       List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
       WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome,
       AddressCityDictionary registrationsAddressData) {
-    return new BasicOccupationContext(isFinalChecks, clientOccupationType, occupationTypeDictionaries);
+    return new BasicOccupationContext(response, isFinalChecks, clientOccupationType, occupationTypeDictionaries);
   }
 }

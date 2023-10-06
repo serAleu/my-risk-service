@@ -1,5 +1,6 @@
 package asia.atmonline.myriskservice.rules.cooldown.applim_2d;
 
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.rules.cooldown.BaseCooldownContext;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,12 +14,12 @@ public class CooldownApplim2dContext extends BaseCooldownContext {
 
   private Integer numOf2dApplications;
 
-  public CooldownApplim2dContext() {
-    super();
+  public CooldownApplim2dContext(RiskResponseJpaEntity response) {
+    super(response);
   }
 
-  public CooldownApplim2dContext(Integer numOf2dApplications) {
-    super();
+  public CooldownApplim2dContext(RiskResponseJpaEntity response, Integer numOf2dApplications) {
+    super(response);
     this.numOf2dApplications = numOf2dApplications;
   }
 }

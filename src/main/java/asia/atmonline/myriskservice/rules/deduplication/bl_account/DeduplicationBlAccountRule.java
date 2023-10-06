@@ -31,8 +31,8 @@ public class DeduplicationBlAccountRule extends BaseDeduplicationRule<Deduplicat
   }
 
   @Override
-  public DeduplicationBlAccountContext getContext(boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
+  public DeduplicationBlAccountContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
       int notFinishedCreditsCount, int maxDpdCount, boolean isBankAccountMatchedWithBlAccount, boolean isPassportNumMatchedWithBlPassportNum) {
-    return new DeduplicationBlAccountContext(isFinalChecks, isBankAccountMatchedWithBlAccount);
+    return new DeduplicationBlAccountContext(response, isFinalChecks, isBankAccountMatchedWithBlAccount);
   }
 }
