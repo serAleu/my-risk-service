@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.envers.NotAudited;
 import org.hibernate.type.SqlTypes;
 
 @Entity
@@ -75,7 +74,7 @@ public class Borrower extends UserAccount {
 
   @Column(name = "extra_attributes")
   @JdbcTypeCode(SqlTypes.JSON)
-  @NotAudited
+//  @NotAudited
   private Map<ExtraAttributes, String> attributes;
 
   @Column(name = "last_application_step")

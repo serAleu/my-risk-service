@@ -127,11 +127,11 @@ score:
     reload-time-minutes: 10
   ds:
     jdbcDriver: org.postgresql.Driver
-    url: ${DB_SCORE_URL:lotus-preprod.ctoxc08s0evf.ap-southeast-1.rds.amazonaws.com}
+    url: ${DB_SCORE_URL:my-dms-preprod-rds.ctoxc08s0evf.ap-southeast-1.rds.amazonaws.com}
     port: ${DB_SCORE_PORT:5432}
-    database: ${DB_SCORE_DATABASE:lotus}
-    username: ${DB_SCORE_USERNAME:risk_user_ro}
-    password: ${DB_SCORE_PASSWORD:ZxamISdw1401ykn3M2vm}
+    database: ${DB_SCORE_DATABASE:dms}
+    username: ${DB_SCORE_USERNAME:dms}
+    password: ${DB_SCORE_PASSWORD:gp6FSY23Ob8Ce4tJFgsK2lc9}
   bitbucket:
     url:
       base: ${BITBUCKET_URL:https://api.bitbucket.org/2.0/repositories/atmonline/external-score-files/src/master/projects/}

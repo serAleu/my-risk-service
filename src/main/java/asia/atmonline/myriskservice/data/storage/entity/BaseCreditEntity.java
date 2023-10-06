@@ -14,7 +14,6 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.envers.NotAudited;
 
 @Getter
 @Setter
@@ -30,7 +29,7 @@ public abstract class BaseCreditEntity extends BaseStorageEntity {
   @Column(name = "credit_product_revision", nullable = false)
   private Long creditProductRevision;
 
-  @NotAudited
+//  @NotAudited
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "borrower_id", nullable = false)
   private Borrower borrower;
