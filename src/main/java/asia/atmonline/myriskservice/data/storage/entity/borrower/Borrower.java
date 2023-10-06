@@ -74,7 +74,6 @@ public class Borrower extends UserAccount {
 
   @Column(name = "extra_attributes")
   @JdbcTypeCode(SqlTypes.JSON)
-//  @NotAudited
   private Map<ExtraAttributes, String> attributes;
 
   @Column(name = "last_application_step")

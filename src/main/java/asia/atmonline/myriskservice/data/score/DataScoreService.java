@@ -19,7 +19,6 @@ public class DataScoreService {
 
   private final RepositoryScoreMy repositoryScoreMy;
   private final ScoreResponseJpaRepository scoreResponseJpaRepository;
-  private final ObjectMapper mapper;
 
   public ScoreResponseRiskJpaEntity getScoreModelResponse(RiskRequestJpaEntity request, String scoreModel, ProductCode code) {
     try {
@@ -34,7 +33,7 @@ public class DataScoreService {
   }
 
   private ObjectMapper rootMapper() {
-    ObjectMapper featuredMapper = mapper;
+    ObjectMapper featuredMapper = new ObjectMapper();
     featuredMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);
     featuredMapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
     featuredMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
