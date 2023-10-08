@@ -1,0 +1,54 @@
+import java.text.SimpleDateFormat;
+
+properties([
+    parameters([
+        gitParameter(
+            name: 'GIT_BRANCH',
+            defaultValue: 'master',
+            quickFilterEnabled: false,
+            type: 'PT_BRANCH'
+        )
+    ])
+])
+
+defaults = [
+    awsRegion: 'ap-southeast-1',
+    awsAccountID: '684128357811'
+]
+
+Date date = new Date()
+String formattedDate = date.format("yyyy-MM-dd-HH-mm-ss")
+
+pipeline {
+    agent { label 'atm' }
+    stages {
+        stage ('Build and push component image') {
+            steps {
+                script {
+                    dir("./projects/${params.GIT_BRANCH}") {
+                        buildScript = """
+                            export IMAGE_TAG=${formattedDate}_${env.BUILD_NUMBER}
+                            export ACCOUNT_ID=${defaults.awsAccountID}
+                            docker-compose build my-service-risk
+                            aws ecr get-login-password --region ${defaults.awsRegion} | docker login --username AWS --password-stdin ${defaults.awsAccountID}.dkr.ecr.${defaults.awsRegion}.amazonaws.com
+                            docker-compose push my-service-risk
+                        """
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "jenkins-aws-user",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
+                            sh "${buildScript}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
