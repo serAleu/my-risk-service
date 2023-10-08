@@ -1,9 +1,10 @@
 version: "3"
 services:
   my-service-risk:
-    image: 429298334463.dkr.ecr.ap-southeast-1.amazonaws.com/my-risk-service:${IMAGE_TAG}
+    image: ${ACCOUNT_ID}.dkr.ecr.ap-southeast-1.amazonaws.com/my-risk-service:${IMAGE_TAG}
     environment:
       - IMAGE_TAG
+      - ACCOUNT_ID
     build: .
     container_name: my-service-risk
     restart: always

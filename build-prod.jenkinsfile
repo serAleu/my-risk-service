@@ -13,7 +13,7 @@ properties([
 
 defaults = [
     awsRegion: 'ap-southeast-1',
-    awsAccountID: '429298334463'
+    awsAccountID: '684128357811'
 ]
 
 Date date = new Date()
@@ -33,7 +33,14 @@ pipeline {
                             aws ecr get-login-password --region ${defaults.awsRegion} | docker login --username AWS --password-stdin ${defaults.awsAccountID}.dkr.ecr.${defaults.awsRegion}.amazonaws.com
                             docker-compose push my-service-risk
                         """
-                        sh "${buildScript}"
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "jenkins-aws-user",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
+                            sh "${buildScript}"
+                        }
                     }
                 }
             }
