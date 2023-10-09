@@ -28,6 +28,7 @@ pipeline {
                     dir("./projects/${params.GIT_BRANCH}") {
                         buildScript = """
                             export IMAGE_TAG=${formattedDate}_${env.BUILD_NUMBER}
+                            export ACCOUNT_ID=${defaults.awsAccountID}
                             docker-compose build my-service-risk
                             aws ecr get-login-password --region ${defaults.awsRegion} | docker login --username AWS --password-stdin ${defaults.awsAccountID}.dkr.ecr.${defaults.awsRegion}.amazonaws.com
                             docker-compose push my-service-risk

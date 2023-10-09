@@ -47,7 +47,7 @@ properties([
                         def access_key;
                         def secret_key;
                         for (credential in jenkinsCredentials) {
-                            if ("aws_credentials_building_application".equals(credential.getId()) || "jenkins-aws-user".equals(credential.getId())) {
+                            if ("aws_credentials_building_application".equals(credential.getId()) || "jenkins-aws-old-user".equals(credential.getId())) {
                             access_key = credential.getCredentials().getAWSAccessKeyId();
                             secret_key = credential.getCredentials().getAWSSecretKey();
                             break;
