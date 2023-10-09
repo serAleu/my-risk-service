@@ -60,10 +60,11 @@ public class CreditApplication extends BaseCreditEntity {
 
 //  @Column(name = "status")
 //  @Enumerated(EnumType.STRING)
+//  @JdbcTypeCode(SqlTypes.VARCHAR)
 //  private CreditApplicationStatus status;
 
   @Column(name = "status")
-  private String status;
+  private Integer status;
 
   @Column(name = "operator_id")
   private Long operator;

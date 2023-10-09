@@ -88,13 +88,13 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
     if (borrowerIds.isEmpty()) {
       return 0;
     }
-    return creditApplicationJpaRepository.countByBorrowerIdInAndStatusIn(borrowerIds, List.of(OUTGOING_PAYMENT_SUCCEED));
+    return creditApplicationJpaRepository.countByBorrowerIdInAndStatusIn(borrowerIds, List.of(OUTGOING_PAYMENT_SUCCEED.getCode()));
   }
 
   @Transactional(readOnly = true)
   public Integer countByApplicationRejectedAndBorrowerIdIn(Set<Long> borrowerIds) {
     return !borrowerIds.isEmpty() ? creditApplicationJpaRepository.countByApplicationRejectedAndBorrowerIdIn(borrowerIds,
-        CreditApplicationStatus.REJECTED) : 0;
+        CreditApplicationStatus.REJECTED.getCode()) : 0;
   }
 
   @Transactional(readOnly = true)
@@ -102,7 +102,7 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
     if (borrowerIds.isEmpty()) {
       return 0;
     }
-    return creditApplicationJpaRepository.countByBorrowerIdInAndStatusIn(borrowerIds, List.of(INITIAL));
+    return creditApplicationJpaRepository.countByBorrowerIdInAndStatusIn(borrowerIds, List.of(INITIAL.getCode()));
   }
 
   @Transactional(readOnly = true)
