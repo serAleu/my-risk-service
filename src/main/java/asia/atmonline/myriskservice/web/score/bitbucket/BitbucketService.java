@@ -17,32 +17,36 @@ public class BitbucketService {
   public String getModel(ProductCode productCode) {
     boolean needUpdateCache = ScoreCacheExecutor.isCachedModelLastUpdDtmAfterReloadTimeMinutes(productCode);
     String scoreModel = "";
-    switch (productCode) {
-      case IL -> {
-        if (needUpdateCache || StringUtils.isBlank(ScoreCacheExecutor.ilScoreModel)) {
-          ScoreCacheExecutor.ilScoreModel = bitbucketClient.getBitbucketIlModel();
-        }
-        scoreModel = ScoreCacheExecutor.ilScoreModel;
-      }
-      case RS1 -> {
-        if (needUpdateCache || StringUtils.isBlank(ScoreCacheExecutor.rs1ScoreModel)) {
-          ScoreCacheExecutor.rs1ScoreModel = bitbucketClient.getBitbucketRs1Model();
-        }
-        scoreModel = ScoreCacheExecutor.rs1ScoreModel;
-      }
-      case RS2 -> {
-        if (needUpdateCache || StringUtils.isBlank(ScoreCacheExecutor.rs2ScoreModel)) {
-          ScoreCacheExecutor.rs2ScoreModel = bitbucketClient.getBitbucketRs2Model();
-        }
-        scoreModel = ScoreCacheExecutor.rs2ScoreModel;
-      }
-      case RS3, RS4, RS5, RS6, RS7 -> {
-        if (needUpdateCache || StringUtils.isBlank(ScoreCacheExecutor.rs3PlusScoreModel)) {
-          ScoreCacheExecutor.rs3PlusScoreModel = bitbucketClient.getBitbucketRs3PlusModel();
-        }
-        scoreModel = ScoreCacheExecutor.rs3PlusScoreModel;
-      }
+    if (needUpdateCache || StringUtils.isBlank(ScoreCacheExecutor.ilScoreModel)) {
+      ScoreCacheExecutor.ilScoreModel = bitbucketClient.getBitbucketIlModel();
     }
+    scoreModel = ScoreCacheExecutor.ilScoreModel;
+//    switch (productCode) {
+//      case IL -> {
+//        if (needUpdateCache || StringUtils.isBlank(ScoreCacheExecutor.ilScoreModel)) {
+//          ScoreCacheExecutor.ilScoreModel = bitbucketClient.getBitbucketIlModel();
+//        }
+//        scoreModel = ScoreCacheExecutor.ilScoreModel;
+//      }
+//      case RS1 -> {
+//        if (needUpdateCache || StringUtils.isBlank(ScoreCacheExecutor.rs1ScoreModel)) {
+//          ScoreCacheExecutor.rs1ScoreModel = bitbucketClient.getBitbucketRs1Model();
+//        }
+//        scoreModel = ScoreCacheExecutor.rs1ScoreModel;
+//      }
+//      case RS2 -> {
+//        if (needUpdateCache || StringUtils.isBlank(ScoreCacheExecutor.rs2ScoreModel)) {
+//          ScoreCacheExecutor.rs2ScoreModel = bitbucketClient.getBitbucketRs2Model();
+//        }
+//        scoreModel = ScoreCacheExecutor.rs2ScoreModel;
+//      }
+//      case RS3, RS4, RS5, RS6, RS7 -> {
+//        if (needUpdateCache || StringUtils.isBlank(ScoreCacheExecutor.rs3PlusScoreModel)) {
+//          ScoreCacheExecutor.rs3PlusScoreModel = bitbucketClient.getBitbucketRs3PlusModel();
+//        }
+//        scoreModel = ScoreCacheExecutor.rs3PlusScoreModel;
+//      }
+//    }
     return scoreModel;
   }
 }

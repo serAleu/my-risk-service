@@ -41,9 +41,9 @@ public class BasicRegionRule extends BaseBasicRule<BasicRegionContext> {
   }
 
   @Override
-  public BasicRegionContext getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
+  public BasicRegionContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
       List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
       WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData) {
-    return new BasicRegionContext(isFinalChecks, registrationsAddressData, dictionaryAddressCities);
+    return new BasicRegionContext(response, isFinalChecks, registrationsAddressData, dictionaryAddressCities);
   }
 }

@@ -5,7 +5,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SEONPHONE;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.external_responses.SeonFraudResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.seon.SeonFraudResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.BaseRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import asia.atmonline.myriskservice.web.seon.dto.AccountDetails;

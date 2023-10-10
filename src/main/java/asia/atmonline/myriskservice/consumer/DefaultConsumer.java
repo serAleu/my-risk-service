@@ -24,6 +24,7 @@ public class DefaultConsumer {
 
   @SneakyThrows
   @SqsListener("#{'${aws.sqs.request.queue}'.split(',')}")
+//  @SqsListener("${aws.sqs.request.local}")
   public void listen(RequestPayload payload) {
     log.info(payload.toString());
     RiskRequestJpaEntity request = entityService.save(payloadMapper.payloadToEntity(payload));
@@ -32,6 +33,4 @@ public class DefaultConsumer {
         .map(processor -> processor.process(request))
         .forEach(entityService::save);
   }
-
-
 }

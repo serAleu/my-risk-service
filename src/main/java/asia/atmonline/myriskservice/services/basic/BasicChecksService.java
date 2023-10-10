@@ -30,10 +30,10 @@ public class BasicChecksService implements BaseRiskChecksService {
 
   private final List<? extends BaseBasicRule<? extends BaseBasicContext>> rules;
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
+  private final BorrowerJpaRepository borrowerJpaRepository;
   private final DictionaryAddressCityJpaRepository dictionaryAddressCityJpaRepository;
   private final DictionaryWorkingIndustryJpaRepository dictionaryWorkingIndustryJpaRepository;
   private final DictionaryOccupationTypeJpaRepository dictionaryOccupationTypeJpaRepository;
-  private final BorrowerJpaRepository borrowerJpaRepository;
 
   @Value("${rules.basic.age-2-low}")
   private Integer rulesBasicPermittedAge2Low;
@@ -73,7 +73,7 @@ public class BasicChecksService implements BaseRiskChecksService {
       List<WorkingIndustryDictionary> workingIndustryDictionaries = dictionaryWorkingIndustryJpaRepository.findAll();
       for (BaseBasicRule rule : rules) {
         response = rule.execute(
-            rule.getContext(isFinalCheck, addressCityDictionaries, occupationTypeDictionaries, workingIndustryDictionaries, age,
+            rule.getContext(response, isFinalCheck, addressCityDictionaries, occupationTypeDictionaries, workingIndustryDictionaries, age,
                 rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, clientWorkingIndustry, clientOccupationType, income,
                 rulesBasicPermittedIncome, registrationsAddressData));
         if (response != null && REJECT.equals(response.getDecision())) {

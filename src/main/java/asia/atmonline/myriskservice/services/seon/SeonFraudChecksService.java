@@ -4,8 +4,8 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.APPROVE;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.external_responses.SeonFraudResponseRiskJpaEntity;
-import asia.atmonline.myriskservice.data.risk.repositories.external_responses.SeonFraudResponseJpaRepository;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.seon.SeonFraudResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.repositories.external_responses.seon.SeonFraudResponseJpaRepository;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.enums.borrower.ExtraAttributes;

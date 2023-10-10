@@ -31,8 +31,8 @@ public class DeduplicationActLoanRule extends BaseDeduplicationRule<Deduplicatio
   }
 
   @Override
-  public DeduplicationActLoanContext getContext(boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
+  public DeduplicationActLoanContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
       int notFinishedCreditsCount, int maxDpdCount, boolean isBankAccountMatchedWithBlAccount, boolean isPassportNumMatchedWithBlPassportNum) {
-    return new DeduplicationActLoanContext(isFinalChecks, notFinishedCreditsCount);
+    return new DeduplicationActLoanContext(response, isFinalChecks, notFinishedCreditsCount);
   }
 }

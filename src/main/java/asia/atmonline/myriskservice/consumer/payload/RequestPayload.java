@@ -1,7 +1,6 @@
 package asia.atmonline.myriskservice.consumer.payload;
 
 import asia.atmonline.myriskservice.enums.risk.CheckType;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;

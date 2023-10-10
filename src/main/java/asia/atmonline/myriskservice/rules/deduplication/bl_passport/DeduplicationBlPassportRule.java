@@ -31,8 +31,8 @@ public class DeduplicationBlPassportRule extends BaseDeduplicationRule<Deduplica
   }
 
   @Override
-  public DeduplicationBlPassportContext getContext(boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
+  public DeduplicationBlPassportContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
       int notFinishedCreditsCount, int maxDpdCount, boolean isBankAccountMatchedWithBlAccount, boolean isPassportNumMatchedWithBlPassportNum) {
-    return new DeduplicationBlPassportContext(isFinalChecks, isPassportNumMatchedWithBlPassportNum);
+    return new DeduplicationBlPassportContext(response, isFinalChecks, isPassportNumMatchedWithBlPassportNum);
   }
 }

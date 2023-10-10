@@ -1,7 +1,7 @@
 package asia.atmonline.myriskservice.rules.seon.phone;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.external_responses.SeonFraudResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.seon.SeonFraudResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.BaseRuleContext;
 import lombok.Getter;
 import lombok.Setter;

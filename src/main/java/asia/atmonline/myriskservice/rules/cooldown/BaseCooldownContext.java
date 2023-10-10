@@ -5,7 +5,7 @@ import asia.atmonline.myriskservice.rules.BaseRuleContext;
 
 public abstract class BaseCooldownContext extends BaseRuleContext {
 
-  public BaseCooldownContext() {
-    super(new RiskResponseJpaEntity());
+  public BaseCooldownContext(RiskResponseJpaEntity response) {
+    super(response);
   }
 }

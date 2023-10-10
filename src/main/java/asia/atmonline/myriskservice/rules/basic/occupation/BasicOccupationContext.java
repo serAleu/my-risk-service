@@ -1,5 +1,6 @@
 package asia.atmonline.myriskservice.rules.basic.occupation;
 
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.OccupationTypeDictionary;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicContext;
 import java.util.List;
@@ -13,8 +14,8 @@ public class BasicOccupationContext extends BaseBasicContext {
   private final OccupationTypeDictionary clientOccupationType;
   private final List<OccupationTypeDictionary> occupationTypeDictionaries;
 
-  public BasicOccupationContext(boolean isFinalChecks, OccupationTypeDictionary clientOccupationType, List<OccupationTypeDictionary> occupationTypeDictionaries) {
-    super(isFinalChecks);
+  public BasicOccupationContext(RiskResponseJpaEntity response, boolean isFinalChecks, OccupationTypeDictionary clientOccupationType, List<OccupationTypeDictionary> occupationTypeDictionaries) {
+    super(response, isFinalChecks);
     this.clientOccupationType = clientOccupationType;
     this.occupationTypeDictionaries = occupationTypeDictionaries;
   }

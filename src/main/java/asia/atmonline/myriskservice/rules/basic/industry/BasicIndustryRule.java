@@ -39,11 +39,11 @@ public class BasicIndustryRule extends BaseBasicRule<BasicIndustryContext> {
   }
 
   @Override
-  public BasicIndustryContext getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities,
+  public BasicIndustryContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities,
       List<OccupationTypeDictionary> occupationTypeDictionaries,
       List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
       WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome,
       AddressCityDictionary registrationsAddressData) {
-    return new BasicIndustryContext(isFinalChecks, clientWorkingIndustry, dictionaryWorkingIndustries);
+    return new BasicIndustryContext(response, isFinalChecks, clientWorkingIndustry, dictionaryWorkingIndustries);
   }
 }

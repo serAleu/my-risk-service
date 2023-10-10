@@ -31,8 +31,8 @@ public class DeduplicationActApplRule extends BaseDeduplicationRule<Deduplicatio
   }
 
   @Override
-  public DeduplicationActApplContext getContext(boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
+  public DeduplicationActApplContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
       int notFinishedCreditsCount, int maxDpdCount, boolean isBankAccountMatchedWithBlAccount, boolean isPassportNumMatchedWithBlPassportNum) {
-    return new DeduplicationActApplContext(isFinalChecks, countInProgress);
+    return new DeduplicationActApplContext(response, isFinalChecks, countInProgress);
   }
 }

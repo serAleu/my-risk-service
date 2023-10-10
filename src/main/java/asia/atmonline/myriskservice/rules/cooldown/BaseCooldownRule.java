@@ -16,11 +16,10 @@ public abstract class BaseCooldownRule<P extends BaseCooldownContext> extends Ba
   }
 
   @Override
-  @SuppressWarnings({"unchecked"})
   public RiskResponseJpaEntity execute(P context) {
     return getApprovedResponse(context.getRiskResponseJpaEntity().getApplicationId(), COOLDOWN, context.getRiskResponseJpaEntity());
   }
 
-  public abstract P getContext(List<CreditApplicationStatus> creditApplicationStatuses, List<Credit> creditList, Integer numOf2DApplications,
+  public abstract P getContext(RiskResponseJpaEntity response, List<CreditApplicationStatus> creditApplicationStatuses, List<Credit> creditList, Integer numOf2DApplications,
       Integer numOf5wApplications, Integer numOf9mApplications);
 }

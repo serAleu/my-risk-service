@@ -4,7 +4,6 @@ import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressC
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.AddressStateDictionary;
 import asia.atmonline.myriskservice.enums.application.ApplicationsStep;
 import asia.atmonline.myriskservice.enums.borrower.ExtraAttributes;
-import asia.atmonline.myriskservice.enums.borrower.LoanPurpose;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -23,7 +22,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.envers.NotAudited;
 import org.hibernate.type.SqlTypes;
 
 @Entity
@@ -67,16 +65,15 @@ public class Borrower extends UserAccount {
   @Column(name = "dpd_max", nullable = false, columnDefinition = "integer default 0")
   private Integer DPDMax;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "loan_purpose")
-  private LoanPurpose loanPurpose;
+//  @Enumerated(EnumType.STRING)
+//  @Column(name = "loan_purpose")
+//  private LoanPurpose loanPurpose;
 
   @Column(name = "juicy_score_session_id")
   private String juicyScoreSessionId;
 
   @Column(name = "extra_attributes")
   @JdbcTypeCode(SqlTypes.JSON)
-  @NotAudited
   private Map<ExtraAttributes, String> attributes;
 
   @Column(name = "last_application_step")

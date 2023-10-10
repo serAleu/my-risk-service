@@ -15,8 +15,8 @@ public abstract class BaseScoreContext extends BaseRuleContext {
   private final Integer decision;
   private final Integer scoreNodeId;
 
-  public BaseScoreContext(Integer decision, Integer scoreNodeId) {
-    super(new RiskResponseJpaEntity());
+  public BaseScoreContext(RiskResponseJpaEntity response, Integer decision, Integer scoreNodeId) {
+    super(response);
     this.decision = decision;
     this.scoreNodeId = scoreNodeId;
   }

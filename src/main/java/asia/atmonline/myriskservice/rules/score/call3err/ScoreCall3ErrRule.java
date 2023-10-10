@@ -4,7 +4,7 @@ import static asia.atmonline.myriskservice.enums.risk.FinalDecision.REJECT;
 import static asia.atmonline.myriskservice.enums.risk.RejectionReasonCode.SCORECALL3ERR;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
-import asia.atmonline.myriskservice.data.risk.entity.external_responses.ScoreResponseRiskJpaEntity;
+import asia.atmonline.myriskservice.data.risk.entity.external_responses.score.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.rules.score.BaseScoreContext;
 import asia.atmonline.myriskservice.rules.score.BaseScoreRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
@@ -46,9 +46,9 @@ public class ScoreCall3ErrRule extends BaseScoreRule<ScoreCall3ErrContext> {
   }
 
   @Override
-  public ScoreCall3ErrContext getContext(ScoreResponseRiskJpaEntity response, Map<String, Long> score3RestrictionsMap) {
-    return new ScoreCall3ErrContext(response.getDecision(), response.getScoreNodeId(), score3RestrictionsMap.get(scorePathTermMax),
+  public ScoreCall3ErrContext getContext(RiskResponseJpaEntity response, ScoreResponseRiskJpaEntity scoreResponse, Map<String, Long> score3RestrictionsMap) {
+    return new ScoreCall3ErrContext(response, scoreResponse.getDecision(), scoreResponse.getScore_node_id(), score3RestrictionsMap.get(scorePathTermMax),
         score3RestrictionsMap.get(scorePathAmountMax), score3RestrictionsMap.get(scorePathTermMin), score3RestrictionsMap.get(scorePathAmountMin),
-        response.getTerm(), response.getLimit());
+        scoreResponse.getTerm(), scoreResponse.getScoreLimit());
   }
 }

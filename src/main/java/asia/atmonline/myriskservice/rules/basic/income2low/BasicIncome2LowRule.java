@@ -35,9 +35,9 @@ public class BasicIncome2LowRule extends BaseBasicRule<BasicIncome2LowContext> {
   }
 
   @Override
-  public BasicIncome2LowContext getContext(boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
+  public BasicIncome2LowContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
       List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
       WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData) {
-    return new BasicIncome2LowContext(isFinalChecks, income, permittedIncome);
+    return new BasicIncome2LowContext(response, isFinalChecks, income, permittedIncome);
   }
 }

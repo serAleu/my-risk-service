@@ -31,8 +31,8 @@ public class DeduplicationRejectsRule extends BaseDeduplicationRule<Deduplicatio
   }
 
   @Override
-  public DeduplicationRejectsContext getContext(boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
+  public DeduplicationRejectsContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, int approvedApplicationsCount, int rejectedApplicationsCount, int countInProgress,
       int notFinishedCreditsCount, int maxDpdCount, boolean isBankAccountMatchedWithBlAccount, boolean isPassportNumMatchedWithBlPassportNum) {
-    return new DeduplicationRejectsContext(isFinalChecks, approvedApplicationsCount, rejectedApplicationsCount);
+    return new DeduplicationRejectsContext(response, isFinalChecks, approvedApplicationsCount, rejectedApplicationsCount);
   }
 }

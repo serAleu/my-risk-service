@@ -1,5 +1,6 @@
 package asia.atmonline.myriskservice.rules.score.call3err;
 
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.rules.score.BaseScoreContext;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,9 +16,9 @@ public class ScoreCall3ErrContext extends BaseScoreContext {
   private final Long termFromScore;
   private final Long limitFromScore;
 
-  public ScoreCall3ErrContext(Integer decision, Integer scoreNodeId, Long termMaxRestriction, Long amountMaxRestriction, Long termMinRestriction,
+  public ScoreCall3ErrContext(RiskResponseJpaEntity response, Integer decision, Integer scoreNodeId, Long termMaxRestriction, Long amountMaxRestriction, Long termMinRestriction,
       Long amountMinRestriction, Long termFromScore, Long limitFromScore) {
-    super(decision, scoreNodeId);
+    super(response, decision, scoreNodeId);
     this.termMaxRestriction = termMaxRestriction;
     this.amountMaxRestriction = amountMaxRestriction;
     this.termMinRestriction = termMinRestriction;

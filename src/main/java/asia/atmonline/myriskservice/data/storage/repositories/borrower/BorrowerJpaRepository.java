@@ -3,7 +3,6 @@ package asia.atmonline.myriskservice.data.storage.repositories.borrower;
 import asia.atmonline.myriskservice.data.storage.entity.borrower.Borrower;
 import asia.atmonline.myriskservice.data.storage.repositories.BaseStorageJpaRepository;
 import asia.atmonline.myriskservice.enums.application.ApplicationsStep;
-import asia.atmonline.myriskservice.enums.borrower.LoanPurpose;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,8 +47,8 @@ public interface BorrowerJpaRepository extends BaseStorageJpaRepository<Borrower
   @Query("select id from Borrower where identityData.primaryId in :nics")
   Set<Long> findIdsByNics(@Param("nics") List<String> nics);
 
-  @Query("select b.loanPurpose from Borrower b where b.id = ?1")
-  Optional<LoanPurpose> findLoanPurpose(final Long borrowerId);
+//  @Query("select b.loanPurpose from Borrower b where b.id = ?1")
+//  Optional<LoanPurpose> findLoanPurpose(final Long borrowerId);
 
   @Modifying
   @Query("update Borrower b "

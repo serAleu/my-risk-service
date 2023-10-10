@@ -1,5 +1,6 @@
 package asia.atmonline.myriskservice.rules.cooldown.applim_5w;
 
+import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.rules.cooldown.BaseCooldownContext;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +14,8 @@ public class CooldownApplim5wContext extends BaseCooldownContext {
 
   private Integer numOf5wApplications;
 
-  public CooldownApplim5wContext(Integer numOf5wApplications) {
-    super();
+  public CooldownApplim5wContext(RiskResponseJpaEntity response, Integer numOf5wApplications) {
+    super(response);
     this.numOf5wApplications = numOf5wApplications;
   }
 }

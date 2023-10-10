@@ -23,8 +23,8 @@ public class CreditHistoryChecksRequestProcessor extends BaseRequestProcessor {
 
   @Value("${aws.sqs.credit-history.producer.queue-name}")
   private String creditHistoryChecksResponseQueue;
-  @Value("${using-mocks.credit-history}")
-  private Boolean usingMocksExperian;
+//  @Value("${using-mocks.credit-history}")
+//  private Boolean usingMocksExperian;
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {

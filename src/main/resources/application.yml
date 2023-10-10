@@ -27,16 +27,14 @@ spring:
     broker-url:
 
 using-mocks:
-  basic: ${USING_MOCKS_BASIC:true}
-  blacklists: ${USING_MOCKS_BL:true}
-  bureau: ${USING_MOCKS_BUREAU:true}
-  cooldown: ${USING_MOCKS_COOLDOWN:true}
-  deduplication: ${USING_MOCKS_DEDUP:true}
-  final: ${USING_MOCKS_FINAL:true}
-  score: ${USING_MOCKS_SCORE:true}
+  basic: ${USING_MOCKS_BASIC:false}
+  blacklists: ${USING_MOCKS_BL:false}
+  bureau: ${USING_MOCKS_BUREAU:false}
+  cooldown: ${USING_MOCKS_COOLDOWN:false}
+  deduplication: ${USING_MOCKS_DEDUP:false}
+  final: ${USING_MOCKS_FINAL:false}
+  score: ${USING_MOCKS_SCORE:false}
   seon: ${USING_MOCKS_SEON:true}
-  experian: true
-  credit-history: true
 
 rules:
   basic:
@@ -84,7 +82,8 @@ aws:
     max-number-of-messages: ${SQS_MAX_NUMBER_OF_MESSAGES:10}
     back-off-time: ${SQS_BACK_OFF_TIME:60000}
     request:
-      queue: ${REQUEST_QUEUES:my-risk-bl-request-preprod,my-risk-cooldown-request-preprod,my-risk-dedup-request-preprod,my-risk-basic-request-preprod,my-risk-score-request-preprod,my-risk-seon-fraud-request-preprod,my-risk-bureau-request-preprod,my-risk-final-request-preprod,my-risk-experian-request-preprod,my-risk-credit-history-request-preprod}
+      queue: ${REQUEST_QUEUES:my-risk-bl-request-preprod,my-risk-cooldown-request-preprod,my-risk-dedup-request-preprod,my-risk-basic-request-preprod,my-risk-score-request-preprod,my-risk-seon-fraud-request-preprod,my-risk-bureau-request-preprod,my-risk-final-request-preprod,my-risk-credit-history-request-preprod}
+      local: my-risk-credit-history-request-preprod
     blacklists:
       producer:
         queue-name: ${BL_RESPONSE_RISK_QUEUE:my-risk-bl-response-preprod}
@@ -128,26 +127,39 @@ score:
     reload-time-minutes: 10
   ds:
     jdbcDriver: org.postgresql.Driver
-    url: ${DB_SCORE_URL:lotus-preprod.ctoxc08s0evf.ap-southeast-1.rds.amazonaws.com}
+    url: ${DB_SCORE_URL:my-dms-preprod-rds.ctoxc08s0evf.ap-southeast-1.rds.amazonaws.com}
     port: ${DB_SCORE_PORT:5432}
-    database: ${DB_SCORE_DATABASE:lotus}
-    username: ${DB_SCORE_USERNAME:risk_user_ro}
-    password: ${DB_SCORE_PASSWORD:ZxamISdw1401ykn3M2vm}
+    database: ${DB_SCORE_DATABASE:dms}
+    username: ${DB_SCORE_USERNAME:dms}
+    password: ${DB_SCORE_PASSWORD:gp6FSY23Ob8Ce4tJFgsK2lc9}
   bitbucket:
     url:
-      base: ${BITBUCKET_URL:https://api.bitbucket.org/2.0/repositories/my/external-score-files/src/master/projects/}
-      il: ${BITBUCKET_PATH_TO_IL:my_scoreservice_preprod/il/app.sql}
-      rs1: ${BITBUCKET_PATH_TO_RS1:my_scoreservice_preprod/rs1/app.sql}
-      rs2: ${BITBUCKET_PATH_TO_RS2:my_scoreservice_preprod/rs2/app.sql}
-      rs3: ${BITBUCKET_PATH_TO_RS3:my_scoreservice_preprod/rs3/app.sql}
+      base: ${BITBUCKET_URL:https://api.bitbucket.org/2.0/repositories/atmonline/external-score-files/src/master/projects/}
+      il: ${BITBUCKET_PATH_TO_IL:malaysia_scoreservice_preprod/il/app.sql}
+      rs1: ${BITBUCKET_PATH_TO_RS1:malaysia_scoreservice_preprod/rs1/app.sql}
+      rs2: ${BITBUCKET_PATH_TO_RS2:malaysia_scoreservice_preprod/rs2/app.sql}
+      rs3: ${BITBUCKET_PATH_TO_RS3:malaysia_scoreservice_preprod/rs3/app.sql}
     token: ${BASIC_AUTH_BITBUCKET:Basic c2VyX2FsZXU6QVRCQkR2RHFrUTRYdXdGS1U0UjhyUXpYdWg4YkU2RTNFN0E2}
 
 experian:
-  base-url: ${EXPERIAN_BASE_URL:https://b2buat.experian.com.my/index.php/b2bgateway}
+  base-url: ${EXPERIAN_BASE_URL:https://b2buat.experian.com.my/index.php/getcredit}
+  username: ${EXPERIAN_BASIC_USERNAME:GETCB2B1}
+  password: ${EXPERIAN_BASIC_PASSWORD:GetC.b2b.1}
   ccris:
-    url: ${EXPERIAN_CCRIS_SEARCH_URL:xxx}
+    group-code: ${EXPERIAN_CCRIS_GROUP_CODE:11}
+    product-type: ${EXPERIAN_CCRIS_PRODUCT_TYPE:CCRIS_SEARCH}
+  review:
+    product-type: ${EXPERIAN_CCRIS_PRODUCT_TYPE:IRISS}
   retrieve-report:
-    url: ${EXPERIAN_RETRIEVE_REPORT_URL:xxx}
+    timeout-before-request: ${EXPERIAN_TIMEOUT_BEFORE_REPORT_REQUEST:60000}
+  feign:
+    options:
+      connect-timeout-millis: ${CONNECT_TIMEOUT_MILLIS:300}
+      read-timeout-millis: ${READ_TIMEOUT_MILLIS:3000}
+    retryer:
+      period: ${RETRYER_PERIOD:100}
+      duration: ${RETRYER_DURATION:1}
+      max-attempts: ${RETRYER_MAX_ATTEMPTS:1}
 
 seon-fraud:
   #  !PROD! license-key: ${SEON_LICENSE_KEY:6fb041e6-86ac-433e-93f6-ab128c72bceb}

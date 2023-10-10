@@ -19,8 +19,6 @@ public abstract class BaseRiskJpaEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-//  @Column(name = "created_at")
-//  private LocalDateTime createdAt;
 
   public abstract String repositoryName();
 }
