@@ -83,16 +83,16 @@ properties([
 
 defaults = [
     awsRegion: 'ap-southeast-1',
-    awsAccountID: '429298334463',
-    ecrRepo: '429298334463.dkr.ecr.ap-southeast-1.amazonaws.com/my-risk-service',
+    awsAccountID: '684128357811',
+    ecrRepo: '684128357811.dkr.ecr.ap-southeast-1.amazonaws.com/my-risk-service',
     projectUrl: 'git@bitbucket.org:atmonline/my-risk-service.git',
     // tdFamily: (params.ENV_TO_DEPLOY == 'prod' ? '' : 'middleware-preprod'),
-    tdFamily: 'my_risk_service_preprod_fg',
+    tdFamily: 'malaysia-prod-risk',
     // serviceName: (params.ENV_TO_DEPLOY == 'prod' ? '' : 'middleware-preprod'),
-    serviceName: 'my-risk-preprod',
-    clusterName: 'malaysia-preprod-fargate-cluster',
+    serviceName: 'malaysia-prod-risk',
+    clusterName: 'malaysia-prod-fargate-cluster',
     // dbName: (params.ENV_TO_DEPLOY == 'prod' ? '' : 'my-middleware-preprod-rds')
-    dbName: 'my-risk-preprod-rds',
+    dbName: 'malaysia-prod-risk-rds',
 ]
 
 Date date = new Date()
@@ -114,7 +114,14 @@ pipeline {
                             --db-instance-identifier ${defaults.dbName} --region ${defaults.awsRegion} \
                             --tags Key=type,Value=release-snapshot
                         """
-                        sh "${createSnapshotScript}"
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "jenkins-aws-user",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
+                            sh "${createSnapshotScript}"
+                        }
                         sleep(10) // 10 seconds
                     }
                 }
@@ -131,7 +138,14 @@ pipeline {
                             TD_NEW_JSON=\$(echo \$TD_CURRENT | jq --arg IMAGE "${newImagePath}" '.taskDefinition | .containerDefinitions[0].image = \$IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
                             aws ecs register-task-definition --region ${defaults.awsRegion} --cli-input-json "\$TD_NEW_JSON"
                         """
-                        sh "${publishScript}"
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "jenkins-aws-user",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
+                            sh "${publishScript}"
+                        }
                         sleep(10)
                     }
                 }
@@ -142,11 +156,25 @@ pipeline {
                 script {
                     dir("./projects/${params.GIT_BRANCH}") {
                         tdDescribeCommand = "aws ecs describe-task-definition --task-definition ${defaults.tdFamily} --region ${defaults.awsRegion}"
-                        def tdDescribeOutput = readJSON(text: sh(script: tdDescribeCommand, returnStdout: true).trim())
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "jenkins-aws-user",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
+                            tdDescribeOutput = readJSON(text: sh(script: tdDescribeCommand, returnStdout: true).trim())
+                        }
                         currentTd = "${tdDescribeOutput.taskDefinition.family}:${tdDescribeOutput.taskDefinition.revision}"
                         echo "currentTd: ${currentTd}"
                         updateServiceCommand = "aws ecs update-service --cluster ${defaults.clusterName} --service ${defaults.serviceName} --task-definition ${currentTd} --region ${defaults.awsRegion}"
-                        sh "${updateServiceCommand}"
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "jenkins-aws-user",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
+                            sh "${updateServiceCommand}"
+                        }
                         sleep(60)
                     }
                 }
@@ -162,7 +190,14 @@ pipeline {
                         tryCount = 1
                         while ((System.currentTimeMillis() - startTime) < timeout) {
                             echo "Checking the New Service Availability during 10 minutes; attempt ${tryCount}"
-                            output = readJSON(text: sh(script: describeServiceCommand, returnStdout: true).trim())
+                            withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "jenkins-aws-user",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                            ]]) {
+                                output = readJSON(text: sh(script: describeServiceCommand, returnStdout: true).trim())
+                            }
                             echo "Running tasks count: ${output.services.runningCount[0]}"
                             echo "Pending tasks count: ${output.services.pendingCount[0]}"
                             echo "Currend task defenition: ${output.services.taskDefinition[0]}"
