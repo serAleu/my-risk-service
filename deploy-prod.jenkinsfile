@@ -191,10 +191,10 @@ pipeline {
                         while ((System.currentTimeMillis() - startTime) < timeout) {
                             echo "Checking the New Service Availability during 10 minutes; attempt ${tryCount}"
                             withCredentials([[
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: "jenkins-aws-user",
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                                $class: 'AmazonWebServicesCredentialsBinding',
+                                credentialsId: "jenkins-aws-user",
+                                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                             ]]) {
                                 output = readJSON(text: sh(script: describeServiceCommand, returnStdout: true).trim())
                             }
