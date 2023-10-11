@@ -56,9 +56,6 @@ public class BlacklistChecksService implements BaseRiskChecksService {
 
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
-    RiskResponseJpaEntity response = new RiskResponseJpaEntity();
-    response.setRequestId(request.getId());
-    response.setApplicationId(request.getApplicationId());
     String phoneNum = request.getPhone();
     Long numberOfNotFinishedCredits = 0L;
     Long numberOfFinishedCredits = 0L;
@@ -74,7 +71,9 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     }
     List<BlacklistPhoneRiskJpaEntity> entities = blacklistPhoneJpaRepository.findByPhoneAndExpiredAtAfterOrderByAddedAtDesc(phoneNum,
         LocalDateTime.now());
-    return blacklistPhoneRule.execute(new BlacklistPhoneContext(entities, numberOfNotFinishedCredits.intValue(), numberOfFinishedCredits.intValue()));
+    RiskResponseJpaEntity response = blacklistPhoneRule.execute(new BlacklistPhoneContext(entities, numberOfNotFinishedCredits.intValue(), numberOfFinishedCredits.intValue()));
+    response.setPhone(request.getPhone());
+    return response;
   }
 
   @Transactional(readOnly = true)

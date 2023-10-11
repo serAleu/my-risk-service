@@ -56,8 +56,7 @@ public class BasicChecksService implements BaseRiskChecksService {
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
     if (borrower.isPresent()) {
       Integer age =
-          borrower.get().getPersonalData() != null ? Period.between(borrower.get().getPersonalData().getBirthDate(), LocalDate.now()).getYears()
-              : null;
+          borrower.get().getPersonalData() != null && borrower.get().getPersonalData().getBirthDate() != null ? Period.between(borrower.get().getPersonalData().getBirthDate(), LocalDate.now()).getYears() : null;
       WorkingIndustryDictionary clientWorkingIndustry =
           borrower.get().getEmploymentData() != null && borrower.get().getEmploymentData().getWorkingIndustry() != null ? borrower.get()
               .getEmploymentData().getWorkingIndustry() : null;
