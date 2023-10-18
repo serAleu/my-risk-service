@@ -17,6 +17,7 @@ import asia.atmonline.myriskservice.enums.application.CreditApplicationStatus;
 import asia.atmonline.myriskservice.enums.credit.CreditStatus;
 import asia.atmonline.myriskservice.rules.deduplication.BaseDeduplicationContext;
 import asia.atmonline.myriskservice.rules.deduplication.BaseDeduplicationRule;
+import asia.atmonline.myriskservice.rules.deduplication.dd_maxdpd.DeduplicationMaxDpdContext;
 import asia.atmonline.myriskservice.services.BaseRiskChecksService;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
 import java.util.HashSet;
@@ -118,8 +119,7 @@ public class DeduplicationChecksService implements BaseRiskChecksService {
     if (borrowerIds.isEmpty()) {
       return 0;
     }
-//    return creditJpaRepository.countByBorrowerIdInAndDPDMaxGreaterThan(borrowerIds, DeduplicationMaxDpdContext.MAX_HISTORICAL_OVERDUE_DAYS);
-    return 0;
+    return creditJpaRepository.countByBorrowerIdInAndDPDMaxGreaterThan(borrowerIds, DeduplicationMaxDpdContext.MAX_HISTORICAL_OVERDUE_DAYS);
   }
 
   @Transactional(readOnly = true)

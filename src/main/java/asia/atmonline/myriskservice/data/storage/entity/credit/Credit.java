@@ -32,6 +32,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "credit", schema = "my-back")
 @Getter
 @Setter
+@BatchSize(size = BaseCreditEntity.DEFAULT_BATCH_SIZE)
 public class Credit extends BaseCreditEntity {
 
   @JsonIgnore

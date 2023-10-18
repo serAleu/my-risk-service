@@ -18,9 +18,9 @@ spring:
       region:
         auto: false
         static: ap-southeast-1
-#      credentials:
-#        access-key: ${AWS_ACCESS_KEY:AKIAWH5BMXL72YM6U76D}
-#        secret-key: ${AWS_SECRET_KEY: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}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY:AKIAWH5BMXL72YM6U76D}
+        secret-key: ${AWS_SECRET_KEY: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}
       stack:
         auto: false
   activemq:
@@ -79,7 +79,7 @@ aws:
     max-number-of-messages: ${SQS_MAX_NUMBER_OF_MESSAGES:10}
     back-off-time: ${SQS_BACK_OFF_TIME:60000}
     request:
-      queue: ${REQUEST_QUEUES:my-risk-bl-request-preprod,my-risk-cooldown-request-preprod,my-risk-dedup-request-preprod,my-risk-basic-request-preprod,my-risk-score-request-preprod,my-risk-seon-fraud-request-preprod,my-risk-bureau-request-preprod,my-risk-final-request-preprod,my-risk-credit-history-request-preprod}
+      queue: ${REQUEST_QUEUES:my-risk-cooldown-request-preprod,my-risk-dedup-request-preprod,my-risk-basic-request-preprod,my-risk-score-request-preprod,my-risk-seon-fraud-request-preprod,my-risk-bureau-request-preprod,my-risk-final-request-preprod,my-risk-credit-history-request-preprod}
       local: my-risk-credit-history-request-preprod
     blacklists:
       producer:

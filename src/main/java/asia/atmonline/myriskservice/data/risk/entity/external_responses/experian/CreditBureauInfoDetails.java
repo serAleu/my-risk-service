@@ -83,7 +83,43 @@ public class CreditBureauInfoDetails extends BaseRiskJpaEntity {
   private String subAccountCollateralTypeCode;
 
   @Column(name = "credit_position")
-  private Integer creditPosition;
+  private String creditPosition;
+
+  @Column(name = "m0")
+  private Integer m0;
+
+  @Column(name = "m1")
+  private Integer m1;
+
+  @Column(name = "m2")
+  private Integer m2;
+
+  @Column(name = "m3")
+  private Integer m3;
+
+  @Column(name = "m4")
+  private Integer m4;
+
+  @Column(name = "m5")
+  private Integer m5;
+
+  @Column(name = "m6")
+  private Integer m6;
+
+  @Column(name = "m7")
+  private Integer m7;
+
+  @Column(name = "m8")
+  private Integer m8;
+
+  @Column(name = "m9")
+  private Integer m9;
+
+  @Column(name = "m10")
+  private Integer m10;
+
+  @Column(name = "m11")
+  private Integer m11;
 
   @Override
   public String repositoryName() {

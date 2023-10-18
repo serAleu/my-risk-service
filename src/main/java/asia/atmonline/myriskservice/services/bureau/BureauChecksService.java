@@ -30,7 +30,6 @@ import asia.atmonline.myriskservice.web.bureau.experian.dto.search.response.Expe
 import asia.atmonline.myriskservice.web.bureau.experian.dto.search.response.ExperianCCRISSearchResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,6 +182,13 @@ public class BureauChecksService implements BaseRiskChecksService {
         && reportResponse.getBankingInfo().getCcrisBankingDetails().getOutstandingCredit() != null) {
       reportResponse.getBankingInfo().getCcrisBankingDetails().getOutstandingCredit()
           .forEach(outstandingCredit -> outstandingCredit.getMaster().forEach(master -> {
+            String concatenatedCreditPositions = getConcatSubAccountCreditPositions(outstandingCredit.getSubAccount());
+            String m0 = null;
+            String replacedConcatenatedCreditPositions = concatenatedCreditPositions != null ? concatenatedCreditPositions.replaceAll("[^0-9]","") : null;
+            if(replacedConcatenatedCreditPositions != null && replacedConcatenatedCreditPositions.length() == 12) {
+              m0 = replacedConcatenatedCreditPositions.substring(0, 1);
+              replacedConcatenatedCreditPositions = replacedConcatenatedCreditPositions.substring(1);
+            }
             CreditBureauInfoDetails creditBureauInfoDetails = new CreditBureauInfoDetails()
                 .setCcrisResponseId(info.getId())
                 .setMasterId(master.getMasterId())
@@ -205,10 +211,38 @@ public class BureauChecksService implements BaseRiskChecksService {
                 .setPrincipleRepaymentTerm(getConcatPrincipleRepaymentTerms(outstandingCredit.getSubAccount()))
                 .setSubAccountCollateralType(getConcatSubAccountCollateralTypes(outstandingCredit.getSubAccount()))
                 .setSubAccountCollateralTypeCode(getConcatSubAccountCollateralTypeCodes(outstandingCredit.getSubAccount()))
-                .setCreditPosition(LocalDate.now().getMonth().getValue());
+                .setCreditPosition(concatenatedCreditPositions)
+                .setM0(getCreditPositionInt(m0, 0))
+                .setM1(getCreditPositionInt(replacedConcatenatedCreditPositions, 0))
+                .setM2(getCreditPositionInt(replacedConcatenatedCreditPositions, 1))
+                .setM3(getCreditPositionInt(replacedConcatenatedCreditPositions, 2))
+                .setM4(getCreditPositionInt(replacedConcatenatedCreditPositions, 3))
+                .setM5(getCreditPositionInt(replacedConcatenatedCreditPositions, 4))
+                .setM6(getCreditPositionInt(replacedConcatenatedCreditPositions, 5))
+                .setM7(getCreditPositionInt(replacedConcatenatedCreditPositions, 6))
+                .setM8(getCreditPositionInt(replacedConcatenatedCreditPositions, 7))
+                .setM9(getCreditPositionInt(replacedConcatenatedCreditPositions, 8))
+                .setM10(getCreditPositionInt(replacedConcatenatedCreditPositions, 9))
+                .setM11(getCreditPositionInt(replacedConcatenatedCreditPositions, 10));
             creditBureauInfoDetailsJpaRepository.save(creditBureauInfoDetails);
           }));
     }
+  }
+
+  private Integer getCreditPositionInt(String str, Integer num) {
+    if(StringUtils.isBlank(str)) return null;
+    str = Character.toString(str.charAt(num));
+    try {
+      return Integer.parseInt(str);
+    } catch (Exception e) {
+      return -1;
+    }
+  }
+
+  private String getConcatSubAccountCreditPositions(List<List<SubAccount>> subAccount) {
+    List<String> list = new ArrayList<>();
+    subAccount.forEach(subAccounts -> subAccounts.forEach(sa -> list.addAll(sa.getCreditPosition())));
+    return list.toString();
   }
 
   private String getConcatSubAccountCollateralTypeCodes(List<List<SubAccount>> subAccount) {
@@ -340,9 +374,11 @@ public class BureauChecksService implements BaseRiskChecksService {
     return new ExperianCCRISSearchRequest()
         .setRequest(new ExperianCCRISSearchRequestBody()
             .setCountry(EXPERIAN_REQUESTED_COUNTRY)
-            .setEntityName(borrower.getName())
+//            .setEntityName(borrower.getName())
+            .setEntityName("COURTS NAME IRISSU 1")
             .setDOB(borrower.getPersonalData().getBirthDate())
-            .setEntityId(borrower.getBorrowerNIC())
+//            .setEntityId(borrower.getBorrowerNIC())
+            .setEntityId("740424125653")
             .setEntityId2("")
             .setGroupCode(experianCCRISGroupCode)
             .setProductType(experianCCRISProductType));

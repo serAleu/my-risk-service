@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -49,11 +50,14 @@ public interface CreditJpaRepository extends BaseStorageJpaRepository<Credit> {
 
   Credit findByContractNumberIgnoreCase(String contractNumber);
 
-  @Query(value = "select count(cr) from Credit cr "
-      + "where cr.borrower_id = ?1 and cr.status = '2000'", nativeQuery = true)
-  Long countFinishedCredits(Long borrowerId);
+//  @Query(value = "select count(cr) from Credit cr "
+//      + "where cr.borrower_id = ?1 and cr.status = '2000'", nativeQuery = true)
+//  Long countFinishedCredits(Long borrowerId);
 
-  @Query(value = "select count(cr) from Credit cr "
-      + "where cr.borrower_id = ?1 and cr.status <> '2000'", nativeQuery = true)
-  Long countNotFinishedCredits(Long borrowerId);
+  @Query(value = "select count(id) from \"my-back\".credit where borrower_id = :borrowerId and status = '2000'", nativeQuery = true)
+  Long countFinishedCredits(@Param("borrowerId") Long borrowerId);
+
+  @Query(value = "select count(id) from \"my-back\".credit where borrower_id = :borrowerId and status != '2000'", nativeQuery = true)
+  Long countNotFinishedCredits(@Param("borrowerId") Long borrowerId);
+
 }

@@ -62,8 +62,8 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     Optional<Borrower> borrower = borrowerJpaRepository.findBorrowerByPersonalDataMobilePhone(phoneNum);
     if (borrower.isPresent()) {
       Long borrowerId = borrower.get().getId();
-//      numberOfNotFinishedCredits = creditJpaRepository.countNotFinishedCredits(borrowerId);
-//      numberOfFinishedCredits = creditJpaRepository.countFinishedCredits(borrowerId);
+      numberOfNotFinishedCredits = creditJpaRepository.countNotFinishedCredits(borrowerId);
+      numberOfFinishedCredits = creditJpaRepository.countFinishedCredits(borrowerId);
       clientBlLevelJpaRepository.save(new ClientBlLevelRiskJpaEntity()
           .setBorrowerId(borrowerId)
           .setPhone(phoneNum)
@@ -73,6 +73,7 @@ public class BlacklistChecksService implements BaseRiskChecksService {
         LocalDateTime.now());
     RiskResponseJpaEntity response = blacklistPhoneRule.execute(new BlacklistPhoneContext(entities, numberOfNotFinishedCredits.intValue(), numberOfFinishedCredits.intValue()));
     response.setPhone(request.getPhone());
+    response.setRequestId(request.getId());
     return response;
   }
 

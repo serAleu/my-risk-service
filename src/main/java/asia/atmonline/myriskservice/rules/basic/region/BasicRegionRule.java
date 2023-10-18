@@ -25,7 +25,8 @@ public class BasicRegionRule extends BaseBasicRule<BasicRegionContext> {
   public RiskResponseJpaEntity execute(BasicRegionContext context) {
     RiskResponseJpaEntity response = super.execute(context);
     context.getDictionaryAddressCities().forEach(dictionaryAddressCity -> {
-      if (!dictionaryAddressCity.isProhibited() && (
+      if (context.getClientAddressCity() != null && context.getClientAddressCity().getState().getId() != null
+          && !dictionaryAddressCity.isProhibited() && (
           Objects.equals(context.getClientAddressCity().getState().getId(), dictionaryAddressCity.getState().getId())
               || context.getClientAddressCity().getNameEn().equalsIgnoreCase(dictionaryAddressCity.getNameEn())
               || context.getClientAddressCity().getNameMy().equalsIgnoreCase(dictionaryAddressCity.getNameMy()))) {
