@@ -1,8 +1,10 @@
 package asia.atmonline.myriskservice.config;
 
-import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
+import asia.atmonline.myriskservice.consumer.payload.RequestPayload;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.sqs.AmazonSQSAsync;
+import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.awspring.cloud.autoconfigure.sqs.SqsProperties.Listener;
 import io.awspring.cloud.sqs.config.SqsBootstrapConfiguration;
 import io.awspring.cloud.sqs.config.SqsMessageListenerContainerFactory;
 import io.awspring.cloud.sqs.listener.acknowledgement.AcknowledgementOrdering;
@@ -11,15 +13,41 @@ import io.awspring.cloud.sqs.operations.SqsTemplate;
 import io.awspring.cloud.sqs.operations.TemplateAcknowledgementMode;
 import io.awspring.cloud.sqs.support.converter.SqsMessagingMessageConverter;
 import java.time.Duration;
+import org.springframework.cloud.aws.core.env.ResourceIdResolver;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.converter.MessageConverter;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
 @Import(SqsBootstrapConfiguration.class)
 @Configuration
 public class AwsConfig {
+
+  @Bean
+  public QueueMessagingTemplate queueMessagingTemplate(AmazonSQSAsync amazonSQSAsync, MessageConverter messageConverter) {
+    return new QueueMessagingTemplate(amazonSQSAsync, (ResourceIdResolver) null, messageConverter);
+  }
+
+  @Bean
+  @Primary
+  public SqsAsyncClient sqsAsyncClient() {
+    return SqsAsyncClient.builder()
+        .region(Region.AP_SOUTHEAST_1)
+        .build();
+  }
+
+  @Bean
+  @Primary
+  public AmazonSQSAsync awsSQSAsync() {
+    return AmazonSQSAsyncClientBuilder.standard()
+        .withRegion(Regions.AP_SOUTHEAST_1)
+        .build();
+  }
 
   @Bean
   public SqsMessagingMessageConverter getSqsMessagingMessageConverter(ObjectMapper mapper) {
@@ -41,14 +69,9 @@ public class AwsConfig {
         .sqsAsyncClient(sqsAsyncClient)
         .configure(options -> options
             .acknowledgementMode(TemplateAcknowledgementMode.MANUAL)
-            .defaultPayloadClass(RiskResponseJpaEntity.class)
+            .defaultPayloadClass(RequestPayload.class)
         )
         .build();
-  }
-
-  @Bean
-  public Listener listener() {
-    return new Listener();
   }
 
   @Bean
@@ -67,5 +90,15 @@ public class AwsConfig {
         .build();
   }
 
+  @Bean
+  protected MessageConverter messageConverter(ObjectMapper objectMapper) {
 
+    var converter = new MappingJackson2MessageConverter();
+    converter.setObjectMapper(objectMapper);
+    // Serialization support:
+    converter.setSerializedPayloadClass(String.class);
+    // Deserialization support: (suppress "contentType=application/json" header requirement)
+    converter.setStrictContentTypeMatch(false);
+    return converter;
+  }
 }

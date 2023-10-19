@@ -1,12 +1,13 @@
 package asia.atmonline.myriskservice.producers;
 
 import asia.atmonline.myriskservice.consumer.payload.ResponsePayload;
-import io.awspring.cloud.sqs.operations.SendResult;
-import io.awspring.cloud.sqs.operations.SqsTemplate;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
+import org.springframework.cloud.aws.messaging.core.SqsMessageHeaders;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,16 +17,14 @@ public class DefaultProducer {
 
   public static final String HEADER_CONTENT_TYPE_VALUE = "application/json;charset=UTF-8";
   public static final String HEADER_CONTENT_TYPE = "contentType";
-
-  private final SqsTemplate template;
+  private final QueueMessagingTemplate queueMessagingTemplate;
 
   public void send(ResponsePayload response, String queueName) {
-    Message<?> message = MessageBuilder.withPayload(response)
-        .setHeader(HEADER_CONTENT_TYPE, HEADER_CONTENT_TYPE_VALUE)
-        .build();
-
-    SendResult<?> result = template.send(queueName, message);
-    log.info(result.toString());
+    log.info("RequestPayload = " + response.toString());
+    Map<String, Object> headers = new HashMap<>();
+    headers.put(HEADER_CONTENT_TYPE, HEADER_CONTENT_TYPE_VALUE);
+    MessageHeaders headersCustom = new SqsMessageHeaders(headers);
+    queueMessagingTemplate.convertAndSend(queueName, response, headersCustom);
   }
 
 }
