@@ -80,7 +80,7 @@ public class AwsConfig {
     return SqsMessageListenerContainerFactory
         .builder()
         .configure(options -> options
-            .acknowledgementMode(AcknowledgementMode.ALWAYS)
+            .acknowledgementMode(AcknowledgementMode.ON_SUCCESS)
             .acknowledgementInterval(Duration.ofSeconds(3))
             .acknowledgementThreshold(5)
             .acknowledgementOrdering(AcknowledgementOrdering.ORDERED)
