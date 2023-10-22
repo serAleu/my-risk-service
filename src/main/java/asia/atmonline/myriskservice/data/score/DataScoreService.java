@@ -19,14 +19,13 @@ public class DataScoreService {
 
   private final RepositoryScoreMy repositoryScoreMy;
   private final ScoreResponseJpaRepository scoreResponseJpaRepository;
-  private static final Long SCORE_NODE_ID = 1L;
 
   public ScoreResponseRiskJpaEntity getScoreModelResponse(RiskRequestJpaEntity request, String scoreModel, ProductCode code) {
     try {
-      request.setScoreNodeId(SCORE_NODE_ID);
+      request.setScoreNodeId(request.getScoreNodeId());
       String scoreModelResponse = repositoryScoreMy.executeScoreSqlQuery(scoreModel, request, code);
       ScoreResponseRiskJpaEntity scoreResponseJpaEntity = rootMapper().readValue(scoreModelResponse, ScoreResponseRiskJpaEntity.class);
-      scoreResponseJpaEntity.setScore_node_id(SCORE_NODE_ID.intValue());
+      scoreResponseJpaEntity.setScore_node_id(request.getScoreNodeId().intValue());
       return scoreResponseJpaRepository.save(scoreResponseJpaEntity);
     } catch (Exception e) {
       log.error("Error while score model executing. credit_application_id = " + request.getApplicationId() + " " + e.getMessage());

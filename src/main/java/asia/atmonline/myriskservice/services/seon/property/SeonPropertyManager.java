@@ -65,56 +65,42 @@ public class SeonPropertyManager {
   }
 
   public Integer getSeonFraudTimeout() {
-//    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToTimeout);
-    Optional<SystemProperty> property = null;
+    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToTimeout);
     return property.map(systemProperty -> Integer.parseInt(systemProperty.getValue())).orElseGet(() -> seonFraudDefaultTimeout);
   }
 
   public Long getSeonFraudRequestLimit() {
-//    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToRequestLimit);
-    Optional<SystemProperty> property = null;
+    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToRequestLimit);
     return property.map(systemProperty -> Long.parseLong(systemProperty.getValue())).orElseGet(() -> seonFraudDefaultRequestLimit);
   }
 
-  public String getSeonFraudIpApiVersion() {
-//    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToIpApiVersion);
-    Optional<SystemProperty> property = null;
-    return property.map(SystemProperty::getValue).orElseGet(() -> seonFraudDefaultIpApiVersion);
-  }
-
   public Boolean getSeonFraudEmailEnable() {
-//    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToEmailEnable);
-    Optional<SystemProperty> property = null;
+    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToEmailEnable);
     return property.map(systemProperty -> Boolean.parseBoolean(systemProperty.getValue())).orElseGet(() -> seonFraudDefaultEmailEnable);
   }
 
   public String getSeonFraudEmailApiVersion() {
-//    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToEmailApiVersion);
-    Optional<SystemProperty> property = null;
+    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToEmailApiVersion);
     return property.map(SystemProperty::getValue).orElseGet(() -> seonFraudDefaultEmailApiVersion);
   }
 
   public Boolean getSeonFraudPhoneEnable() {
-//    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToPhoneEnable);
-    Optional<SystemProperty> property = null;
+    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToPhoneEnable);
     return property.map(systemProperty -> Boolean.parseBoolean(systemProperty.getValue())).orElseGet(() -> seonFraudDefaultPhoneEnable);
   }
 
   public String getSeonFraudPhoneApiVersion() {
-//    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToPhoneApiVersion);
-    Optional<SystemProperty> property = null;
+    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToPhoneApiVersion);
     return property.map(SystemProperty::getValue).orElseGet(() -> seonFraudDefaultPhoneApiVersion);
   }
 
   public Boolean getSeonFraudPhoneStopFactorEnable() {
-//    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToPhoneStopFactorEnable);
-    Optional<SystemProperty> property = null;
+    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToPhoneStopFactorEnable);
     return property.map(systemProperty -> Boolean.parseBoolean(systemProperty.getValue())).orElseGet(() -> seonFraudDefaultPhoneStopFactorEnable);
   }
 
   public Boolean getSeonFraudFingerprintEnable() {
-//    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToFingerprintEnable);
-    Optional<SystemProperty> property = null;
+    Optional<SystemProperty> property = systemPropertyJpaRepository.findByPropertyKey(seonFraudPathToFingerprintEnable);
     return property.map(systemProperty -> Boolean.parseBoolean(systemProperty.getValue())).orElseGet(() -> seonFraudDefaultFingerprintEnable);
   }
 

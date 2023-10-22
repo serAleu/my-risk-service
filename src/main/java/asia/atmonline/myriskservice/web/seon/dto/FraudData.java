@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.Data;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -37,5 +39,10 @@ public class FraudData {
 
   @JsonProperty("applied_rules")
   private List<AppliedRulesItem> appliedRules;
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+  }
 
 }
