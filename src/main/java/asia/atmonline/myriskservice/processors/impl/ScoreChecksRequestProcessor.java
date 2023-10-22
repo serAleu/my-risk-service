@@ -29,7 +29,7 @@ public class ScoreChecksRequestProcessor extends BaseRequestProcessor {
 
   @Override
   public boolean isSuitable(RiskRequestJpaEntity request) {
-    return request != null && SCORE.equals(request.getCheckType()) && request.getApplicationId() != null;
+    return request != null && SCORE.equals(request.getCheckType()) && request.getApplicationId() != null && request.getScoreNodeId() != null;
   }
 
   @Override

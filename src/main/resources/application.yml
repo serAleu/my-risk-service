@@ -34,7 +34,7 @@ using-mocks:
   deduplication: ${USING_MOCKS_DEDUP:false}
   final: ${USING_MOCKS_FINAL:false}
   score: ${USING_MOCKS_SCORE:false}
-  seon: ${USING_MOCKS_SEON:true}
+  seon: ${USING_MOCKS_SEON:false}
 
 rules:
   basic:
@@ -163,20 +163,20 @@ seon-fraud:
   license-key: ${SEON_LICENSE_KEY:1856407c-4c65-43b7-b597-70ed5f228b0d}
   base-url: ${SEON_BASE_URL:https://api.seon.io}
   paths-to-properties:
-    timeout: ${DMS_SEON_TIMEOUT:dms.seon.timeout}
-    requests-limit: ${DMS_SEON_REQUESTS_LIMIT:dms.seon.requests.limit}
+    timeout: ${DMS_SEON_TIMEOUT:dms.seon.fraud.timeout}
+    requests-limit: ${DMS_SEON_REQUESTS_LIMIT:dms.seon.existing.request.within}
     ip:
       api-version: ${DMS_SEON_IP_API_VERSION:dms.seon.ip.api.version}
     email:
-      enable: ${DMS_SEON_EMAIL_ENABLE:dms.seon.email.enable}
+      enable: ${DMS_SEON_EMAIL_ENABLE:dms.seon.email.enabled}
       api-version: ${DMS_SEON_EMAIL_API_VERSION:dms.seon.email.api.version}
     phone:
-      enable: ${DMS_SEON_PHONE_ENABLE:dms.seon.phone.enable}
+      enable: ${DMS_SEON_PHONE_ENABLE:dms.seon.phone.enabled}
       api-version: ${DMS_SEON_PHONE_API_VERSION:dms.seon.phone.api.version}
       stop-factor:
-        enable: ${DMS_SEON_PHONE_STOP_FACTOR_ENABLE:dms.seon.phone.stop.factor.enable}
+        enable: ${DMS_SEON_PHONE_STOP_FACTOR_ENABLE:dms.seon.phone.stop.factor.enabled}
     fingerprint:
-      enable: ${DMS_SEON_FINGERPRINT_ENABLE:dms.seon.fingerprint.enable}
+      enable: ${DMS_SEON_FINGERPRINT_ENABLE:dms.seon.device.fingerprint.enabled}
   default:
     timeout: ${DEFAULT_SEON_TIMEOUT:30000}
     requests-limit: ${DEFAULT_SEON_REQUESTS_LIMIT:30}

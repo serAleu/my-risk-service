@@ -1,22 +1,31 @@
 package asia.atmonline.myriskservice.data.storage.entity.property.impl;
 
-import asia.atmonline.myriskservice.data.storage.entity.property.Property;
+import asia.atmonline.myriskservice.data.storage.entity.BaseStorageEntity;
 import asia.atmonline.myriskservice.enums.property.PropertyType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "system_property",
-    indexes = @Index(name = "idx_property_key", columnList = "property_key"), schema = "my-back")
-public class SystemProperty extends Property {
+@Table(name = "system_property",schema = "my-back")
+@NoArgsConstructor
+@Getter
+@Setter
+public class SystemProperty extends BaseStorageEntity {
 
-  public SystemProperty() {
-    super();
-  }
+  @Column(name = "property_key")
+  private String propertyKey;
 
-  public SystemProperty(String key, PropertyType type, Object value) {
-    super(key, type, value);
-  }
+  @Column(name = "type")
+  @Enumerated(EnumType.STRING)
+  private PropertyType type;
+
+  @Column(name = "value", columnDefinition = "text")
+  private String value;
 
 }
