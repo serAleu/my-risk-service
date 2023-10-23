@@ -11,5 +11,5 @@ public interface BlacklistPassportNumberRiskJpaRepository extends BaseRiskJpaRep
 
   boolean existsByPassportNumberInAndExpiredAtAfter(List<String> passportNumbers,  LocalDateTime after);
 
-  List<BlacklistPassportNumberRiskJpaEntity> findByPassportNumberAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(String passportNumber, Long ruleId, LocalDateTime after);
+  List<BlacklistPassportNumberRiskJpaEntity> findByPassportNumberAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(String passportNumber, String blReason, LocalDateTime after);
 }

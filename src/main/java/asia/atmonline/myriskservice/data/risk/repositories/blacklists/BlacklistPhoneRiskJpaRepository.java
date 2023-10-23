@@ -14,7 +14,7 @@ public interface BlacklistPhoneRiskJpaRepository extends BaseRiskJpaRepository<B
 
   boolean existsByPhoneInAndSourceInAndExpiredAtAfter(List<String> phones, List<BlacklistSource> sources, LocalDateTime after);
 
-  List<BlacklistPhoneRiskJpaEntity> findByPhoneAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(String phone, Long ruleId, LocalDateTime after);
+  List<BlacklistPhoneRiskJpaEntity> findByPhoneAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(String phone, String blReason, LocalDateTime after);
 
   List<BlacklistPhoneRiskJpaEntity> findByPhoneAndExpiredAtAfterOrderByAddedAtDesc(String phone, LocalDateTime after);
 

@@ -1,30 +1,28 @@
 package asia.atmonline.myriskservice.data.risk.entity.blacklists;
 
-import asia.atmonline.myriskservice.data.risk.entity.BaseRiskJpaEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "blacklist_rule")
 @Setter
 @Getter
-public class BlacklistRule extends BaseRiskJpaEntity {
+@NoArgsConstructor
+@Accessors(chain = true)
+public class BlacklistRule {
 
-  //  @ManyToOne(fetch = FetchType.EAGER)
-//  @JoinColumn(name = "created_by")
+  @Id
+  @Column(name = "id")
+  private String id;
+
   @Column(name = "created_by")
   private Long createdBy;
-
-//  @Column(name = "created_at")
-//  private LocalDateTime createdAt;
-
-  @Column(name = "rule_id")
-  private Long ruleId;
 
   @Column(name = "rule_version")
   private String ruleVersion;
@@ -44,15 +42,6 @@ public class BlacklistRule extends BaseRiskJpaEntity {
   @Column(name = "add_bank_account", nullable = false, columnDefinition = "bool default false")
   private boolean addBankAccount;
 
-//  @Column(name = "add_card_number", nullable = false, columnDefinition = "bool default false")
-//  private boolean addCardNumber;
-
-  @Transient
-  public String getRuleName() {
-    return days + StringUtils.SPACE + "(" + ruleId + ")";
-  }
-
-  @Override
   public String repositoryName() {
     return "blacklistRuleJpaRepository";
   }

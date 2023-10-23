@@ -72,6 +72,12 @@ public class Borrower extends UserAccount {
   @Column(name = "juicy_score_session_id")
   private String juicyScoreSessionId;
 
+  @Column(name = "seon_session")
+  private String seonSession;
+
+  @Column(name = "seon_session_id")
+  private String seonSessionId;
+
   @Column(name = "extra_attributes")
   @JdbcTypeCode(SqlTypes.JSON)
   private Map<ExtraAttributes, String> attributes;

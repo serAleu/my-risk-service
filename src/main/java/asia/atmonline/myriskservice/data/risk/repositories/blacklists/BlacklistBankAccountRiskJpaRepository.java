@@ -11,6 +11,6 @@ public interface BlacklistBankAccountRiskJpaRepository extends BaseRiskJpaReposi
 
   boolean existsByBankAccountInAndExpiredAtAfter(List<String> bankAccounts, LocalDateTime after);
 
-  List<BlacklistBankAccountRiskJpaEntity> findByBankAccountAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(String account, Long ruleId, LocalDateTime after);
+  List<BlacklistBankAccountRiskJpaEntity> findByBankAccountAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(String account, String blReason, LocalDateTime after);
 
 }

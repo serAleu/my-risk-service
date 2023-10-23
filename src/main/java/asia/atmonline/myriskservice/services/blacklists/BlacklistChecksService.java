@@ -122,27 +122,30 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     form.setPassportNumber(borrower.getBorrowerNIC());
     form.setPhone(borrower.getBorrowerPhone());
     form.setProductCode(ProductCode.IL);
-    form.setRuleId((long) code.getRuleId());
-    form.setCode(code);
+    form.setId(code.name());
     form.setCreditApplicationId(applicationId);
     save(form, SYSTEM, null);
   }
 
   @Transactional
   public void save(BlacklistRecordForm form, BlacklistSource source, Long userId) {
-    if (form.getRuleId() == null) {
+    if (form.getId() == null) {
       return;
     }
 
-    BlacklistRule rule = blacklistRuleJpaRepository.findByRuleId(form.getRuleId());
+    Optional<BlacklistRule> optionalBlacklistRule = blacklistRuleJpaRepository.findById(form.getId());
+    BlacklistRule rule = null;
+    if(optionalBlacklistRule.isPresent()) {
+      rule = optionalBlacklistRule.get();
+    }
     if (rule == null || rule.getDays() == null || rule.getDays() <= 0) {
       return;
     }
 
-    Long ruleId = rule.getId();
+    String blReason = rule.getId();
     if (StringUtils.isNotEmpty(form.getPassportNumber()) && rule.isAddIdNumber()) {
-      List<BlacklistPassportNumberRiskJpaEntity> blackListIdNumbers = blacklistPassportNumberJpaRepository.findByPassportNumberAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(
-          form.getPassportNumber(), ruleId, LocalDateTime.now());
+      List<BlacklistPassportNumberRiskJpaEntity> blackListIdNumbers = blacklistPassportNumberJpaRepository.findByPassportNumberAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(
+          form.getPassportNumber(), blReason, LocalDateTime.now());
       BlacklistPassportNumberRiskJpaEntity entity;
       if (CollectionUtils.isNotEmpty(blackListIdNumbers)) {
         entity = blackListIdNumbers.get(0);
@@ -154,8 +157,8 @@ public class BlacklistChecksService implements BaseRiskChecksService {
       saveIdNumToBl(entity, form, source, userId);
     }
     if (StringUtils.isNotEmpty(form.getPhone()) && rule.isAddPhone()) {
-      List<BlacklistPhoneRiskJpaEntity> blackListPhones = blacklistPhoneJpaRepository.findByPhoneAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(
-          form.getPhone(), ruleId, LocalDateTime.now());
+      List<BlacklistPhoneRiskJpaEntity> blackListPhones = blacklistPhoneJpaRepository.findByPhoneAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(
+          form.getPhone(), blReason, LocalDateTime.now());
       BlacklistPhoneRiskJpaEntity entity;
       if (CollectionUtils.isNotEmpty(blackListPhones)) {
         entity = blackListPhones.get(0);
@@ -168,8 +171,8 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     }
     if (StringUtils.isNotEmpty(form.getBankAccount()) && rule.isAddBankAccount()) {
       BlacklistBankAccountRiskJpaEntity entity;
-      List<BlacklistBankAccountRiskJpaEntity> blackListBankAccounts = blacklistBankAccountJpaRepository.findByBankAccountAndRuleIdAndExpiredAtAfterOrderByAddedAtDesc(
-          form.getBankAccount(), ruleId, LocalDateTime.now());
+      List<BlacklistBankAccountRiskJpaEntity> blackListBankAccounts = blacklistBankAccountJpaRepository.findByBankAccountAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(
+          form.getBankAccount(), blReason, LocalDateTime.now());
       if (CollectionUtils.isNotEmpty(blackListBankAccounts)) {
         entity = blackListBankAccounts.get(0);
       } else {
@@ -182,20 +185,23 @@ public class BlacklistChecksService implements BaseRiskChecksService {
   }
 
   private void getFilledBlEntity(BlacklistBaseRiskJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
-    final BlacklistRule rule = blacklistRuleJpaRepository.findByRuleId(form.getRuleId());
-    if (Objects.nonNull(entity.getId())) {
-      entity.setExpiredAt(entity.getExpiredAt().plusDays(rule.getDays()));
-    } else {
-      final LocalDateTime addedAt = LocalDateTime.now();
-      final LocalDateTime expiredAt = addedAt.plusDays(rule.getDays());
-      entity.setAddedAt(addedAt);
-      entity.setExpiredAt(expiredAt);
+    Optional<BlacklistRule> optionalBlacklistRule = blacklistRuleJpaRepository.findById(form.getId());
+    if(optionalBlacklistRule.isPresent()) {
+      BlacklistRule rule = optionalBlacklistRule.get();
+      if (Objects.nonNull(entity.getId())) {
+        entity.setExpiredAt(entity.getExpiredAt().plusDays(rule.getDays()));
+      } else {
+        final LocalDateTime addedAt = LocalDateTime.now();
+        final LocalDateTime expiredAt = addedAt.plusDays(rule.getDays());
+        entity.setAddedAt(addedAt);
+        entity.setExpiredAt(expiredAt);
+      }
+      entity.setBlLevel(defineBlLevel(form.getProductCode()));
+      entity.setRule(rule);
+      entity.setAddedBy(userId);
+      entity.setSource(source);
+      entity.setBlReason(form.getId());
     }
-    entity.setBlLevel(defineBlLevel(form.getProductCode()));
-    entity.setRule(rule);
-    entity.setAddedBy(userId);
-    entity.setSource(source);
-    entity.setBlReason(form.getCode().name());
   }
 
   private void saveIdNumToBl(BlacklistPassportNumberRiskJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
