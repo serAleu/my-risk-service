@@ -12,11 +12,9 @@ import lombok.Setter;
 public class BasicOccupationContext extends BaseBasicContext {
 
   private final OccupationTypeDictionary clientOccupationType;
-  private final List<OccupationTypeDictionary> occupationTypeDictionaries;
 
-  public BasicOccupationContext(RiskResponseJpaEntity response, boolean isFinalChecks, OccupationTypeDictionary clientOccupationType, List<OccupationTypeDictionary> occupationTypeDictionaries) {
+  public BasicOccupationContext(RiskResponseJpaEntity response, boolean isFinalChecks, OccupationTypeDictionary clientOccupationType) {
     super(response, isFinalChecks);
     this.clientOccupationType = clientOccupationType;
-    this.occupationTypeDictionaries = occupationTypeDictionaries;
   }
 }

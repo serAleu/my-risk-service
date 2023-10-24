@@ -10,9 +10,6 @@ import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.Occupati
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.borrower.BorrowerJpaRepository;
-import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryAddressCityJpaRepository;
-import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryOccupationTypeJpaRepository;
-import asia.atmonline.myriskservice.data.storage.repositories.property.DictionaryWorkingIndustryJpaRepository;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicContext;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
 import asia.atmonline.myriskservice.services.BaseRiskChecksService;
@@ -31,9 +28,6 @@ public class BasicChecksService implements BaseRiskChecksService {
   private final List<? extends BaseBasicRule<? extends BaseBasicContext>> rules;
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
   private final BorrowerJpaRepository borrowerJpaRepository;
-  private final DictionaryAddressCityJpaRepository dictionaryAddressCityJpaRepository;
-  private final DictionaryWorkingIndustryJpaRepository dictionaryWorkingIndustryJpaRepository;
-  private final DictionaryOccupationTypeJpaRepository dictionaryOccupationTypeJpaRepository;
 
   @Value("${rules.basic.age-2-low}")
   private Integer rulesBasicPermittedAge2Low;
@@ -56,7 +50,8 @@ public class BasicChecksService implements BaseRiskChecksService {
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
     if (borrower.isPresent()) {
       Integer age =
-          borrower.get().getPersonalData() != null && borrower.get().getPersonalData().getBirthDate() != null ? Period.between(borrower.get().getPersonalData().getBirthDate(), LocalDate.now()).getYears() : null;
+          borrower.get().getPersonalData() != null && borrower.get().getPersonalData().getBirthDate() != null ? Period.between(
+              borrower.get().getPersonalData().getBirthDate(), LocalDate.now()).getYears() : null;
       WorkingIndustryDictionary clientWorkingIndustry =
           borrower.get().getEmploymentData() != null && borrower.get().getEmploymentData().getWorkingIndustry() != null ? borrower.get()
               .getEmploymentData().getWorkingIndustry() : null;
@@ -66,15 +61,12 @@ public class BasicChecksService implements BaseRiskChecksService {
       Long income =
           borrower.get().getEmploymentData() != null && borrower.get().getEmploymentData().getIncome() != null ? borrower.get().getEmploymentData()
               .getIncome().longValue() : null;
-      AddressCityDictionary registrationsAddressData = borrower.get().getResidenceCity();
-      List<AddressCityDictionary> addressCityDictionaries = dictionaryAddressCityJpaRepository.findAll();
-      List<OccupationTypeDictionary> occupationTypeDictionaries = dictionaryOccupationTypeJpaRepository.findAll();
-      List<WorkingIndustryDictionary> workingIndustryDictionaries = dictionaryWorkingIndustryJpaRepository.findAll();
+      AddressCityDictionary residencyCity = borrower.get().getResidenceCity();
       for (BaseBasicRule rule : rules) {
         response = rule.execute(
-            rule.getContext(response, isFinalCheck, addressCityDictionaries, occupationTypeDictionaries, workingIndustryDictionaries, age,
+            rule.getContext(response, isFinalCheck, age,
                 rulesBasicPermittedAge2High, rulesBasicPermittedAge2Low, clientWorkingIndustry, clientOccupationType, income,
-                rulesBasicPermittedIncome, registrationsAddressData));
+                rulesBasicPermittedIncome, residencyCity));
         if (response != null && REJECT.equals(response.getDecision())) {
           if (response.getRejectionReason() != null) {
             rule.saveToBlacklists(request.getApplicationId(), borrower.get().getId(), response.getRejectionReason());

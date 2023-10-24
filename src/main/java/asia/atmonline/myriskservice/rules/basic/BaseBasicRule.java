@@ -8,7 +8,6 @@ import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.Occupati
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.rules.BaseRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
-import java.util.List;
 
 public abstract class BaseBasicRule<P extends BaseBasicContext> extends BaseRule<P> {
 
@@ -21,8 +20,17 @@ public abstract class BaseBasicRule<P extends BaseBasicContext> extends BaseRule
     return getApprovedResponse(context.getRiskResponseJpaEntity().getApplicationId(), BASIC, context.getRiskResponseJpaEntity());
   }
 
-  public abstract P getContext(RiskResponseJpaEntity response, boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
-      List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
-      WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData);
+  public abstract P getContext(
+      RiskResponseJpaEntity response,
+      boolean isFinalChecks,
+      Integer age,
+      Integer permittedHighAge,
+      Integer permittedLowAge,
+      WorkingIndustryDictionary clientWorkingIndustry,
+      OccupationTypeDictionary clientOccupationType,
+      Long income,
+      Long permittedIncome,
+      AddressCityDictionary registrationsAddressData
+  );
 }
 

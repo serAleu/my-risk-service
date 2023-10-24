@@ -10,8 +10,6 @@ import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.Occupati
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
-import java.util.List;
-import java.util.Objects;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,27 +22,18 @@ public class BasicRegionRule extends BaseBasicRule<BasicRegionContext> {
   @Override
   public RiskResponseJpaEntity execute(BasicRegionContext context) {
     RiskResponseJpaEntity response = super.execute(context);
-    context.getDictionaryAddressCities().forEach(dictionaryAddressCity -> {
-      if (context.getClientAddressCity() != null && context.getClientAddressCity().getState().getId() != null
-          && !dictionaryAddressCity.isProhibited() && (
-          Objects.equals(context.getClientAddressCity().getState().getId(), dictionaryAddressCity.getState().getId())
-              || context.getClientAddressCity().getNameEn().equalsIgnoreCase(dictionaryAddressCity.getNameEn())
-              || context.getClientAddressCity().getNameMy().equalsIgnoreCase(dictionaryAddressCity.getNameMy()))) {
-        if (context.isFinalChecks) {
-          response.setRejectionReason(REGION_F);
-        } else {
-          response.setRejectionReason(REGION);
-        }
-        response.setDecision(REJECT);
-      }
-    });
+    if (context.getClientAddressCity().isProhibited()) {
+      response.setRejectionReason(context.isFinalChecks ? REGION_F : REGION);
+      response.setDecision(REJECT);
+    }
     return response;
   }
 
   @Override
-  public BasicRegionContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
-      List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
-      WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData) {
-    return new BasicRegionContext(response, isFinalChecks, registrationsAddressData, dictionaryAddressCities);
+  public BasicRegionContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, Integer age, Integer permittedHighAge,
+      Integer permittedLowAge,
+      WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome,
+      AddressCityDictionary residencyCity) {
+    return new BasicRegionContext(response, isFinalChecks, residencyCity);
   }
 }

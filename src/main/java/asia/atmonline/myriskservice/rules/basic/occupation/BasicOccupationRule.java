@@ -10,7 +10,6 @@ import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.Occupati
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,27 +22,18 @@ public class BasicOccupationRule extends BaseBasicRule<BasicOccupationContext> {
   @Override
   public RiskResponseJpaEntity execute(BasicOccupationContext context) {
     RiskResponseJpaEntity response = super.execute(context);
-    context.getOccupationTypeDictionaries().forEach(dictionaryOccupationType -> {
-      if (!dictionaryOccupationType.getActive()
-          && (dictionaryOccupationType.getNameEn().equalsIgnoreCase(context.getClientOccupationType().getNameEn())
-          || dictionaryOccupationType.getNameMy().equalsIgnoreCase(context.getClientOccupationType().getNameMy()))) {
-        if (context.isFinalChecks) {
-          response.setRejectionReason(OCCUPATION_F);
-        } else {
-          response.setRejectionReason(OCCUPATION);
-        }
-        response.setDecision(REJECT);
-      }
-    });
+    if (!context.getClientOccupationType().getActive()) {
+      response.setRejectionReason(context.isFinalChecks ? OCCUPATION_F : OCCUPATION);
+      response.setDecision(REJECT);
+    }
     return response;
   }
 
   @Override
-  public BasicOccupationContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities,
-      List<OccupationTypeDictionary> occupationTypeDictionaries,
-      List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
+  public BasicOccupationContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, Integer age, Integer permittedHighAge,
+      Integer permittedLowAge,
       WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome,
       AddressCityDictionary registrationsAddressData) {
-    return new BasicOccupationContext(response, isFinalChecks, clientOccupationType, occupationTypeDictionaries);
+    return new BasicOccupationContext(response, isFinalChecks, clientOccupationType);
   }
 }

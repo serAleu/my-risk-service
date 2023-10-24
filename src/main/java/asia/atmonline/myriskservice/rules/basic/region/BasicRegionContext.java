@@ -12,11 +12,9 @@ import lombok.Setter;
 public class BasicRegionContext extends BaseBasicContext {
 
   private final AddressCityDictionary clientAddressCity;
-  private final List<AddressCityDictionary> dictionaryAddressCities;
 
-  public BasicRegionContext(RiskResponseJpaEntity response, boolean isFinalChecks, AddressCityDictionary clientAddressCity, List<AddressCityDictionary> dictionaryAddressCities) {
+  public BasicRegionContext(RiskResponseJpaEntity response, boolean isFinalChecks, AddressCityDictionary clientAddressCity) {
     super(response, isFinalChecks);
     this.clientAddressCity = clientAddressCity;
-    this.dictionaryAddressCities = dictionaryAddressCities;
   }
 }

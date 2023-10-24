@@ -10,7 +10,6 @@ import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.Occupati
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,7 +22,7 @@ public class BasicIncome2LowRule extends BaseBasicRule<BasicIncome2LowContext> {
   @Override
   public RiskResponseJpaEntity execute(BasicIncome2LowContext context) {
     RiskResponseJpaEntity response = super.execute(context);
-    if(context.getIncome() == null || context.getPermittedIncome() > context.getIncome()) {
+    if (context.getIncome() == null || context.getPermittedIncome() > context.getIncome()) {
       if (context.isFinalChecks) {
         response.setRejectionReason(INCOME2LOW_F);
       } else {
@@ -35,9 +34,10 @@ public class BasicIncome2LowRule extends BaseBasicRule<BasicIncome2LowContext> {
   }
 
   @Override
-  public BasicIncome2LowContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities, List<OccupationTypeDictionary> occupationTypeDictionaries,
-      List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
-      WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome, AddressCityDictionary registrationsAddressData) {
+  public BasicIncome2LowContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, Integer age, Integer permittedHighAge,
+      Integer permittedLowAge,
+      WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome,
+      AddressCityDictionary registrationsAddressData) {
     return new BasicIncome2LowContext(response, isFinalChecks, income, permittedIncome);
   }
 }
