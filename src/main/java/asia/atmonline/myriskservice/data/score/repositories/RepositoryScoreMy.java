@@ -1,6 +1,6 @@
 package asia.atmonline.myriskservice.data.score.repositories;
 
-import static asia.atmonline.myriskservice.enums.application.ProductCode.IL;
+import static asia.atmonline.myriskservice.enums.application.ProductCode.IL_Start_RPH;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.enums.application.ProductCode;
@@ -28,7 +28,7 @@ public class RepositoryScoreMy {
 
   public String executeScoreSqlQuery(String scoreModel, RiskRequestJpaEntity request, ProductCode code) {
     List<String> scoreFilesList;
-    if (IL.equals(code)) {
+    if (IL_Start_RPH.equals(code)) {
       Map<String, Object> map = new HashMap<>();
       map.put("applicationId", request.getApplicationId());
       map.put("nodeId", request.getScoreNodeId());

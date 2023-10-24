@@ -8,7 +8,7 @@ import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.external_responses.score.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.score.DataScoreService;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
-import asia.atmonline.myriskservice.data.storage.entity.property.impl.SystemProperty;
+import asia.atmonline.myriskservice.data.storage.entity.credit.CreditProduct;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.credit.CreditProductJpaRepository;
 import asia.atmonline.myriskservice.enums.application.ProductCode;
@@ -83,25 +83,20 @@ public class ScoreChecksService implements BaseRiskChecksService {
   private Map<String, Long> getScoreLimitAndDecisionRestrictions(RiskRequestJpaEntity request, ProductCode code) {
     Map<String, Long> map = new HashMap<>();
     if (3 == request.getScoreNodeId()) {
-//      Optional<SystemProperty> termMaxProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathTermMax);
-      Optional<SystemProperty> termMaxProperty = null;
-      if (termMaxProperty.isPresent() && termMaxProperty.get().getValue() != null) {
-        map.put(scorePathTermMax, Long.parseLong(termMaxProperty.get().getValue()));
-      }
-//      Optional<SystemProperty> amountMaxProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathAmountMax);
-      Optional<SystemProperty> amountMaxProperty = null;
-      if (amountMaxProperty.isPresent() && amountMaxProperty.get().getValue() != null) {
-        map.put(scorePathAmountMax, Long.parseLong(amountMaxProperty.get().getValue()));
-      }
-//      Optional<SystemProperty> termMinProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathTermMin);
-      Optional<SystemProperty> termMinProperty = null;
-      if (termMinProperty.isPresent() && termMinProperty.get().getValue() != null) {
-        map.put(scorePathTermMin, Long.parseLong(termMinProperty.get().getValue()));
-      }
-//      Optional<SystemProperty> amountMinProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathAmountMin);
-      Optional<SystemProperty> amountMinProperty = null;
-      if (amountMinProperty.isPresent() && amountMinProperty.get().getValue() != null) {
-        map.put(scorePathAmountMin, Long.parseLong(amountMinProperty.get().getValue()));
+      Optional<CreditProduct> creditProduct = creditProductJpaRepository.findById(code.getCodeNum());
+      if(creditProduct.isPresent()) {
+        if (creditProduct.get().getMaxTerm() != null) {
+          map.put(scorePathTermMax, creditProduct.get().getMaxTerm().longValue());
+        }
+        if (creditProduct.get().getMaxAmount() != null) {
+          map.put(scorePathAmountMax, creditProduct.get().getMaxAmount().longValue());
+        }
+        if (creditProduct.get().getMinTerm() != null) {
+          map.put(scorePathTermMin, creditProduct.get().getMinTerm().longValue());
+        }
+        if (creditProduct.get().getMinAmount() != null) {
+          map.put(scorePathAmountMin, creditProduct.get().getMinAmount().longValue());
+        }
       }
     }
     return map;

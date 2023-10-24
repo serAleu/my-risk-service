@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum ProductCode {
 
-  IL(1),
+  IL_Start_RPH(1),
   RS1(2),
   RS2(3),
   RS3(4),
