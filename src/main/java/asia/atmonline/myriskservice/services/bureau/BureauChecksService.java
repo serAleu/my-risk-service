@@ -374,11 +374,9 @@ public class BureauChecksService implements BaseRiskChecksService {
     return new ExperianCCRISSearchRequest()
         .setRequest(new ExperianCCRISSearchRequestBody()
             .setCountry(EXPERIAN_REQUESTED_COUNTRY)
-//            .setEntityName(borrower.getName())
-            .setEntityName("COURTS NAME IRISSU 1")
+            .setEntityName(borrower.getName())
             .setDOB(borrower.getPersonalData().getBirthDate())
-//            .setEntityId(borrower.getBorrowerNIC())
-            .setEntityId("740424125653")
+            .setEntityId(borrower.getBorrowerNIC())
             .setEntityId2("")
             .setGroupCode(experianCCRISGroupCode)
             .setProductType(experianCCRISProductType));
