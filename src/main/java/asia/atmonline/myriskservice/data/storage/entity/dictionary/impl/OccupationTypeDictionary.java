@@ -23,4 +23,7 @@ public class OccupationTypeDictionary extends BaseDictionary {
   @Column(name = "working_industries")
   @JdbcTypeCode(SqlTypes.JSON)
   private Set<Long> workingIndustries = new HashSet<>();
+
+  @Column(name = "prohibited", nullable = false)
+  private boolean prohibited;
 }
