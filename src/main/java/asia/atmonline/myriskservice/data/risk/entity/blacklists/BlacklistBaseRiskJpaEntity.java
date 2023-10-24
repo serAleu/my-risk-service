@@ -5,6 +5,9 @@ import asia.atmonline.myriskservice.enums.risk.BlacklistSource;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -30,8 +33,9 @@ public abstract class BlacklistBaseRiskJpaEntity extends BaseRiskJpaEntity {
   @Column(name = "bl_level")
   private Integer blLevel;
 
-  @Column(name = "bl_reason")
-  private String blReason;
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "bl_reason")
+  private BlacklistRule blReason;
 
   @Column(name = "source")
   @Enumerated(EnumType.STRING)

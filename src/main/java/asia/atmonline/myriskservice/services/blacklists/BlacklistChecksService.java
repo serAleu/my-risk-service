@@ -199,7 +199,7 @@ public class BlacklistChecksService implements BaseRiskChecksService {
       entity.setBlLevel(defineBlLevel(form.getProductCode()));
       entity.setAddedBy(userId);
       entity.setSource(source);
-      entity.setBlReason(form.getId());
+      entity.setBlReason(rule);
     }
   }
 
