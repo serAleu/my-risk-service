@@ -10,7 +10,7 @@ import asia.atmonline.myriskservice.data.score.DataScoreService;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
 import asia.atmonline.myriskservice.data.storage.entity.property.impl.SystemProperty;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
-import asia.atmonline.myriskservice.data.storage.repositories.property.SystemPropertyJpaRepository;
+import asia.atmonline.myriskservice.data.storage.repositories.credit.CreditProductJpaRepository;
 import asia.atmonline.myriskservice.enums.application.ProductCode;
 import asia.atmonline.myriskservice.rules.score.BaseScoreContext;
 import asia.atmonline.myriskservice.rules.score.BaseScoreRule;
@@ -34,7 +34,7 @@ public class ScoreChecksService implements BaseRiskChecksService {
   private final DataScoreService dataScoreService;
   private final BitbucketService bitbucketService;
   private final CreditApplicationJpaRepository creditApplicationJpaRepository;
-  private final SystemPropertyJpaRepository systemPropertyJpaRepository;
+  private final CreditProductJpaRepository creditProductJpaRepository;
 
   @Value("${score.paths-to-properties.term.max}")
   private String scorePathTermMax;
@@ -57,7 +57,7 @@ public class ScoreChecksService implements BaseRiskChecksService {
       if (!StringUtils.isBlank(scoreModel)) {
         scoreResponseJpaEntity = dataScoreService.getScoreModelResponse(request, scoreModel, code);
       }
-      Map<String, Long> score3RestrictionsMap = getScoreLimitAndDecisionRestrictions(request);
+      Map<String, Long> score3RestrictionsMap = getScoreLimitAndDecisionRestrictions(request, code);
       for (BaseScoreRule rule : rules) {
         response = rule.execute(rule.getContext(response, scoreResponseJpaEntity, score3RestrictionsMap));
         if (response != null && REJECT.equals(response.getDecision())) {
@@ -80,7 +80,7 @@ public class ScoreChecksService implements BaseRiskChecksService {
     return response;
   }
 
-  private Map<String, Long> getScoreLimitAndDecisionRestrictions(RiskRequestJpaEntity request) {
+  private Map<String, Long> getScoreLimitAndDecisionRestrictions(RiskRequestJpaEntity request, ProductCode code) {
     Map<String, Long> map = new HashMap<>();
     if (3 == request.getScoreNodeId()) {
 //      Optional<SystemProperty> termMaxProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathTermMax);

@@ -197,7 +197,6 @@ public class BlacklistChecksService implements BaseRiskChecksService {
         entity.setExpiredAt(expiredAt);
       }
       entity.setBlLevel(defineBlLevel(form.getProductCode()));
-      entity.setRule(rule);
       entity.setAddedBy(userId);
       entity.setSource(source);
       entity.setBlReason(form.getId());
