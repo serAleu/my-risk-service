@@ -1,5 +1,6 @@
 package asia.atmonline.myriskservice.data.risk.repositories.blacklists;
 
+import asia.atmonline.myriskservice.data.risk.entity.blacklists.BlacklistRule;
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.impl.BlacklistPhoneRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.repositories.BaseRiskJpaRepository;
 import asia.atmonline.myriskservice.enums.risk.BlacklistSource;
@@ -14,7 +15,7 @@ public interface BlacklistPhoneRiskJpaRepository extends BaseRiskJpaRepository<B
 
   boolean existsByPhoneInAndSourceInAndExpiredAtAfter(List<String> phones, List<BlacklistSource> sources, LocalDateTime after);
 
-  List<BlacklistPhoneRiskJpaEntity> findByPhoneAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(String phone, String blReason, LocalDateTime after);
+  List<BlacklistPhoneRiskJpaEntity> findByPhoneAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(String phone, BlacklistRule rule, LocalDateTime after);
 
   List<BlacklistPhoneRiskJpaEntity> findByPhoneAndExpiredAtAfterOrderByAddedAtDesc(String phone, LocalDateTime after);
 

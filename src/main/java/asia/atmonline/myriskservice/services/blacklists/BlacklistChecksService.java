@@ -141,11 +141,9 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     if (rule == null || rule.getDays() == null || rule.getDays() <= 0) {
       return;
     }
-
-    String blReason = rule.getId();
     if (StringUtils.isNotEmpty(form.getPassportNumber()) && rule.isAddIdNumber()) {
       List<BlacklistPassportNumberRiskJpaEntity> blackListIdNumbers = blacklistPassportNumberJpaRepository.findByPassportNumberAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(
-          form.getPassportNumber(), blReason, LocalDateTime.now());
+          form.getPassportNumber(), rule, LocalDateTime.now());
       BlacklistPassportNumberRiskJpaEntity entity;
       if (CollectionUtils.isNotEmpty(blackListIdNumbers)) {
         entity = blackListIdNumbers.get(0);
@@ -158,7 +156,7 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     }
     if (StringUtils.isNotEmpty(form.getPhone()) && rule.isAddPhone()) {
       List<BlacklistPhoneRiskJpaEntity> blackListPhones = blacklistPhoneJpaRepository.findByPhoneAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(
-          form.getPhone(), blReason, LocalDateTime.now());
+          form.getPhone(), rule, LocalDateTime.now());
       BlacklistPhoneRiskJpaEntity entity;
       if (CollectionUtils.isNotEmpty(blackListPhones)) {
         entity = blackListPhones.get(0);
@@ -172,7 +170,7 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     if (StringUtils.isNotEmpty(form.getBankAccount()) && rule.isAddBankAccount()) {
       BlacklistBankAccountRiskJpaEntity entity;
       List<BlacklistBankAccountRiskJpaEntity> blackListBankAccounts = blacklistBankAccountJpaRepository.findByBankAccountAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(
-          form.getBankAccount(), blReason, LocalDateTime.now());
+          form.getBankAccount(), rule, LocalDateTime.now());
       if (CollectionUtils.isNotEmpty(blackListBankAccounts)) {
         entity = blackListBankAccounts.get(0);
       } else {

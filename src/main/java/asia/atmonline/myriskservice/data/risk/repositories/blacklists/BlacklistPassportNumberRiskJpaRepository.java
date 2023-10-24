@@ -1,5 +1,6 @@
 package asia.atmonline.myriskservice.data.risk.repositories.blacklists;
 
+import asia.atmonline.myriskservice.data.risk.entity.blacklists.BlacklistRule;
 import asia.atmonline.myriskservice.data.risk.entity.blacklists.impl.BlacklistPassportNumberRiskJpaEntity;
 import asia.atmonline.myriskservice.data.risk.repositories.BaseRiskJpaRepository;
 import java.time.LocalDateTime;
@@ -11,5 +12,5 @@ public interface BlacklistPassportNumberRiskJpaRepository extends BaseRiskJpaRep
 
   boolean existsByPassportNumberInAndExpiredAtAfter(List<String> passportNumbers,  LocalDateTime after);
 
-  List<BlacklistPassportNumberRiskJpaEntity> findByPassportNumberAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(String passportNumber, String blReason, LocalDateTime after);
+  List<BlacklistPassportNumberRiskJpaEntity> findByPassportNumberAndBlReasonAndExpiredAtAfterOrderByAddedAtDesc(String passportNumber, BlacklistRule rule, LocalDateTime after);
 }
