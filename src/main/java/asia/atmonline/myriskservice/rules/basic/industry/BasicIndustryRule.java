@@ -10,7 +10,6 @@ import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.Occupati
 import asia.atmonline.myriskservice.data.storage.entity.dictionary.impl.WorkingIndustryDictionary;
 import asia.atmonline.myriskservice.rules.basic.BaseBasicRule;
 import asia.atmonline.myriskservice.services.blacklists.BlacklistChecksService;
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,27 +22,18 @@ public class BasicIndustryRule extends BaseBasicRule<BasicIndustryContext> {
   @Override
   public RiskResponseJpaEntity execute(BasicIndustryContext context) {
     RiskResponseJpaEntity response = super.execute(context);
-    context.getDictionaryWorkingIndustries().forEach(dictionaryWorkingIndustry -> {
-      if (!dictionaryWorkingIndustry.getActive()
-          && (dictionaryWorkingIndustry.getNameEn().equalsIgnoreCase(context.getClientWorkingIndustry().getNameEn())
-          || dictionaryWorkingIndustry.getNameMy().equalsIgnoreCase(context.getClientWorkingIndustry().getNameMy()))) {
-        if (context.isFinalChecks) {
-          response.setRejectionReason(INDUSTRY_F);
-        } else {
-          response.setRejectionReason(INDUSTRY);
-        }
-        response.setDecision(REJECT);
-      }
-    });
+    if (!context.getClientWorkingIndustry().getActive()) {
+      response.setRejectionReason(context.isFinalChecks ? INDUSTRY_F : INDUSTRY);
+      response.setDecision(REJECT);
+    }
     return response;
   }
 
   @Override
-  public BasicIndustryContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, List<AddressCityDictionary> dictionaryAddressCities,
-      List<OccupationTypeDictionary> occupationTypeDictionaries,
-      List<WorkingIndustryDictionary> dictionaryWorkingIndustries, Integer age, Integer permittedHighAge, Integer permittedLowAge,
+  public BasicIndustryContext getContext(RiskResponseJpaEntity response, boolean isFinalChecks, Integer age, Integer permittedHighAge,
+      Integer permittedLowAge,
       WorkingIndustryDictionary clientWorkingIndustry, OccupationTypeDictionary clientOccupationType, Long income, Long permittedIncome,
       AddressCityDictionary registrationsAddressData) {
-    return new BasicIndustryContext(response, isFinalChecks, clientWorkingIndustry, dictionaryWorkingIndustries);
+    return new BasicIndustryContext(response, isFinalChecks, clientWorkingIndustry);
   }
 }
