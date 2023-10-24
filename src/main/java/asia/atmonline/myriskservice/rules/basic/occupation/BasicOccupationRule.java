@@ -22,7 +22,7 @@ public class BasicOccupationRule extends BaseBasicRule<BasicOccupationContext> {
   @Override
   public RiskResponseJpaEntity execute(BasicOccupationContext context) {
     RiskResponseJpaEntity response = super.execute(context);
-    if (!context.getClientOccupationType().getActive()) {
+    if (context.getClientOccupationType().isProhibited()) {
       response.setRejectionReason(context.isFinalChecks ? OCCUPATION_F : OCCUPATION);
       response.setDecision(REJECT);
     }

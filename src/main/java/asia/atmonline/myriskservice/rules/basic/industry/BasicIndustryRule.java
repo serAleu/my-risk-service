@@ -22,7 +22,7 @@ public class BasicIndustryRule extends BaseBasicRule<BasicIndustryContext> {
   @Override
   public RiskResponseJpaEntity execute(BasicIndustryContext context) {
     RiskResponseJpaEntity response = super.execute(context);
-    if (context.getClientWorkingIndustry() != null && !context.getClientWorkingIndustry().getActive()) {
+    if (context.getClientWorkingIndustry() != null && context.getClientWorkingIndustry().isProhibited()) {
       response.setRejectionReason(context.isFinalChecks ? INDUSTRY_F : INDUSTRY);
       response.setDecision(REJECT);
     }
