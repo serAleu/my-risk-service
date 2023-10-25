@@ -35,12 +35,11 @@ public class ScoreChecksRequestProcessor extends BaseRequestProcessor {
   @Override
   public RiskResponseJpaEntity process(RiskRequestJpaEntity request) {
     RiskResponseJpaEntity response;
-    response = getMockApprovedResponse(request, SCORE_MOCK_WAS_USED_MESSAGE);
-//    if(usingMocksScore) {
-//      response = getMockApprovedResponse(request, SCORE_MOCK_WAS_USED_MESSAGE);
-//    } else {
-//      response = scoreChecksService.process(request);
-//    }
+    if(usingMocksScore) {
+      response = getMockApprovedResponse(request, SCORE_MOCK_WAS_USED_MESSAGE);
+    } else {
+      response = scoreChecksService.process(request);
+    }
     defaultProducer.send(convertToPayload(response), scoreChecksResponseQueue);
     return response;
   }
