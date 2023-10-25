@@ -45,9 +45,9 @@
 //  @Test
 //  void listen() {
 //    RequestPayload requestPayload = new RequestPayload();
-//    requestPayload.setApplicationId(312L);
+//    requestPayload.setApplicationId(745L);
 //    requestPayload.setCheckType(SCORE);
-//    requestPayload.setScoreNodeId("2");
+//    requestPayload.setScoreNodeId("3");
 //    requestPayload.setPhone(null);
 //
 //    consumer.listen(requestPayload);
