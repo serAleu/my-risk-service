@@ -5,6 +5,7 @@ import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
 import asia.atmonline.myriskservice.data.risk.service.JpaEntityService;
 import asia.atmonline.myriskservice.mapper.PayloadMapper;
 import asia.atmonline.myriskservice.processors.BaseRequestProcessor;
+import io.awspring.cloud.sqs.annotation.SqsListener;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -22,7 +23,7 @@ public class DefaultConsumer {
   private final JpaEntityService entityService;
 
   @SneakyThrows
-//  @SqsListener("#{'${aws.sqs.request.queue}'.split(',')}")
+  @SqsListener("#{'${aws.sqs.request.queue}'.split(',')}")
 //  @SqsListener("${aws.sqs.request.local}")
   public void listen(RequestPayload payload) {
     log.info(payload.toString());
