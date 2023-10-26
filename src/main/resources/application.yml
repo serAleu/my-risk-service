@@ -196,4 +196,4 @@ seon-fraud:
 blacklist:
   request:
     queue:
-      name: my-risk-blacklists-request-preprod
+      name: ${BLACK_LIST_QUEUE_NAME:my-risk-blacklists-request-preprod}
