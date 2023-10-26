@@ -22,7 +22,6 @@ public class DataScoreService {
 
   public ScoreResponseRiskJpaEntity getScoreModelResponse(RiskRequestJpaEntity request, String scoreModel, ProductCode code) {
     try {
-      request.setScoreNodeId(request.getScoreNodeId());
       String scoreModelResponse = repositoryScoreMy.executeScoreSqlQuery(scoreModel, request, code);
       ScoreResponseRiskJpaEntity scoreResponseJpaEntity = rootMapper().readValue(scoreModelResponse, ScoreResponseRiskJpaEntity.class);
       scoreResponseJpaEntity.setScore_node_id(request.getScoreNodeId().intValue());

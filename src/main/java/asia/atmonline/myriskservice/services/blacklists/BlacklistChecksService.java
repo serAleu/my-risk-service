@@ -121,7 +121,7 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     form.setBankAccount(borrower.getBorrowerAccount());
     form.setPassportNumber(borrower.getBorrowerNIC());
     form.setPhone(borrower.getBorrowerPhone());
-    form.setProductCode(ProductCode.IL);
+    form.setProductCode(ProductCode.IL_Start_RPH);
     form.setId(code.name());
     form.setCreditApplicationId(applicationId);
     save(form, SYSTEM, null);
@@ -218,14 +218,14 @@ public class BlacklistChecksService implements BaseRiskChecksService {
 
   private int defineBlLevel(ProductCode code) {
     return switch (code) {
-      case IL -> 0;
-      case RS1 -> 1;
-      case RS2 -> 2;
-      case RS3 -> 3;
-      case RS4 -> 4;
-      case RS5 -> 5;
-      case RS6 -> 6;
-      case RS7 -> 7;
+      case IL_Start_RPH, IL -> 0;
+      case RS1, RS1_TEST155, RS1_TEST160, RS1_RPH -> 1;
+      case RS2, RS2_RPH -> 2;
+      case RS3, RS3_RPH -> 3;
+      case RS4, RS4_RPH -> 4;
+      case RS5, RS5_RPH -> 5;
+      case RS6, RS6_RPH -> 6;
+      case RS7, RS7_RPH -> 7;
     };
   }
 }

@@ -8,7 +8,7 @@ import asia.atmonline.myriskservice.data.risk.entity.RiskResponseJpaEntity;
 import asia.atmonline.myriskservice.data.risk.entity.external_responses.score.ScoreResponseRiskJpaEntity;
 import asia.atmonline.myriskservice.data.score.DataScoreService;
 import asia.atmonline.myriskservice.data.storage.entity.application.CreditApplication;
-import asia.atmonline.myriskservice.data.storage.entity.property.impl.SystemProperty;
+import asia.atmonline.myriskservice.data.storage.entity.credit.CreditProduct;
 import asia.atmonline.myriskservice.data.storage.repositories.application.CreditApplicationJpaRepository;
 import asia.atmonline.myriskservice.data.storage.repositories.credit.CreditProductJpaRepository;
 import asia.atmonline.myriskservice.enums.application.ProductCode;
@@ -51,20 +51,23 @@ public class ScoreChecksService implements BaseRiskChecksService {
     RiskResponseJpaEntity response = getRiskResponseJpaEntity(request);
     ScoreResponseRiskJpaEntity scoreResponseJpaEntity = new ScoreResponseRiskJpaEntity().setApplication_id(request.getApplicationId());
     Optional<CreditApplication> application = creditApplicationJpaRepository.findById(request.getApplicationId());
-    if (application.isPresent()) {
-      ProductCode code = ProductCode.getProductByCode(application.get().getCreditProductId());
-      String scoreModel = bitbucketService.getModel(code);
-      if (!StringUtils.isBlank(scoreModel)) {
-        scoreResponseJpaEntity = dataScoreService.getScoreModelResponse(request, scoreModel, code);
-      }
-      Map<String, Long> score3RestrictionsMap = getScoreLimitAndDecisionRestrictions(request, code);
-      for (BaseScoreRule rule : rules) {
-        response = rule.execute(rule.getContext(response, scoreResponseJpaEntity, score3RestrictionsMap));
-        if (response != null && REJECT.equals(response.getDecision())) {
-          if (response.getRejectionReason() != null) {
-            rule.saveToBlacklists(request.getApplicationId(), application.get().getBorrower().getId(), response.getRejectionReason());
+    if (application.isPresent() && application.get().getCreditProductId() != null) {
+      Optional<CreditProduct> creditProduct = creditProductJpaRepository.findById(application.get().getCreditProductId());
+      if (creditProduct.isPresent() && creditProduct.get().getCode() != null) {
+        ProductCode code = ProductCode.valueOf(creditProduct.get().getCode());
+        String scoreModel = bitbucketService.getModel(code);
+        if (!StringUtils.isBlank(scoreModel)) {
+          scoreResponseJpaEntity = dataScoreService.getScoreModelResponse(request, scoreModel, code);
+        }
+        Map<String, Long> score3RestrictionsMap = getScoreLimitAndDecisionRestrictions(request, creditProduct.get());
+        for (BaseScoreRule rule : rules) {
+          response = rule.execute(rule.getContext(response, scoreResponseJpaEntity, score3RestrictionsMap));
+          if (response != null && REJECT.equals(response.getDecision())) {
+            if (response.getRejectionReason() != null) {
+              rule.saveToBlacklists(request.getApplicationId(), application.get().getBorrower().getId(), response.getRejectionReason());
+            }
+            return response;
           }
-          return response;
         }
       }
     }
@@ -80,28 +83,20 @@ public class ScoreChecksService implements BaseRiskChecksService {
     return response;
   }
 
-  private Map<String, Long> getScoreLimitAndDecisionRestrictions(RiskRequestJpaEntity request, ProductCode code) {
+  private Map<String, Long> getScoreLimitAndDecisionRestrictions(RiskRequestJpaEntity request, CreditProduct creditProduct) {
     Map<String, Long> map = new HashMap<>();
     if (3 == request.getScoreNodeId()) {
-//      Optional<SystemProperty> termMaxProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathTermMax);
-      Optional<SystemProperty> termMaxProperty = null;
-      if (termMaxProperty.isPresent() && termMaxProperty.get().getValue() != null) {
-        map.put(scorePathTermMax, Long.parseLong(termMaxProperty.get().getValue()));
+      if (creditProduct.getMaxTerm() != null) {
+        map.put(scorePathTermMax, creditProduct.getMaxTerm().longValue());
       }
-//      Optional<SystemProperty> amountMaxProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathAmountMax);
-      Optional<SystemProperty> amountMaxProperty = null;
-      if (amountMaxProperty.isPresent() && amountMaxProperty.get().getValue() != null) {
-        map.put(scorePathAmountMax, Long.parseLong(amountMaxProperty.get().getValue()));
+      if (creditProduct.getMaxAmount() != null) {
+        map.put(scorePathAmountMax, creditProduct.getMaxAmount().longValue());
       }
-//      Optional<SystemProperty> termMinProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathTermMin);
-      Optional<SystemProperty> termMinProperty = null;
-      if (termMinProperty.isPresent() && termMinProperty.get().getValue() != null) {
-        map.put(scorePathTermMin, Long.parseLong(termMinProperty.get().getValue()));
+      if (creditProduct.getMinTerm() != null) {
+        map.put(scorePathTermMin, creditProduct.getMinTerm().longValue());
       }
-//      Optional<SystemProperty> amountMinProperty = systemPropertyJpaRepository.findByPropertyKey(scorePathAmountMin);
-      Optional<SystemProperty> amountMinProperty = null;
-      if (amountMinProperty.isPresent() && amountMinProperty.get().getValue() != null) {
-        map.put(scorePathAmountMin, Long.parseLong(amountMinProperty.get().getValue()));
+      if (creditProduct.getMinAmount() != null) {
+        map.put(scorePathAmountMin, creditProduct.getMinAmount().longValue());
       }
     }
     return map;

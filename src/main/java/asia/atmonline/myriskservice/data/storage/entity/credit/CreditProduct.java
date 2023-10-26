@@ -22,6 +22,7 @@ public class CreditProduct extends BaseStorageEntity {
   private boolean active = true;
 
   @Column(name = "external_id")
+  @JsonIgnore
   private Long externalId;
 
   @Column(name = "title")
@@ -31,12 +32,15 @@ public class CreditProduct extends BaseStorageEntity {
   private String code;
 
   @Column(name = "engine_name")
+  @JsonIgnore
   private String engineName;
 
   @Column(name = "min_amount")
+//  @Digits(integer = 16, fraction = 0, message = NUMBER)
   private BigDecimal minAmount;
 
   @Column(name = "max_amount")
+//  @Digits(integer = 16, fraction = 0, message = NUMBER)
   private BigDecimal maxAmount;
 
   @Enumerated(EnumType.STRING)
@@ -49,37 +53,6 @@ public class CreditProduct extends BaseStorageEntity {
   @Column(name = "max_term")
   private Integer maxTerm;
 
-  @Column(name = "min_finished_credits_count")
-  @JsonIgnore
-  private Integer minFinishedCreditsCount;
-
-//  @Embedded
-//  private ProlongationSettings prolongationSettings;
-//
-//  @Embedded
-//  private CalculationSettings calculationSettings;
-//
-//  @Embedded
-//  private RestructuringSettings restructuringSettings;
-
-  @Column(name = "restructuring_agreement_template_id")
-  private Long restructuringAgreementTemplateId;
-
-  @Column(name = "grace_period_active", columnDefinition = "boolean default false")
-  private boolean gracePeriodActive;
-
-  @Column(name = "early_repayment_active", columnDefinition = "boolean default false")
-  private boolean earlyRepaymentActive;
-
-  @Column(name = "external_scoring_service_enabled", columnDefinition = "boolean default false")
-  private boolean externalScoringServiceEnabled;
-
-  @Column(name = "external_scoring_decision", columnDefinition = "boolean default false")
-  private boolean externalScoringDecision;
-
-  @Column(name = "scoring_service_url")
-  private String scoringServiceUrl;
-
   @Column(name = "authorization_key")
   private String authorizationKey;
 
@@ -89,9 +62,11 @@ public class CreditProduct extends BaseStorageEntity {
   @Column(name = "external_scoring_service_result_timeout")
   private Integer externalScoringServiceResultTimeout;
 
+  @Column(name = "next_product_code")
+  private String nextProductCode;
+
   @Override
   public String toString() {
     return this.getTitle();
   }
-
 }
