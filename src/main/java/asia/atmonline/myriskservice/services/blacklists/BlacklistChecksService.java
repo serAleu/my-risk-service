@@ -1,5 +1,6 @@
 package asia.atmonline.myriskservice.services.blacklists;
 
+import static asia.atmonline.myriskservice.enums.risk.BlacklistSource.MANUAL;
 import static asia.atmonline.myriskservice.enums.risk.BlacklistSource.SYSTEM;
 
 import asia.atmonline.myriskservice.data.risk.entity.RiskRequestJpaEntity;
@@ -71,7 +72,8 @@ public class BlacklistChecksService implements BaseRiskChecksService {
     }
     List<BlacklistPhoneRiskJpaEntity> entities = blacklistPhoneJpaRepository.findByPhoneAndExpiredAtAfterOrderByAddedAtDesc(phoneNum,
         LocalDateTime.now());
-    RiskResponseJpaEntity response = blacklistPhoneRule.execute(new BlacklistPhoneContext(entities, numberOfNotFinishedCredits.intValue(), numberOfFinishedCredits.intValue()));
+    RiskResponseJpaEntity response = blacklistPhoneRule.execute(
+        new BlacklistPhoneContext(entities, numberOfNotFinishedCredits.intValue(), numberOfFinishedCredits.intValue()));
     response.setPhone(request.getPhone());
     response.setRequestId(request.getId());
     return response;
@@ -104,38 +106,48 @@ public class BlacklistChecksService implements BaseRiskChecksService {
   @Transactional(readOnly = true)
   public boolean checkPassportNumbersBlacklist(final List<String> passportNumber) {
     List<String> passportNumberCaseSensitivity = Optional.ofNullable(passportNumber).orElse(List.of()).stream()
-        .map(num -> List.of(num.toLowerCase(),num.toUpperCase()))
+        .map(num -> List.of(num.toLowerCase(), num.toUpperCase()))
         .flatMap(Collection::stream)
         .collect(Collectors.toList());
     return CollectionUtils.isNotEmpty(passportNumberCaseSensitivity)
         && blacklistPassportNumberJpaRepository.existsByPassportNumberInAndExpiredAtAfter(passportNumberCaseSensitivity, LocalDateTime.now());
   }
 
+  @Transactional
+  public void save(Long applicationId, Long borrowerId, Long userId, String rejectCode) {
+    Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
+    borrower.ifPresent(value -> save(value, rejectCode, applicationId, userId, MANUAL));
+  }
+
+  @Transactional
   public void save(Long applicationId, Long borrowerId, RejectionReasonCode code) {
     Optional<Borrower> borrower = borrowerJpaRepository.findById(borrowerId);
     borrower.ifPresent(value -> save(value, code, applicationId));
   }
 
-  public void save(Borrower borrower, RejectionReasonCode code, Long applicationId) {
+  private void save(Borrower borrower, RejectionReasonCode code, Long applicationId) {
+    save(borrower, code.name(), applicationId, null, SYSTEM);
+  }
+
+  private void save(Borrower borrower, String code, Long applicationId, Long userId, BlacklistSource source) {
     BlacklistRecordForm form = new BlacklistRecordForm();
     form.setBankAccount(borrower.getBorrowerAccount());
     form.setPassportNumber(borrower.getBorrowerNIC());
     form.setPhone(borrower.getBorrowerPhone());
     form.setProductCode(ProductCode.IL_Start_RPH);
-    form.setId(code.name());
+    form.setId(code);
     form.setCreditApplicationId(applicationId);
-    save(form, SYSTEM, null);
+    save(form, source, userId);
   }
 
-  @Transactional
-  public void save(BlacklistRecordForm form, BlacklistSource source, Long userId) {
+  private void save(BlacklistRecordForm form, BlacklistSource source, Long userId) {
     if (form.getId() == null) {
       return;
     }
 
     Optional<BlacklistRule> optionalBlacklistRule = blacklistRuleJpaRepository.findById(form.getId());
     BlacklistRule rule = null;
-    if(optionalBlacklistRule.isPresent()) {
+    if (optionalBlacklistRule.isPresent()) {
       rule = optionalBlacklistRule.get();
     }
     if (rule == null || rule.getDays() == null || rule.getDays() <= 0) {
@@ -184,7 +196,7 @@ public class BlacklistChecksService implements BaseRiskChecksService {
 
   private void getFilledBlEntity(BlacklistBaseRiskJpaEntity entity, BlacklistRecordForm form, BlacklistSource source, Long userId) {
     Optional<BlacklistRule> optionalBlacklistRule = blacklistRuleJpaRepository.findById(form.getId());
-    if(optionalBlacklistRule.isPresent()) {
+    if (optionalBlacklistRule.isPresent()) {
       BlacklistRule rule = optionalBlacklistRule.get();
       if (Objects.nonNull(entity.getId())) {
         entity.setExpiredAt(entity.getExpiredAt().plusDays(rule.getDays()));

@@ -192,3 +192,8 @@ seon-fraud:
         enable: ${DEFAULT_SEON_PHONE_STOP_FACTOR_ENABLE:false}
     fingerprint:
       enable: ${DEFAULT_SEON_FINGERPRINT_ENABLE:true}
+
+blacklist:
+  request:
+    queue:
+      name: my-risk-blacklists-request-preprod
