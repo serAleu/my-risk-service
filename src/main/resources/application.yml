@@ -19,8 +19,8 @@ spring:
         auto: false
         static: ap-southeast-1
       credentials:
-        access-key: ${AWS_ACCESS_KEY:AKIAWH5BMXL72YM6U76D}
-        secret-key: ${AWS_SECRET_KEY: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}
+        access-key: ${xxx:xxx}
+        secret-key: ${xxx:xxx}
       stack:
         auto: false
   activemq:
@@ -65,9 +65,9 @@ datasource:
     prepStmtCacheSqlLimit: ${DATASOURCE_STORAGE_PREP_STMT_CACHE_SQL_LIMIT:2048}
     useServerPrepStmts: ${DATASOURCE_STORAGE_USE_SERVER_PREP_STMTS:true}
     driverClassName: ${DATASOURCE_STORAGE_DRIVER_CLASS_NAME:org.postgresql.Driver}
-    url: jdbc:postgresql://${DB_STORAGE_URL:my-dms-preprod-rds.ctoxc08s0evf.ap-southeast-1.rds.amazonaws.com}:${DB_STORAGE_PORT:5432}/${DB_STORAGE_DATABASE:dms}?socketTimeout=30
-    username: ${DB_STORAGE_LOGIN:dms}
-    password: ${DB_STORAGE_PASSWORD:gp6FSY23Ob8Ce4tJFgsK2lc9}
+    url: jdbc:postgresql://${DB_STORAGE_URL}:${DB_STORAGE_PORT:5432}/${DB_STORAGE_DATABASE:dms}?socketTimeout=30
+    username: ${DB_STORAGE_LOGIN:xxx}
+    password: ${DB_STORAGE_PASSWORD:xxx}
 
 aws:
   default-task-executor:
@@ -79,38 +79,38 @@ aws:
     max-number-of-messages: ${SQS_MAX_NUMBER_OF_MESSAGES:10}
     back-off-time: ${SQS_BACK_OFF_TIME:60000}
     request:
-      queue: ${REQUEST_QUEUES:my-risk-bl-request-preprod,my-risk-cooldown-request-preprod,my-risk-dedup-request-preprod,my-risk-basic-request-preprod,my-risk-score-request-preprod,my-risk-seon-fraud-request-preprod,my-risk-bureau-request-preprod,my-risk-final-request-preprod,my-risk-credit-history-request-preprod}
-      local: my-risk-bl-request-preprod
+      queue: ${REQUEST_QUEUES:xxx,xxx,xxx}
+      local: xxx
     blacklists:
       producer:
-        queue-name: ${BL_RESPONSE_RISK_QUEUE:my-risk-bl-response-preprod}
+        queue-name: ${BL_RESPONSE_RISK_QUEUE:xxx}
     cooldown:
       producer:
-        queue-name: ${COOLDOWN_RESPONSE_RISK_QUEUE:my-risk-cooldown-response-preprod}
+        queue-name: ${COOLDOWN_RESPONSE_RISK_QUEUE:xxx}
     dedup:
       producer:
-        queue-name: ${DEDUP_RESPONSE_RISK_QUEUE:my-risk-dedup-response-preprod}
+        queue-name: ${DEDUP_RESPONSE_RISK_QUEUE:xxx}
     basic:
       producer:
-        queue-name: ${BASIC_RESPONSE_RISK_QUEUE:my-risk-basic-response-preprod}
+        queue-name: ${BASIC_RESPONSE_RISK_QUEUE:xxx}
     score:
       producer:
-        queue-name: ${SCORE_RESPONSE_RISK_QUEUE:my-risk-score-response-preprod}
+        queue-name: ${SCORE_RESPONSE_RISK_QUEUE:xxx}
     seon-fraud:
       producer:
-        queue-name: ${SEON_FRAUD_RESPONSE_RISK_QUEUE:my-risk-seon-fraud-response-preprod}
+        queue-name: ${SEON_FRAUD_RESPONSE_RISK_QUEUE:xxx}
     bureau:
       producer:
-        queue-name: ${BUREAU_RESPONSE_RISK_QUEUE:my-risk-bureau-response-preprod}
+        queue-name: ${BUREAU_RESPONSE_RISK_QUEUE:xxx}
     final:
       producer:
-        queue-name: ${FINAL_RESPONSE_RISK_QUEUE:my-risk-final-response-preprod}
+        queue-name: ${FINAL_RESPONSE_RISK_QUEUE:xxx}
     experian:
       producer:
-        queue-name: ${EXPERIAN_RESPONSE_RISK_QUEUE:my-risk-experian-response-preprod}
+        queue-name: ${EXPERIAN_RESPONSE_RISK_QUEUE:xxx}
     credit-history:
       producer:
-        queue-name: ${CREDIT_HISTORY_RESPONSE_RISK_QUEUE:my-risk-credit-history-response-preprod}
+        queue-name: ${CREDIT_HISTORY_RESPONSE_RISK_QUEUE:xxx}
 
 score:
   paths-to-properties:
@@ -124,24 +124,24 @@ score:
     reload-time-minutes: 10
   ds:
     jdbcDriver: org.postgresql.Driver
-    url: ${DB_SCORE_URL:my-dms-preprod-rds.ctoxc08s0evf.ap-southeast-1.rds.amazonaws.com}
+    url: ${DB_SCORE_URL:xxx}
     port: ${DB_SCORE_PORT:5432}
-    database: ${DB_SCORE_DATABASE:dms}
-    username: ${DB_SCORE_USERNAME:dms}
-    password: ${DB_SCORE_PASSWORD:gp6FSY23Ob8Ce4tJFgsK2lc9}
+    database: ${DB_SCORE_DATABASE:xxx}
+    username: ${DB_SCORE_USERNAME:xxx}
+    password: ${DB_SCORE_PASSWORD:xxx}
   bitbucket:
     url:
-      base: ${BITBUCKET_URL:https://api.bitbucket.org/2.0/repositories/atmonline/external-score-files/src/master/projects/}
-      il: ${BITBUCKET_PATH_TO_IL:malaysia_scoreservice_preprod/il/app.sql}
-      rs1: ${BITBUCKET_PATH_TO_RS1:malaysia_scoreservice_preprod/rs1/app.sql}
-      rs2: ${BITBUCKET_PATH_TO_RS2:malaysia_scoreservice_preprod/rs2/app.sql}
-      rs3: ${BITBUCKET_PATH_TO_RS3:malaysia_scoreservice_preprod/rs3/app.sql}
-    token: ${BASIC_AUTH_BITBUCKET:Basic c2VyX2FsZXU6QVRCQkR2RHFrUTRYdXdGS1U0UjhyUXpYdWg4YkU2RTNFN0E2}
+      base: ${BITBUCKET_URL:https://api.bitbucket.org/2.0/repositories/xxx/xxx/src/master/projects/}
+      il: ${BITBUCKET_PATH_TO_IL:xxx/xxx/app.sql}
+      rs1: ${BITBUCKET_PATH_TO_RS1:xxx/xxx/app.sql}
+      rs2: ${BITBUCKET_PATH_TO_RS2:xxx/xxx/app.sql}
+      rs3: ${BITBUCKET_PATH_TO_RS3:xxx/xxx/app.sql}
+    token: ${BASIC_AUTH_BITBUCKET:Basic xxx}
 
 experian:
-  base-url: ${EXPERIAN_BASE_URL:https://b2buat.experian.com.my/index.php/getcredit}
-  username: ${EXPERIAN_BASIC_USERNAME:GETCB2B1}
-  password: ${EXPERIAN_BASIC_PASSWORD:GetC.b2b.1}
+  base-url: ${EXPERIAN_BASE_URL:https://b2buat.experian.com.my/xxx/xxx}
+  username: ${EXPERIAN_BASIC_USERNAME:xxx}
+  password: ${EXPERIAN_BASIC_PASSWORD:xxx}
   ccris:
     group-code: ${EXPERIAN_CCRIS_GROUP_CODE:11}
     product-type: ${EXPERIAN_CCRIS_PRODUCT_TYPE:CCRIS_SEARCH}
@@ -159,8 +159,7 @@ experian:
       max-attempts: ${RETRYER_MAX_ATTEMPTS:1}
 
 seon-fraud:
-  #  !PROD! license-key: ${SEON_LICENSE_KEY:6fb041e6-86ac-433e-93f6-ab128c72bceb}
-  license-key: ${SEON_LICENSE_KEY:1856407c-4c65-43b7-b597-70ed5f228b0d}
+  license-key: ${SEON_LICENSE_KEY:xxx}
   base-url: ${SEON_BASE_URL:https://api.seon.io}
   paths-to-properties:
     timeout: ${DMS_SEON_TIMEOUT:dms.seon.fraud.timeout}
@@ -196,4 +195,4 @@ seon-fraud:
 blacklist:
   request:
     queue:
-      name: ${BLACK_LIST_QUEUE_NAME:my-risk-blacklists-request-preprod}
+      name: ${BLACK_LIST_QUEUE_NAME:xxx}
